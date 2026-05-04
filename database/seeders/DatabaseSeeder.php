@@ -62,6 +62,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         // --- 5. SEED MODULES ---
+        $modManagement = Module::create(['module' => 'management', 'label' => 'Manajemen Data User', 'status' => 1]);
         $modMaster = Module::create(['module' => 'master', 'label' => 'Manajemen Data Master', 'status' => 1]);
         $modTimbangan = Module::create(['module' => 'timbangan', 'label' => 'Operasional Timbangan', 'status' => 1]);
         $modJarakHarga = Module::create(['module' => 'jarakdanharga', 'label' => 'Jarak & Harga', 'status' => 1]);
@@ -71,10 +72,12 @@ class DatabaseSeeder extends Seeder
 
         // --- 6. SEED PERMISSIONS (GRANULAR / PER MENU) ---
         $permissionsList = [
+            // Management Permissions
+            ['module_id' => $modManagement->id, 'nama_permission' => 'menu-role'],
+            ['module_id' => $modManagement->id, 'nama_permission' => 'menu-pegawai'],
+            ['module_id' => $modManagement->id, 'nama_permission' => 'menu-users'],
+
             // Master Permissions
-            ['module_id' => $modMaster->id, 'nama_permission' => 'menu-role'],
-            ['module_id' => $modMaster->id, 'nama_permission' => 'menu-pegawai'],
-            ['module_id' => $modMaster->id, 'nama_permission' => 'menu-users'],
             ['module_id' => $modMaster->id, 'nama_permission' => 'menu-driver'],
             ['module_id' => $modMaster->id, 'nama_permission' => 'menu-suplier'],
             ['module_id' => $modMaster->id, 'nama_permission' => 'menu-jeniskendaraan'],
@@ -115,16 +118,5 @@ class DatabaseSeeder extends Seeder
         // ADMIN: Mendapatkan SEMUA Permission yang ada
         $allPermissions = Permission::all();
         $userAdmin->permissions()->attach($allPermissions->pluck('id'));
-
-        // STAFF: Contoh Akses Terbatas (Hanya Suplier, Kendaraan, dan Kegiatan Armada)
-        // User ini tidak punya akses ke Role, Pegawai, Users, dll.
-        $staffPermissions = Permission::whereIn('nama_permission', [
-            'menu-suplier',
-            'menu-kendaraan',
-            'menu-material',
-            'menu-kegiatanarmada'
-        ])->get();
-
-        $userStaff->permissions()->attach($staffPermissions->pluck('id'));
     }
 }
