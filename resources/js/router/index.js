@@ -85,12 +85,12 @@ const routes = [
                 component: () =>
                     import("@/modules/material/views/MaterialView.vue"),
             },
-            // {
-            //     path: "beratjenis",
-            //     name: "beratjenis",
-            //     component: () =>
-            //         import("@/modules/beratjenis/views/BeratJenisView.vue"),
-            // },
+            {
+                path: "beratjenis",
+                name: "beratjenis",
+                component: () =>
+                    import("@/modules/beratjenis/views/BeratJenisView.vue"),
+            },
             // {
             //     path: "stonecrusher",
             //     name: "stonecrusher",

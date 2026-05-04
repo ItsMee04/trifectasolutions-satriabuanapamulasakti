@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Authentication\AuthController;
+use App\Http\Controllers\Master\BeratJenisController;
 use App\Http\Controllers\Master\CustomerController;
 use App\Http\Controllers\Master\DriverController;
 use App\Http\Controllers\Master\JenisKendaraanController;
@@ -115,6 +116,14 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::post('/store', [MaterialController::class, 'storeMaterial']);    // POST /api/master/material/store
             Route::post('/update', [MaterialController::class, 'updateMaterial']);   // PUT /api/master/material/update
             Route::delete('/delete', [MaterialController::class, 'deleteMaterial']); // DELETE /api/master/material/delete
+        });
+
+        // Mengelompokkan route khusus Berat Jenis
+        Route::prefix('beratjenis')->group(function () {
+            Route::get('/', [BeratJenisController::class, 'getBeratJenis']);          // GET /api/master/berat-jenis
+            Route::post('/store', [BeratJenisController::class, 'storeBeratJenis']);    // POST /api/master/berat-jenis/store
+            Route::post('/update', [BeratJenisController::class, 'updateBeratJenis']);   // PUT /api/master/berat-jenis/update
+            Route::delete('/delete', [BeratJenisController::class, 'deleteBeratJenis']); // DELETE /api/master/berat-jenis/delete
         });
     });
 });
