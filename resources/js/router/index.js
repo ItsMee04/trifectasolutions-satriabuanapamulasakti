@@ -55,12 +55,13 @@ const routes = [
                 component: () =>
                     import("@/modules/driver/views/DriverView.vue"),
             },
+            {
+                path: "customer",
+                name: "customer",
+                component: () =>
+                    import("@/modules/customer/views/CustomerView.vue"),
+            },
             // {
-            //     path: "suplier",
-            //     name: "suplier",
-            //     component: () =>
-            //         import("@/modules/suplier/views/SuplierView.vue"),
-            // },
             // {
             //     path: "jeniskendaraan",
             //     name: "jeniskendaraan",

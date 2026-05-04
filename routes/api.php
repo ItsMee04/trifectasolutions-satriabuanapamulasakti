@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Authentication\AuthController;
+use App\Http\Controllers\Master\CustomerController;
 use App\Http\Controllers\Master\DriverController;
 use App\Http\Controllers\Master\PegawaiController;
 use App\Http\Controllers\Master\PermissionController;
@@ -70,6 +71,14 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::post('/store', [DriverController::class, 'storeDriver']);    // POST /api/master/driver/store
             Route::post('/update', [DriverController::class, 'updateDriver']);   // PUT /api/master/driver/update
             Route::delete('/delete', [DriverController::class, 'deleteDriver']); // DELETE /api/master/driver/delete
+        });
+
+        // Mengelompokkan route khusus Customer
+        Route::prefix('customer')->group(function () {
+            Route::get('/', [CustomerController::class, 'getCustomer']);          // GET /api/master/customer
+            Route::post('/store', [CustomerController::class, 'storeCustomer']);    // POST /api/master/customer/store
+            Route::post('/update', [CustomerController::class, 'updateCustomer']);   // PUT /api/master/customer/update
+            Route::delete('/delete', [CustomerController::class, 'deleteCustomer']); // DELETE /api/master/customer/delete
         });
     });
 });

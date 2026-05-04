@@ -137,7 +137,7 @@ const masterItems = computed(() => {
     if (!hasModule('master')) return [];
     const list = [
         { name: 'Driver', path: '/driver', perm: 'menu-driver' },
-        { name: 'Suplier / Customer', path: '/suplier', perm: 'menu-suplier' },
+        { name: 'Customer', path: '/customer', perm: 'menu-customer' },
         { name: 'Jenis Kendaraan', path: '/jeniskendaraan', perm: 'menu-jeniskendaraan' },
         { name: 'Kendaraan', path: '/kendaraan', perm: 'menu-kendaraan' },
         { name: 'Kategori', path: '/kategori', perm: 'menu-kategori' },
