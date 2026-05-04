@@ -18,7 +18,7 @@ class KendaraanService
         return Kendaraan::create([
             'kode' => $data['kode'],
             'kendaraan' => $data['kendaraan'],
-            'jeniskendaraan_id' => $data['jeniskendaraan_id'],
+            'jeniskendaraan_id' => $data['jenis'],
             'nomor' => $data['nomor'],
             'oleh' => Auth::id(), // Pastikan Anda menggunakan ID user yang sedang login sebagai 'oleh'
         ]);

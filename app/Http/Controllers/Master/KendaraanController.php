@@ -38,7 +38,7 @@ class KendaraanController extends Controller
 
     public function storeKendaraan(Request $request)
     {
-        $request->validate(['jenis' => 'required|max:255', 'indexperkm' => 'required|numeric']);
+        $request->validate(['jenis' => 'required|max:255', 'jeniskendaraan_id' => 'exists:jeniskendaraan,id|numeric']);
 
         $kendaraan = $this->kendaraanService->createKendaraan($request->all());
 
@@ -52,7 +52,7 @@ class KendaraanController extends Controller
 
     public function updateKendaraan(Request $request)
     {
-        $request->validate(['jenis' => 'required|max:255', 'indexperkm' => 'required|numeric']);
+        $request->validate(['jenis' => 'required|max:255', 'jeniskendaraan_id' => 'exists:jeniskendaraan,id|numeric']);
 
         $kendaraan = $this->kendaraanService->updateKendaraan($request->id, $request->all());
 
