@@ -134,8 +134,8 @@ export function useDrivers() {
             title: 'Apakah Anda yakin?',
             text: `Data Driver "${item.nama}" yang dihapus tidak dapat dikembalikan!`,
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
             confirmButtonText: 'Ya, hapus!',
             cancelButtonText: 'Batal',
             reverseButtons: true // Opsional: menukar posisi tombol Batal & Hapus

@@ -155,8 +155,8 @@ export function usePegawai() {
             title: 'Apakah Anda yakin?',
             text: `Data Pegawi "${item.nama}" yang dihapus tidak dapat dikembalikan!`,
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
             confirmButtonText: 'Ya, hapus!',
             cancelButtonText: 'Batal',
             reverseButtons: true // Opsional: menukar posisi tombol Batal & Hapus

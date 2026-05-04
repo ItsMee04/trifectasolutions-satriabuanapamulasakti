@@ -113,8 +113,8 @@ export function useRole() {
             title: 'Apakah Anda yakin?',
             text: `Data Role "${item.role}" yang dihapus tidak dapat dikembalikan!`,
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
             confirmButtonText: 'Ya, hapus!',
             cancelButtonText: 'Batal',
             reverseButtons: true // Opsional: menukar posisi tombol Batal & Hapus
