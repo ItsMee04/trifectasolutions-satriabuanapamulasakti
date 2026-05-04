@@ -30,7 +30,7 @@ class MaterialService
 
     public function getAllActive(): Collection
     {
-        return Material::where('status', 1)->get();
+        return Material::with('kategori')->where('status', 1)->get();
     }
 
     public function createMaterial(array $data): Material

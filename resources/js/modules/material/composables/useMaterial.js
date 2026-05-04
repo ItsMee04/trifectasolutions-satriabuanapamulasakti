@@ -77,7 +77,7 @@ export function useMaterial() {
             const payload = {
                 id: formMaterial.id,
                 material: formMaterial.material,
-                kategori: formMaterial.kategori_id, // 5. Kirim role_id (integer) ke backend
+                kategori_id: formMaterial.kategori_id, // 5. Kirim role_id (integer) ke backend
                 satuan: formMaterial.satuan,
             };
 
