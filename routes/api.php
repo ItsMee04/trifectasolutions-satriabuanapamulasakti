@@ -4,6 +4,7 @@ use App\Http\Controllers\Authentication\AuthController;
 use App\Http\Controllers\Master\CustomerController;
 use App\Http\Controllers\Master\DriverController;
 use App\Http\Controllers\Master\JenisKendaraanController;
+use App\Http\Controllers\Master\KategoriController;
 use App\Http\Controllers\Master\KendaraanController;
 use App\Http\Controllers\Master\PegawaiController;
 use App\Http\Controllers\Master\PermissionController;
@@ -97,6 +98,14 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::post('/store', [KendaraanController::class, 'storeKendaraan']);    // POST /api/master/kendaraan/store
             Route::post('/update', [KendaraanController::class, 'updateKendaraan']);   // PUT /api/master/kendaraan/update
             Route::delete('/delete', [KendaraanController::class, 'deleteKendaraan']); // DELETE /api/master/kendaraan/delete
+        });
+
+        // Mengelompokkan route khusus Kategori
+        Route::prefix('kategori')->group(function () {
+            Route::get('/', [KategoriController::class, 'getKategori']);          // GET /api/master/kategori
+            Route::post('/store', [KategoriController::class, 'storeKategori']);    // POST /api/master/kategori/store
+            Route::post('/update', [KategoriController::class, 'updateKategori']);   // PUT /api/master/kategori/update
+            Route::delete('/delete', [KategoriController::class, 'deleteKategori']); // DELETE /api/master/kategori/delete
         });
     });
 });
