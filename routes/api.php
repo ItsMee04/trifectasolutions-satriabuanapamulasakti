@@ -8,6 +8,7 @@ use App\Http\Controllers\Master\PermissionController;
 use App\Http\Controllers\Master\RoleController;
 use App\Http\Controllers\Master\UserController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Master\JenisKendaraanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -79,6 +80,14 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::post('/store', [CustomerController::class, 'storeCustomer']);    // POST /api/master/customer/store
             Route::post('/update', [CustomerController::class, 'updateCustomer']);   // PUT /api/master/customer/update
             Route::delete('/delete', [CustomerController::class, 'deleteCustomer']); // DELETE /api/master/customer/delete
+        });
+
+        // Mengelompokkan route khusus Jenis Kendaraan
+        Route::prefix('jeniskendaraan')->group(function () {
+            Route::get('/', [JenisKendaraanController::class, 'getJenisKendaraan']);          // GET /api/master/jenis-kendaraan
+            Route::post('/store', [JenisKendaraanController::class, 'storeJenisKendaraan']);    // POST /api/master/jenis-kendaraan/store
+            Route::post('/update', [JenisKendaraanController::class, 'updateJenisKendaraan']);   // PUT /api/master/jenis-kendaraan/update
+            Route::delete('/delete', [JenisKendaraanController::class, 'deleteJenisKendaraan']); // DELETE /api/master/jenis-kendaraan/delete
         });
     });
 });
