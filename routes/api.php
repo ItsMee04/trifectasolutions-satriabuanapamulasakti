@@ -6,6 +6,7 @@ use App\Http\Controllers\Master\DriverController;
 use App\Http\Controllers\Master\JenisKendaraanController;
 use App\Http\Controllers\Master\KategoriController;
 use App\Http\Controllers\Master\KendaraanController;
+use App\Http\Controllers\Master\MaterialController;
 use App\Http\Controllers\Master\PegawaiController;
 use App\Http\Controllers\Master\PermissionController;
 use App\Http\Controllers\Master\RoleController;
@@ -106,6 +107,14 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::post('/store', [KategoriController::class, 'storeKategori']);    // POST /api/master/kategori/store
             Route::post('/update', [KategoriController::class, 'updateKategori']);   // PUT /api/master/kategori/update
             Route::delete('/delete', [KategoriController::class, 'deleteKategori']); // DELETE /api/master/kategori/delete
+        });
+
+        // Mengelompokkan route khusus Material
+        Route::prefix('material')->group(function () {
+            Route::get('/', [MaterialController::class, 'getMaterial']);          // GET /api/master/material
+            Route::post('/store', [MaterialController::class, 'storeMaterial']);    // POST /api/master/material/store
+            Route::post('/update', [MaterialController::class, 'updateMaterial']);   // PUT /api/master/material/update
+            Route::delete('/delete', [MaterialController::class, 'deleteMaterial']); // DELETE /api/master/material/delete
         });
     });
 });
