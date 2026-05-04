@@ -49,12 +49,12 @@ const routes = [
                 component: () =>
                     import("@/modules/users/views/UserView.vue"),
             },
-            // {
-            //     path: "driver",
-            //     name: "driver",
-            //     component: () =>
-            //         import("@/modules/driver/views/DriverView.vue"),
-            // },
+            {
+                path: "driver",
+                name: "driver",
+                component: () =>
+                    import("@/modules/driver/views/DriverView.vue"),
+            },
             // {
             //     path: "suplier",
             //     name: "suplier",

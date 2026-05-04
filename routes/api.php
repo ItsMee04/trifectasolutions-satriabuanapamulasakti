@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Authentication\AuthController;
+use App\Http\Controllers\Master\DriverController;
 use App\Http\Controllers\Master\PegawaiController;
 use App\Http\Controllers\Master\PermissionController;
 use App\Http\Controllers\Master\RoleController;
@@ -61,6 +62,14 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('/', [PermissionController::class, 'getPermissions']);
             // Tambahkan {userId} di sini
             Route::post('/update/{userId}', [PermissionController::class, 'updatePermissions']);
+        });
+
+        // Mengelompokkan route khusus Driver
+        Route::prefix('driver')->group(function () {
+            Route::get('/', [DriverController::class, 'getDriver']);          // GET /api/master/driver
+            Route::post('/store', [DriverController::class, 'storeDriver']);    // POST /api/master/driver/store
+            Route::post('/update', [DriverController::class, 'updateDriver']);   // PUT /api/master/driver/update
+            Route::delete('/delete', [DriverController::class, 'deleteDriver']); // DELETE /api/master/driver/delete
         });
     });
 });
