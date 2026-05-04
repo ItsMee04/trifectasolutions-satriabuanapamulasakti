@@ -3,12 +3,13 @@
 use App\Http\Controllers\Authentication\AuthController;
 use App\Http\Controllers\Master\CustomerController;
 use App\Http\Controllers\Master\DriverController;
+use App\Http\Controllers\Master\JenisKendaraanController;
+use App\Http\Controllers\Master\KendaraanController;
 use App\Http\Controllers\Master\PegawaiController;
 use App\Http\Controllers\Master\PermissionController;
 use App\Http\Controllers\Master\RoleController;
 use App\Http\Controllers\Master\UserController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Master\JenisKendaraanController;
 
 /*
 |--------------------------------------------------------------------------
@@ -88,6 +89,14 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::post('/store', [JenisKendaraanController::class, 'storeJenisKendaraan']);    // POST /api/master/jenis-kendaraan/store
             Route::post('/update', [JenisKendaraanController::class, 'updateJenisKendaraan']);   // PUT /api/master/jenis-kendaraan/update
             Route::delete('/delete', [JenisKendaraanController::class, 'deleteJenisKendaraan']); // DELETE /api/master/jenis-kendaraan/delete
+        });
+
+        // Mengelompokkan route khusus Kendaraan
+        Route::prefix('kendaraan')->group(function () {
+            Route::get('/', [KendaraanController::class, 'getKendaraan']);          // GET /api/master/kendaraan
+            Route::post('/store', [KendaraanController::class, 'storeKendaraan']);    // POST /api/master/kendaraan/store
+            Route::post('/update', [KendaraanController::class, 'updateKendaraan']);   // PUT /api/master/kendaraan/update
+            Route::delete('/delete', [KendaraanController::class, 'deleteKendaraan']); // DELETE /api/master/kendaraan/delete
         });
     });
 });
