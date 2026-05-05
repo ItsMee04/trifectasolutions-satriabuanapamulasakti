@@ -257,7 +257,7 @@ export function useTimbanganSC() {
         formStoneCrusher.driver_id = null;
         formStoneCrusher.customer_id = null;
         formStoneCrusher.beratjenis_id = null,
-        formStoneCrusher.jenis = currentTab.value;
+            formStoneCrusher.jenis = currentTab.value;
         formStoneCrusher.volume = '';
         formStoneCrusher.berattotal = '';
         formStoneCrusher.beratkendaraan = '';
@@ -377,11 +377,15 @@ export function useTimbanganSC() {
     }
 
     // --- FILTER UTAMA (Text + Date Range) ---
-    // --- FILTER UTAMA (Text + Date Range) ---
     const filteredStoneCrusher = computed(() => {
         const query = searchQuery.value.toLowerCase();
+        const activeTab = currentTab.value; // Ambil tab yang aktif saat ini
 
         return StoneCrushers.value.filter(item => {
+
+            const matchesTab = item.jenis === activeTab;
+            if (!matchesTab) return false;
+
             // 1. FILTER SEARCH GLOBAL (Cari di semua field)
             const matchesSearch = searchMatch(item, query);
 
