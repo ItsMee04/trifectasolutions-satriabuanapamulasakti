@@ -80,13 +80,13 @@
                                     placeholder="Filter..."></td>
                             <td><input v-model="columnFilters.tanggal" type="date" class="form-control form-control-sm">
                             </td>
-                            <td><input v-model="columnFilters.kode" class="form-control form-control-sm"
+                            <td><input v-model="columnFilters.nomor" class="form-control form-control-sm"
                                     placeholder="Filter..."></td>
                             <td><input v-model="columnFilters.kendaraan" class="form-control form-control-sm"
                                     placeholder="Filter..."></td>
                             <td><input v-model="columnFilters.driver" class="form-control form-control-sm"
                                     placeholder="Filter..."></td>
-                            <td><input v-model="columnFilters.suplier" class="form-control form-control-sm"
+                            <td><input v-model="columnFilters.customer" class="form-control form-control-sm"
                                     placeholder="Filter..."></td>
                             <td><input v-model="columnFilters.volume" class="form-control form-control-sm"
                                     placeholder="Filter..."></td>
@@ -122,10 +122,10 @@
                                 <td>{{ ((currentPage - 1) * 10) + (index + 1) }}</td>
                                 <td>{{ item.material.material }}</td>
                                 <td>{{ item.tanggal }}</td>
-                                <td>{{ item.kode }}</td>
+                                <td>{{ item.nomor }}</td>
                                 <td>{{ item.kendaraan.nomor }}</td>
                                 <td>{{ item.driver.nama }}</td>
-                                <td>{{ item.suplier.nama }}</td>
+                                <td>{{ item.customer.nama }}</td>
                                 <td>{{ item.volume }}</td>
                                 <td>{{ formatNumber(item.berattotal) }}</td>
                                 <td>{{ formatNumber(item.beratkendaraan) }}</td>

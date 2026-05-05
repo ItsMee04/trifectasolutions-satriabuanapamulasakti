@@ -13,7 +13,7 @@ const StoneCrushers = ref([]);
 const materialList = ref([]);
 const kendaraanList = ref([]);
 const driverList = ref([]);
-const suplierList = ref([]);
+const customerList = ref([]);
 const beratjenisList = ref([]);
 const currentTab = ref('IN');
 const startDate = ref(''); // State Baru
@@ -28,10 +28,10 @@ const materialDataRaw = ref([]);
 const columnFilters = reactive({
     material: '',
     tanggal: '',
-    kode: '',
+    nomor: '',
     kendaraan: '',
     driver: '',
-    suplier: '',
+    customer: '',
     volume: '',
     berattotal: '',
     beratkendaraan: '',
@@ -40,12 +40,12 @@ const columnFilters = reactive({
 
 const formStoneCrusher = reactive({
     id: null,
-    kode: '',
+    nomor: '',
     tanggal: '',
     material_id: null,
     kendaraan_id: null,
     driver_id: null,
-    suplier_id: null,
+    customer_id: null,
     beratjenis_id: null,
     jenis: '',
     volume: '',
@@ -152,15 +152,15 @@ export function useTimbanganSC() {
         }
     }
 
-    const fetchSuplier = async () => {
+    const fetchCustomer = async () => {
         try {
             const response = await customerService.getCustomer();
-            suplierList.value = response.data.map(item => ({
+            customerList.value = response.data.map(item => ({
                 value: item.id,
                 label: item.nama
             }));
         } catch (error) {
-            console.error("Gagal memuat suplier:", error);
+            console.error("Gagal memuat customer:", error);
         }
     };
 
@@ -207,7 +207,7 @@ export function useTimbanganSC() {
                 material: formStoneCrusher.material_id,
                 kendaraan: formStoneCrusher.kendaraan_id,
                 driver: formStoneCrusher.driver_id,
-                suplier: formStoneCrusher.suplier_id,
+                suplier: formStoneCrusher.customer_id,
                 beratjenis: formStoneCrusher.beratjenis_id,
                 jenis: formStoneCrusher.jenis,
                 volume: formStoneCrusher.volume,
@@ -221,12 +221,12 @@ export function useTimbanganSC() {
 
             let response;
             if (isEdit.value) {
-                response = await stonecrusherService.updateStoneCrusher(payload);
+                response = await timbanganscService.updateTimbanganSC(payload);
             } else {
-                response = await stonecrusherService.storeStoneCrusher(payload);
+                response = await timbanganscService.storeTimbanganSC(payload);
             }
 
-            notify.success(response.message || 'Data berhasil disimpan');
+            toastfy.success(response.message || 'Data berhasil disimpan');
             const modalElement = document.getElementById('modalStoneCrusher');
             const modalInstance = bootstrap.Modal.getInstance(modalElement);
             if (modalInstance) modalInstance.hide();
@@ -236,9 +236,10 @@ export function useTimbanganSC() {
         } catch (error) {
             if (error.response?.status === 422) {
                 errors.value = error.response.data.errors;
-                notify.error(error.response.data.message || 'Terjadi kesalahan validasi.');
+                toastfy.error(error.response.data.message || 'Terjadi kesalahan validasi.');
             } else {
-                notify.error(error.response?.data?.message || 'Gagal menyimpan data.');
+                console.log(error)
+                toastfy.error(error.response?.data?.message || 'Gagal menyimpan data.');
             }
             return false;
         } finally {
@@ -254,7 +255,7 @@ export function useTimbanganSC() {
         formStoneCrusher.material_id = null;
         formStoneCrusher.kendaraan_id = null;
         formStoneCrusher.driver_id = null;
-        formStoneCrusher.suplier_id = null;
+        formStoneCrusher.customer_id = null;
         formStoneCrusher.beratjenis_id = null,
         formStoneCrusher.jenis = currentTab.value;
         formStoneCrusher.volume = '';
@@ -307,13 +308,15 @@ export function useTimbanganSC() {
         formStoneCrusher.material_id = item.material_id;
         formStoneCrusher.kendaraan_id = item.kendaraan_id;
         formStoneCrusher.driver_id = item.driver_id;
-        formStoneCrusher.suplier_id = item.suplier_id;
+        formStoneCrusher.customer_id = item.customer_id;
         formStoneCrusher.beratjenis_id = item.beratjenis_id;
         formStoneCrusher.jenis = item.jenis;
         formStoneCrusher.volume = item.volume;
         formStoneCrusher.berattotal = item.berattotal;
         formStoneCrusher.beratkendaraan = item.beratkendaraan;
         formStoneCrusher.beratmuatan = item.beratmuatan;
+        formStoneCrusher.jarakawal = item.jarakawal;
+        formStoneCrusher.jarakakhir = item.jarakakhir;
 
         const modal = new bootstrap.Modal(document.getElementById('modalStoneCrusher'));
         modal.show();
@@ -324,8 +327,8 @@ export function useTimbanganSC() {
             title: 'Apakah Anda yakin?',
             text: `Data Stone Crusher "${item.material.material}" yang dihapus tidak dapat dikembalikan!`,
             showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
             confirmButtonText: 'Ya, hapus!',
             cancelButtonText: 'Batal',
             reverseButtons: true
@@ -335,11 +338,11 @@ export function useTimbanganSC() {
             isLoading.value = true;
             try {
                 const payload = { id: item.id };
-                await stonecrusherService.deleteStoneCrusher(payload);
-                notify.success('Stone Crusher berhasil dihapus.');
+                await timbanganscService.deleteTimbanganSC(payload);
+                toastfy.success('Stone Crusher berhasil dihapus.');
                 await fetchStoneCrusher();
             } catch (error) {
-                notify.error('Gagal menghapus data Stone Crusher.');
+                toastfy.error('Gagal menghapus data Stone Crusher.');
             } finally {
                 isLoading.value = false;
             }
@@ -361,11 +364,11 @@ export function useTimbanganSC() {
     // --- HELPER UNTUK SEARCH MATCH ---
     const searchMatch = (item, query) => {
         return (
-            String(item.kode || '').toLowerCase().includes(query) ||
+            String(item.nomor || '').toLowerCase().includes(query) ||
             String(item.material?.material || '').toLowerCase().includes(query) ||
             String(item.kendaraan?.nomor || '').toLowerCase().includes(query) ||
             String(item.driver?.nama || '').toLowerCase().includes(query) ||
-            String(item.suplier?.nama || '').toLowerCase().includes(query) ||
+            String(item.customer?.nama || '').toLowerCase().includes(query) ||
             String(item.volume || '').toLowerCase().includes(query) ||
             String(item.berattotal || '').toLowerCase().includes(query) ||
             String(item.beratkendaraan || '').toLowerCase().includes(query) ||
@@ -403,14 +406,14 @@ export function useTimbanganSC() {
                         return String(item.material?.material || '').toLowerCase().includes(filterVal);
                     case 'tanggal':
                         return String(item.tanggal || '').toLowerCase().includes(filterVal);
-                    case 'kode':
-                        return String(item.kode || '').toLowerCase().includes(filterVal);
+                    case 'nomor':
+                        return String(item.nomor || '').toLowerCase().includes(filterVal);
                     case 'kendaraan':
                         return String(item.kendaraan?.nomor || '').toLowerCase().includes(filterVal);
                     case 'driver':
                         return String(item.driver?.nama || '').toLowerCase().includes(filterVal);
-                    case 'suplier':
-                        return String(item.suplier?.nama || '').toLowerCase().includes(filterVal);
+                    case 'customer':
+                        return String(item.customer?.nama || '').toLowerCase().includes(filterVal);
                     case 'volume':
                         return String(item.volume || '').toLowerCase().includes(filterVal);
                     case 'berattotal':
@@ -484,7 +487,7 @@ export function useTimbanganSC() {
         materialList,
         kendaraanList,
         driverList,
-        suplierList,
+        customerList,
         beratjenisList,
         selectedMaterialSatuan,
         isLoading,
@@ -507,7 +510,7 @@ export function useTimbanganSC() {
         fetchMaterial,
         fetchKendaraan,
         fetchDriver,
-        fetchSuplier,
+        fetchCustomer,
         fetchBeratJenis,
         columnFilters,
         resetColumnFilters,

@@ -143,8 +143,9 @@ Route::middleware('auth:sanctum')->group(function () {
         // Stone Crusher
         Route::prefix('stonecrusher')->group(function () {
             Route::get('/', [StoneCrusherController::class, 'getTimbanganSC']);
-            // Route::post('/store', [StoneCrusherController::class, 'store']);
-            // Route::delete('/delete/{id}', [StoneCrusherController::class, 'delete']);
+            Route::post('/store', [StoneCrusherController::class, 'storeTimbanganSC']);
+            Route::post('/update', [StoneCrusherController::class, 'updateTimbanganSC']);
+            Route::post('/delete', [StoneCrusherController::class, 'deleteTimbanganSC']);
         });
 
         // Concrete Batching Plant (CBP)

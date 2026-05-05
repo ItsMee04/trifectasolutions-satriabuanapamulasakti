@@ -118,14 +118,14 @@
                             <div class="col-md-6">
                                 <div class="mb-4">
                                     <div class="form-group local-forms mb-3">
-                                        <label>Suplier <span class="login-danger">*</span></label>
-                                        <Multiselect v-model="formStoneCrusher.suplier_id" :options="suplierList"
-                                            :searchable="true" placeholder="Pilih Suplier"
+                                        <label>Customer <span class="login-danger">*</span></label>
+                                        <Multiselect v-model="formStoneCrusher.customer_id" :options="customerList"
+                                            :searchable="true" placeholder="Pilih Customer"
                                             noOptionsText="Memuat data..."
-                                            :class="{ 'is-invalid': errors.suplier_id }" />
-                                        <div class="invalid-feedback d-block" v-if="errors.suplier_id">
-                                            {{ Array.isArray(errors.suplier_id) ? errors.suplier_id[0] :
-                                                errors.suplier_id }}
+                                            :class="{ 'is-invalid': errors.customer_id }" />
+                                        <div class="invalid-feedback d-block" v-if="errors.customer_id">
+                                            {{ Array.isArray(errors.customer_id) ? errors.customer_id[0] :
+                                                errors.customer_id }}
                                         </div>
                                     </div>
                                 </div>
@@ -242,14 +242,14 @@ const {
     materialList,
     kendaraanList,
     driverList,
-    suplierList,
+    customerList,
     beratjenisList,
     errors,
     selectedMaterialSatuan,
     fetchMaterial,
     fetchKendaraan,
     fetchDriver,
-    fetchSuplier,
+    fetchCustomer,
     fetchBeratJenis,
     submitStoneCrusher,
     isLoading
@@ -263,7 +263,7 @@ onMounted(() => {
     fetchMaterial();
     fetchKendaraan();
     fetchDriver();
-    fetchSuplier();
+    fetchCustomer();
     fetchBeratJenis();
 });
 </script>

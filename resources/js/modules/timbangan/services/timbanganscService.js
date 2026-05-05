@@ -8,24 +8,18 @@ export const timbanganscService = {
         return response.data;
     },
 
-    // // Sesuai: api/master/masterplant/store [POST]
-    // async storeMasterPlant(payload) {
-    //     const response = await apiClient.post('/master/masterplant/store', payload);
-    //     return response.data;
-    // },
+    async storeTimbanganSC(payload) {
+        const response = await apiClient.post('/timbangan/stonecrusher/store', payload);
+        return response.data;
+    },
 
-    // // Sesuai: api/master/masterplant/update [PUT]
-    // // PENTING: Gunakan .put sesuai daftar route Anda
-    // async updateMasterPlant(payload) {
-    //     const response = await apiClient.put('/master/masterplant/update', payload);
-    //     return response.data;
-    // },
+    async updateTimbanganSC(payload) {
+        const response = await apiClient.post('/timbangan/stonecrusher/update', payload);
+        return response.data;
+    },
 
-    // // Sesuai: api/master/masterplant/delete [DELETE]
-    // // PENTING: Gunakan .delete sesuai daftar route Anda
-    // async deleteMasterPlant(payload) {
-    //     // Jika payload berisi { id: 1 }, axios.delete butuh konfigurasi data
-    //     const response = await apiClient.delete('/master/masterplant/delete', { data: payload });
-    //     return response.data;
-    // }
+    async deleteTimbanganSC(payload) {
+        const response = await apiClient.post('/timbangan/stonecrusher/delete', payload);
+        return response.data;
+    },
 };

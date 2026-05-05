@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('timbangan', function (Blueprint $table) {
             $table->id();
-            $table->integer('nomor');
+            $table->bigInteger('nomor');
             $table->date('tanggal');
             $table->unsignedBigInteger('masterplant_id');
             $table->unsignedBigInteger('material_id');
