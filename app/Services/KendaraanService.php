@@ -16,7 +16,7 @@ class KendaraanService
     public function createKendaraan(array $data): Kendaraan
     {
         return Kendaraan::create([
-            'kode' => $data['kode'],
+            'kode' => strtoupper($data['kode']),
             'kendaraan' => strtoupper($data['kendaraan']),
             'jeniskendaraan_id' => $data['jenis'],
             'nomor' => strtoupper($data['nomor']),
@@ -34,9 +34,9 @@ class KendaraanService
         }
 
         $kendaraan->update([
-            'kode' => $data['kode'],
+            'kode' => strtoupper($data['kode']),
             'kendaraan' => strtoupper($data['kendaraan']),
-            'jeniskendaraan_id' => $data['jeniskendaraan_id'],
+            'jeniskendaraan_id' => $data['jenis'],
             'nomor' => strtoupper($data['nomor']),
             'oleh' => Auth::id(), // Pastikan Anda menggunakan ID user yang sedang login sebagai 'oleh'
         ]);

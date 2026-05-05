@@ -39,10 +39,11 @@ export function useKendaraan() {
     const fetchJenisKendaraan = async () => {
         try {
             const response = await jeniskendaraanService.getJenisKendaraan();
-            // Map data agar formatnya { value: id, label: 'nama' } sesuai standar Multiselect
-            jeniskendaranList.value = response.data.map(jeniskendaranList => ({
-                value: jeniskendaranList.id,
-                label: jeniskendaranList.jenis // Sesuaikan field 'role' dengan nama kolom di tabel roles Anda
+            // Gunakan nama item yang berbeda, misal 'it' atau 'val'
+            // Paksa id menjadi Number untuk memastikan kecocokan tipe data
+            jeniskendaranList.value = response.data.map(item => ({
+                value: Number(item.id),
+                label: item.jenis
             }));
         } catch (error) {
             console.error("Gagal memuat Jenis Kendaraan:", error);
@@ -136,12 +137,16 @@ export function useKendaraan() {
     const handleEdit = (item) => {
         isEdit.value = true;
         errors.value = {};
+
         formKendaraan.id = item.id;
         formKendaraan.kode = item.kode;
         formKendaraan.kendaraan = item.kendaraan;
-        formKendaraan.jenis = item.jenis_id;
+        formKendaraan.jenis = item.jeniskendaraan_id ? Number(item.jeniskendaraan_id) : null;
+
         formKendaraan.nomor = item.nomor;
-        const modal = new bootstrap.Modal(document.getElementById('modalKendaraan'));
+
+        const modalElement = document.getElementById('modalKendaraan');
+        const modal = new bootstrap.Modal(modalElement);
         modal.show();
     };
 

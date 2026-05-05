@@ -97,12 +97,12 @@ const routes = [
                 component: () =>
                     import("@/modules/masterplant/views/MasterPlantView.vue"),
             },
-            // {
-            //     path: "stonecrusher",
-            //     name: "stonecrusher",
-            //     component: () =>
-            //         import("@/modules/sc/views/SCView.vue"),
-            // },
+            {
+                path: "stonecrusher",
+                name: "stonecrusher",
+                component: () =>
+                    import("@/modules/timbangan/views/TimbanganSCView.vue"),
+            },
             // {
             //     path: "concretebatchingplant",
             //     name: "concretebatchingplant",

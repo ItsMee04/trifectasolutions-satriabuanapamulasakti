@@ -13,6 +13,7 @@ use App\Http\Controllers\Master\PegawaiController;
 use App\Http\Controllers\Master\PermissionController;
 use App\Http\Controllers\Master\RoleController;
 use App\Http\Controllers\Master\UserController;
+use App\Http\Controllers\Timbangan\StoneCrusherController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -127,12 +128,37 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::delete('/delete', [BeratJenisController::class, 'deleteBeratJenis']); // DELETE /api/master/berat-jenis/delete
         });
 
-        // Mengelompokkan route khusus Berat Jenis
+        // Mengelompokkan route khusus Master Plant
         Route::prefix('masterplant')->group(function () {
             Route::get('/', [MasterPlantController::class, 'getMasterPlant']);          // GET /api/master/berat-jenis
             Route::post('/store', [MasterPlantController::class, 'storeMasterPlant']);    // POST /api/master/berat-jenis/store
             Route::post('/update', [MasterPlantController::class, 'updateMasterPlant']);   // PUT /api/master/berat-jenis/update
             Route::delete('/delete', [MasterPlantController::class, 'deleteMasterPlant']); // DELETE /api/master/berat-jenis/delete
         });
+    });
+
+    // Mengelompokan route khusus Timbangan
+    Route::prefix('timbangan')->group(function () {
+
+        // Stone Crusher
+        Route::prefix('stonecrusher')->group(function () {
+            Route::get('/', [StoneCrusherController::class, 'getTimbanganSC']);
+            // Route::post('/store', [StoneCrusherController::class, 'store']);
+            // Route::delete('/delete/{id}', [StoneCrusherController::class, 'delete']);
+        });
+
+        // Concrete Batching Plant (CBP)
+        // Route::prefix('cbp')->group(function () {
+        //     Route::get('/', [ConcreteBatchingController::class, 'getTimbanganCBP']);
+        //     Route::post('/store', [ConcreteBatchingController::class, 'store']);
+        //     Route::delete('/delete/{id}', [ConcreteBatchingController::class, 'delete']);
+        // });
+
+        // // Asphalt Mixing Plant (AMP)
+        // Route::prefix('amp')->group(function () {
+        //     Route::get('/', [AsphaltMixingController::class, 'getTimbanganAMP']);
+        //     Route::post('/store', [AsphaltMixingController::class, 'store']);
+        //     Route::delete('/delete/{id}', [AsphaltMixingController::class, 'delete']);
+        // });
     });
 });
