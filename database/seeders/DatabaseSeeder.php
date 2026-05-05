@@ -85,6 +85,7 @@ class DatabaseSeeder extends Seeder
             ['module_id' => $modMaster->id, 'nama_permission' => 'menu-kategori'],
             ['module_id' => $modMaster->id, 'nama_permission' => 'menu-material'],
             ['module_id' => $modMaster->id, 'nama_permission' => 'menu-beratjenis'],
+            ['module_id' => $modMaster->id, 'nama_permission' => 'menu-masterplant'],
 
             // Timbangan Permissions
             ['module_id' => $modTimbangan->id, 'nama_permission' => 'menu-sc'],

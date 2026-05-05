@@ -143,6 +143,7 @@ const masterItems = computed(() => {
         { name: 'Kategori', path: '/kategori', perm: 'menu-kategori' },
         { name: 'Material', path: '/material', perm: 'menu-material' },
         { name: 'Berat Jenis', path: '/beratjenis', perm: 'menu-beratjenis' },
+        { name: 'Master Plant', path: '/masterplant', perm: 'menu-masterplant' },
     ];
     return list.filter(item => hasPermission(item.perm));
 });

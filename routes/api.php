@@ -7,6 +7,7 @@ use App\Http\Controllers\Master\DriverController;
 use App\Http\Controllers\Master\JenisKendaraanController;
 use App\Http\Controllers\Master\KategoriController;
 use App\Http\Controllers\Master\KendaraanController;
+use App\Http\Controllers\Master\MasterPlantController;
 use App\Http\Controllers\Master\MaterialController;
 use App\Http\Controllers\Master\PegawaiController;
 use App\Http\Controllers\Master\PermissionController;
@@ -124,6 +125,14 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::post('/store', [BeratJenisController::class, 'storeBeratJenis']);    // POST /api/master/berat-jenis/store
             Route::post('/update', [BeratJenisController::class, 'updateBeratJenis']);   // PUT /api/master/berat-jenis/update
             Route::delete('/delete', [BeratJenisController::class, 'deleteBeratJenis']); // DELETE /api/master/berat-jenis/delete
+        });
+
+        // Mengelompokkan route khusus Berat Jenis
+        Route::prefix('masterplant')->group(function () {
+            Route::get('/', [MasterPlantController::class, 'getMasterPlant']);          // GET /api/master/berat-jenis
+            Route::post('/store', [MasterPlantController::class, 'storeMasterPlant']);    // POST /api/master/berat-jenis/store
+            Route::post('/update', [MasterPlantController::class, 'updateMasterPlant']);   // PUT /api/master/berat-jenis/update
+            Route::delete('/delete', [MasterPlantController::class, 'deleteMasterPlant']); // DELETE /api/master/berat-jenis/delete
         });
     });
 });
