@@ -39,7 +39,7 @@ class MaterialService
             // Otomatis generate kode di sini jika tidak dikirim dari front-end
             'kode' => self::generateKodeMaterial(),
             'kategori_id' => $data['kategori_id'],
-            'material' => $data['material'],
+            'material' => strtoupper($data['material']),
             'satuan' => $data['satuan'],
             'oleh' => Auth::id()
         ]);
@@ -58,7 +58,7 @@ class MaterialService
             // tapi jika tetap ingin bisa diubah, gunakan $data['kode']
             'kode' => $data['kode'] ?? $material->kode,
             'kategori_id' => $data['kategori_id'],
-            'material' => $data['material'],
+            'material' => strtoupper($data['material']),
             'satuan' => $data['satuan'],
             'oleh' => Auth::id() // Pastikan Anda menggunakan ID user yang sedang login sebagai 'oleh'
         ]);

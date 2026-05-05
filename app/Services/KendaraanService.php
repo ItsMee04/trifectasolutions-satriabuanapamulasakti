@@ -10,16 +10,16 @@ class KendaraanService
 {
     public function getAllActive(): Collection
     {
-        return Kendaraan::where('status', 1)->get();
+        return Kendaraan::with('jeniskendaraan')->where('status', 1)->get();
     }
 
     public function createKendaraan(array $data): Kendaraan
     {
         return Kendaraan::create([
             'kode' => $data['kode'],
-            'kendaraan' => $data['kendaraan'],
+            'kendaraan' => strtoupper($data['kendaraan']),
             'jeniskendaraan_id' => $data['jenis'],
-            'nomor' => $data['nomor'],
+            'nomor' => strtoupper($data['nomor']),
             'oleh' => Auth::id(), // Pastikan Anda menggunakan ID user yang sedang login sebagai 'oleh'
         ]);
     }
@@ -35,9 +35,9 @@ class KendaraanService
 
         $kendaraan->update([
             'kode' => $data['kode'],
-            'kendaraan' => $data['kendaraan'],
+            'kendaraan' => strtoupper($data['kendaraan']),
             'jeniskendaraan_id' => $data['jeniskendaraan_id'],
-            'nomor' => $data['nomor'],
+            'nomor' => strtoupper($data['nomor']),
             'oleh' => Auth::id(), // Pastikan Anda menggunakan ID user yang sedang login sebagai 'oleh'
         ]);
 

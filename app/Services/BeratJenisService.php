@@ -16,7 +16,7 @@ class BeratJenisService
     public function createBeratJenis(array $data): BeratJenis
     {
         return BeratJenis::create([
-            'beratjenis' => $data['beratjenis'],
+            'beratjenis' => strtoupper($data['beratjenis']),
             'oleh' => Auth::id(), // Pastikan Anda menggunakan ID user yang sedang login sebagai 'oleh'
         ]);
     }
@@ -31,7 +31,7 @@ class BeratJenisService
         }
 
         $beratjenis->update([
-            'beratjenis' => $data['beratjenis'],
+            'beratjenis' => strtoupper($data['beratjenis']),
             'oleh' => Auth::id(), // Pastikan Anda menggunakan ID user yang sedang login sebagai 'oleh'
         ]);
 

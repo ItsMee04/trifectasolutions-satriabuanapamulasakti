@@ -38,9 +38,9 @@ class DriverService
         return Driver::create([
             // Otomatis generate kode di sini jika tidak dikirim dari front-end
             'kode' => self::generateKodeDriver(),
-            'nama' => $data['nama'],
+            'nama' => strtoupper($data['nama']),
             'kontak' => $data['kontak'],
-            'alamat' => $data['alamat'],
+            'alamat' => strtoupper($data['alamat']),
             'rekening' => $data['rekening'] ?? null,
             'oleh' => Auth::id()
         ]);
@@ -58,9 +58,9 @@ class DriverService
             // Umumnya kode tidak diubah saat update,
             // tapi jika tetap ingin bisa diubah, gunakan $data['kode']
             'kode' => $data['kode'] ?? $driver->kode,
-            'nama' => $data['nama'],
+            'nama' => strtoupper($data['nama']),
             'kontak' => $data['kontak'],
-            'alamat' => $data['alamat'],
+            'alamat' => strtoupper($data['alamat']),
             'rekening' => $data['rekening'] ?? null,
             'oleh' => Auth::id() // Pastikan Anda menggunakan ID user yang sedang login sebagai 'oleh'
         ]);

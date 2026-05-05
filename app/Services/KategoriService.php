@@ -16,7 +16,7 @@ class KategoriService
     public function createKategori(array $data): Kategori
     {
         return Kategori::create([
-            'kategori' => $data['kategori'],
+            'kategori' => strtoupper($data['kategori']),
             'oleh' => Auth::id(), // Pastikan Anda menggunakan ID user yang sedang login sebagai 'oleh'
         ]);
     }
@@ -31,7 +31,7 @@ class KategoriService
         }
 
         $kategori->update([
-            'kategori' => $data['kategori'],
+            'kategori' => strtoupper($data['kategori']),
             'oleh' => Auth::id(), // Pastikan Anda menggunakan ID user yang sedang login sebagai 'oleh'
         ]);
 

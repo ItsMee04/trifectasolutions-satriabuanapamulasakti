@@ -16,7 +16,7 @@ class JenisKendaraanService
     public function createJenisKendaraan(array $data): JenisKendaraan
     {
         return JenisKendaraan::create([
-            'jenis' => $data['jenis'],
+            'jenis' => strtoupper($data['jenis']),
             'indexperkm' => $data['indexperkm'],
             'oleh' => Auth::id(), // Pastikan Anda menggunakan ID user yang sedang login sebagai 'oleh'
         ]);
@@ -32,7 +32,7 @@ class JenisKendaraanService
         }
 
         $jenisKendaraan->update([
-            'jenis' => $data['jenis'],
+            'jenis' => strtoupper($data['jenis']),
             'indexperkm' => $data['indexperkm'],
             'oleh' => Auth::id(), // Pastikan Anda menggunakan ID user yang sedang login sebagai 'oleh'
         ]);

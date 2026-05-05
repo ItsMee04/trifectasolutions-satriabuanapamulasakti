@@ -38,9 +38,9 @@ class CustomerService
         return Customer::create([
             // Otomatis generate kode di sini jika tidak dikirim dari front-end
             'kode' => self::generateKodeCustomer(),
-            'nama' => $data['nama'],
+            'nama' => strtoupper($data['nama']),
             'kontak' => $data['kontak'],
-            'alamat' => $data['alamat'],
+            'alamat' => strtoupper($data['alamat']),
             'oleh' => Auth::id()
         ]);
     }
@@ -57,9 +57,9 @@ class CustomerService
             // Umumnya kode tidak diubah saat update,
             // tapi jika tetap ingin bisa diubah, gunakan $data['kode']
             'kode' => $data['kode'] ?? $customer->kode,
-            'nama' => $data['nama'],
+            'nama' => strtoupper($data['nama']),
             'kontak' => $data['kontak'],
-            'alamat' => $data['alamat'],
+            'alamat' => strtoupper($data['alamat']),
             'oleh' => Auth::id() // Pastikan Anda menggunakan ID user yang sedang login sebagai 'oleh'
         ]);
 
