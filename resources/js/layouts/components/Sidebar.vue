@@ -239,7 +239,7 @@ const toggleMenu = (menuName) => {
 
 .sidebar-menu ul ul li a:hover,
 .sidebar-menu ul ul li a.active {
-    background-color: #3d5ee1 !important;
+    background-color: #171717 !important;
     color: #ffffff !important;
 }
 
