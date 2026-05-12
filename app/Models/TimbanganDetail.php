@@ -2,43 +2,45 @@
 
 namespace App\Models;
 
-use App\Models\BeratJenis;
-use App\Models\Customer;
-use App\Models\Kendaraan;
-use App\Models\MasterPlant;
-use App\Models\Material;
-use App\Models\TimbanganDetail;
-use App\Models\User;
+use App\Models\Timbangan;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 
-class Timbangan extends Model
+class TimbanganDetail extends Model
 {
     use HasFactory;
-
-    protected $table = 'timbangan';
+    protected $table = 'timbangandetail';
     protected $fillable = [
-        'nomor',
-        'tanggal',
-        'masterplant_id',
+        'timbangan_id',
+        'material_id',
+        'kendaraan_id',
+        'driver_id',
+        'customer_id',
+        'beratjenis_id',
+        'jenis',
+        'volume',
+        'berattotal',
+        'beratkendaraan',
+        'beratmuatan',
+        'jarakawal',
+        'jarakakhir',
         'oleh',
-        'status'
+        'status',
     ];
 
     /**
-     * Get the masterplant that owns the Timbangan
+     * Get the timbangan that owns the TimbanganDetail
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function masterplant(): BelongsTo
+    public function timbangan(): BelongsTo
     {
-        return $this->belongsTo(MasterPlant::class, 'masterplant_id', 'id');
+        return $this->belongsTo(Timbangan::class, 'timbangan_id', 'id');
     }
 
     /**
-     * Get the material that owns the Timbangan
+     * Get the material that owns the TimbanganDetail
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -48,7 +50,7 @@ class Timbangan extends Model
     }
 
     /**
-     * Get the kendaraan that owns the Timbangan
+     * Get the kendaraan that owns the TimbanganDetail
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -58,7 +60,7 @@ class Timbangan extends Model
     }
 
     /**
-     * Get the driver that owns the Timbangan
+     * Get the driver that owns the TimbanganDetail
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -68,7 +70,7 @@ class Timbangan extends Model
     }
 
     /**
-     * Get the customer that owns the Timbangan
+     * Get the customer that owns the TimbanganDetail
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -78,7 +80,7 @@ class Timbangan extends Model
     }
 
     /**
-     * Get the beratjenis that owns the Timbangan
+     * Get the beratjenis that owns the TimbanganDetail
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -88,22 +90,12 @@ class Timbangan extends Model
     }
 
     /**
-     * Get the user that owns the Timbangan
+     * Get the oleh that owns the TimbanganDetail
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
-    public function user(): BelongsTo
+    public function oleh(): BelongsTo
     {
         return $this->belongsTo(User::class, 'oleh', 'id');
-    }
-
-    /**
-     * Get all of the timbangandetail for the Timbangan
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\HasMany
-     */
-    public function timbangandetail(): HasMany
-    {
-        return $this->hasMany(TimbanganDetail::class, 'timbangan_id', 'id');
     }
 }

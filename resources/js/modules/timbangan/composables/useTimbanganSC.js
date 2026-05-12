@@ -365,14 +365,14 @@ export function useTimbanganSC() {
     const searchMatch = (item, query) => {
         return (
             String(item.nomor || '').toLowerCase().includes(query) ||
-            String(item.material?.material || '').toLowerCase().includes(query) ||
-            String(item.kendaraan?.nomor || '').toLowerCase().includes(query) ||
-            String(item.driver?.nama || '').toLowerCase().includes(query) ||
-            String(item.customer?.nama || '').toLowerCase().includes(query) ||
-            String(item.volume || '').toLowerCase().includes(query) ||
-            String(item.berattotal || '').toLowerCase().includes(query) ||
-            String(item.beratkendaraan || '').toLowerCase().includes(query) ||
-            String(item.beratmuatan || '').toLowerCase().includes(query)
+            String(item.timbangandetail?.[0]?.material?.material || '').toLowerCase().includes(query) ||
+            String(item.timbangandetail?.[0]?.kendaraan?.nomor || '').toLowerCase().includes(query) ||
+            String(item.timbangandetail?.[0]?.driver?.nama || '').toLowerCase().includes(query) ||
+            String(item.timbangandetail?.[0]?.customer?.nama || '').toLowerCase().includes(query) ||
+            String(item.timbangandetail?.[0]?.volume || '').toLowerCase().includes(query) ||
+            String(item.timbangandetail?.[0]?.berattotal || '').toLowerCase().includes(query) ||
+            String(item.timbangandetail?.[0]?.beratkendaraan || '').toLowerCase().includes(query) ||
+            String(item.timbangandetail?.[0]?.beratmuatan || '').toLowerCase().includes(query)
         );
     }
 
@@ -383,7 +383,7 @@ export function useTimbanganSC() {
 
         return StoneCrushers.value.filter(item => {
 
-            const matchesTab = item.jenis === activeTab;
+            const matchesTab = item.timbangandetail?.[0]?.jenis === activeTab;
             if (!matchesTab) return false;
 
             // 1. FILTER SEARCH GLOBAL (Cari di semua field)
@@ -407,25 +407,25 @@ export function useTimbanganSC() {
 
                 switch (key) {
                     case 'material':
-                        return String(item.material?.material || '').toLowerCase().includes(filterVal);
+                        return String(item.timbangandetail?.[0]?.material?.material || '').toLowerCase().includes(filterVal);
                     case 'tanggal':
                         return String(item.tanggal || '').toLowerCase().includes(filterVal);
                     case 'nomor':
                         return String(item.nomor || '').toLowerCase().includes(filterVal);
                     case 'kendaraan':
-                        return String(item.kendaraan?.nomor || '').toLowerCase().includes(filterVal);
+                        return String(item.timbangandetail?.[0]?.kendaraan?.nomor || '').toLowerCase().includes(filterVal);
                     case 'driver':
-                        return String(item.driver?.nama || '').toLowerCase().includes(filterVal);
+                        return String(item.timbangandetail?.[0]?.driver?.nama || '').toLowerCase().includes(filterVal);
                     case 'customer':
-                        return String(item.customer?.nama || '').toLowerCase().includes(filterVal);
+                        return String(item.timbangandetail?.[0]?.customer?.nama || '').toLowerCase().includes(filterVal);
                     case 'volume':
-                        return String(item.volume || '').toLowerCase().includes(filterVal);
+                        return String(item.timbangandetail?.[0]?.volume || '').toLowerCase().includes(filterVal);
                     case 'berattotal':
-                        return String(item.berattotal || '').toLowerCase().includes(filterVal);
+                        return String(item.timbangandetail?.[0]?.berattotal || '').toLowerCase().includes(filterVal);
                     case 'beratkendaraan':
-                        return String(item.beratkendaraan || '').toLowerCase().includes(filterVal);
+                        return String(item.timbangandetail?.[0]?.beratkendaraan || '').toLowerCase().includes(filterVal);
                     case 'beratmuatan':
-                        return String(item.beratmuatan || '').toLowerCase().includes(filterVal);
+                        return String(item.timbangandetail?.[0]?.beratmuatan || '').toLowerCase().includes(filterVal);
                     // ... case kolom lainnya
                     default: return true;
                 }
@@ -438,10 +438,10 @@ export function useTimbanganSC() {
 
     const totalFooter = computed(() => {
         return filteredStoneCrusher.value.reduce((acc, item) => {
-            acc.volumeTotal += parseFloat(item.volume || 0);
-            acc.beratTotal += Number(item.berattotal || 0);
-            acc.beratKendaraan += Number(item.beratkendaraan || 0);
-            acc.beratMuatan += Number(item.beratmuatan || 0);
+            acc.volumeTotal += parseFloat(item.timbangandetail?.[0]?.volume || 0);
+            acc.beratTotal += Number(item.timbangandetail?.[0]?.berattotal || 0);
+            acc.beratKendaraan += Number(item.timbangandetail?.[0]?.beratkendaraan || 0);
+            acc.beratMuatan += Number(item.timbangandetail?.[0]?.beratmuatan || 0);
             return acc;
         }, { volumeTotal: 0, beratTotal: 0, beratKendaraan: 0, beratMuatan: 0 });
     });

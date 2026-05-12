@@ -32,7 +32,7 @@ class StoneCrusherController extends Controller
                 'success' => false,
                 'message' => 'Data timbangan tidak ditemukan',
                 'data'    => []
-            ], 404);
+            ], 200);
         }
 
         return response()->json([

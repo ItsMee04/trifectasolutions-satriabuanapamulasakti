@@ -120,29 +120,43 @@
                         <template v-else>
                             <tr v-for="(item, index) in paginatedStoneCrusher" :key="item.id" class="text-center">
                                 <td>{{ ((currentPage - 1) * 10) + (index + 1) }}</td>
-                                <td>{{ item.material.material }}</td>
+
+                                <td>{{ item.timbangandetail?.[0]?.material?.material }}</td>
+
                                 <td>{{ item.tanggal }}</td>
+
                                 <td>{{ item.nomor }}</td>
-                                <td>{{ item.kendaraan.nomor }}</td>
-                                <td>{{ item.driver.nama }}</td>
-                                <td>{{ item.customer.nama }}</td>
-                                <td>{{ item.volume }}</td>
-                                <td>{{ formatNumber(item.berattotal) }}</td>
-                                <td>{{ formatNumber(item.beratkendaraan) }}</td>
-                                <td>{{ formatNumber(item.beratmuatan) }}</td>
+
+                                <td>{{ item.timbangandetail?.[0]?.kendaraan?.nomor }}</td>
+
+                                <td>{{ item.timbangandetail?.[0]?.driver?.nama }}</td>
+
+                                <td>{{ item.timbangandetail?.[0]?.customer?.nama }}</td>
+
+                                <td>{{ item.timbangandetail?.[0]?.volume }}</td>
+
+                                <td>{{ formatNumber(item.timbangandetail?.[0]?.berattotal) }}</td>
+
+                                <td>{{ formatNumber(item.timbangandetail?.[0]?.beratkendaraan) }}</td>
+
+                                <td>{{ formatNumber(item.timbangandetail?.[0]?.beratmuatan) }}</td>
+
                                 <td>
                                     <span v-if="item.status == 1" class="badge bg-success">
                                         ACTIVE
                                     </span>
+
                                     <span v-else class="badge bg-danger">
                                         INACTIVE
                                     </span>
                                 </td>
+
                                 <td>
                                     <div class="actions d-flex justify-content-center">
                                         <a @click="handleEdit(item)" class="btn btn-sm bg-success-light me-2">
                                             <i class="feather-edit"></i>
                                         </a>
+
                                         <a @click="handleDelete(item)" class="btn btn-sm bg-danger-light">
                                             <i class="feather-trash"></i>
                                         </a>
