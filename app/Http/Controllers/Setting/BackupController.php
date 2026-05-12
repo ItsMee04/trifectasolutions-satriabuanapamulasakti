@@ -39,7 +39,7 @@ class BackupController extends Controller
         return $this->backupService->download($filename);
     }
 
-    public function destroy(int $id)
+    public function destroy(string $id)
     {
         $this->backupService->delete($id);
 

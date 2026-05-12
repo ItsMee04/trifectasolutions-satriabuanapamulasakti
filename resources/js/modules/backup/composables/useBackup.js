@@ -82,9 +82,7 @@ export function useBackup() {
         isLoading.value = true;
 
         try {
-            await backupService.deleteBackup({
-                id: item.id
-            });
+            await backupService.deleteBackup(item.id);
             toastfy.success('Backup berhasil dihapus.');
             await fetchBackup();
         } catch (error) {

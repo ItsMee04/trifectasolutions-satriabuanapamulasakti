@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use App\Models\Backup;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\File;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
@@ -58,7 +59,7 @@ class BackupService
             'filename' => $filename,
             'path' => $path,
             'size' => $this->formatBytes(File::size($path)),
-            'backup_date' => now(),
+            'backup_date' => Carbon::now(),
             'created_by' => auth()->id(),
         ]);
     }
@@ -83,7 +84,7 @@ class BackupService
         return response()->download($path);
     }
 
-    public function delete(int $id): bool
+    public function delete(string $id): bool
     {
         $backup = Backup::findOrFail($id);
 
