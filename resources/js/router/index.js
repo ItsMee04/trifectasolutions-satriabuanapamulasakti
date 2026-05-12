@@ -103,6 +103,12 @@ const routes = [
                 component: () =>
                     import("@/modules/timbangan/views/TimbanganSCView.vue"),
             },
+            {
+                path: "backup",
+                name: "backup",
+                component: () =>
+                    import("@/modules/backup/views/BackupView.vue"),
+            },
             // {
             //     path: "concretebatchingplant",
             //     name: "concretebatchingplant",

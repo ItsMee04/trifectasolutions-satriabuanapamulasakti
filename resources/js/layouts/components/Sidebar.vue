@@ -106,6 +106,24 @@
                             <i class="fas fa-coins"></i> <span> Penjualan</span>
                         </router-link>
                     </li>
+
+                    <!-- Setting Submenu -->
+                    <li v-if="settingItems.length > 0" class="submenu" :class="{ active: isSettingActive }">
+                        <a href="javascript:void(0);" @click="toggleMenu('setting')"
+                            :class="{ 'subdrop': openMenu === 'setting' }">
+                            <i class="fas fa-cogs"></i> <span> Setting</span>
+                            <span class="menu-arrow"></span>
+                        </a>
+                        <ul :class="['submenu-list', { 'is-open': openMenu === 'setting' }]">
+                            <li v-for="item in settingItems" :key="item.path">
+                                <router-link :to="item.path" :class="{ active: $route.path === item.path }">
+                                    {{ item.name }}
+                                </router-link>
+                            </li>
+                        </ul>
+                    </li>
+
+
                 </ul>
             </div>
         </div>
@@ -177,11 +195,20 @@ const invoiceItems = computed(() => {
     return list.filter(item => hasPermission(item.perm));
 });
 
+const settingItems = computed(() => {
+    if (!hasModule('setting')) return [];
+    const list = [
+        { name: 'Backup', path: '/backup', perm: 'menu-setting' },
+    ];
+    return list.filter(item => hasPermission(item.perm));
+});
+
 const isManagementActive = computed(() => managementUserItems.value.some(item => route.path === item.path));
 const isMasterActive = computed(() => masterItems.value.some(item => route.path === item.path));
 const isTimbanganActive = computed(() => timbanganItems.value.some(item => route.path === item.path));
 const isJarakDanHargaActive = computed(() => jarakdanhargaItems.value.some(item => route.path === item.path));
 const isInvoiceActive = computed(() => invoiceItems.value.some(item => route.path === item.path));
+const isSettingActive = computed(() => settingItems.value.some(item => route.path === item.path));
 
 const updateMenuState = () => {
     if (isManagementActive.value) {
@@ -194,6 +221,8 @@ const updateMenuState = () => {
         openMenu.value = 'jarakdanharga';
     } else if (isInvoiceActive.value) {
         openMenu.value = 'invoice';
+    } else if (isSettingActive.value) {
+        openMenu.value = 'setting';
     } else {
         openMenu.value = null;
     }

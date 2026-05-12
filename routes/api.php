@@ -13,6 +13,7 @@ use App\Http\Controllers\Master\PegawaiController;
 use App\Http\Controllers\Master\PermissionController;
 use App\Http\Controllers\Master\RoleController;
 use App\Http\Controllers\Master\UserController;
+use App\Http\Controllers\Setting\BackupController;
 use App\Http\Controllers\Timbangan\StoneCrusherController;
 use Illuminate\Support\Facades\Route;
 
@@ -161,5 +162,12 @@ Route::middleware('auth:sanctum')->group(function () {
         //     Route::post('/store', [AsphaltMixingController::class, 'store']);
         //     Route::delete('/delete/{id}', [AsphaltMixingController::class, 'delete']);
         // });
+    });
+
+    Route::prefix('backup')->group(function () {
+        Route::get('/', [BackupController::class, 'index']);
+        Route::post('/generate', [BackupController::class, 'generate']);
+        Route::get('/download/{filename}', [BackupController::class, 'download']);
+        Route::delete('/delete/{id}', [BackupController::class, 'destroy']);
     });
 });
