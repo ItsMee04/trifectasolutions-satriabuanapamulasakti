@@ -8,6 +8,11 @@ export const timbanganscService = {
         return response.data;
     },
 
+    async getMenuJenisSC() {
+        const response = await apiClient.get('/timbangan/stonecrusher/menujenis');
+        return response.data;
+    },
+
     async storeTimbanganSC(payload) {
         const response = await apiClient.post('/timbangan/stonecrusher/store', payload);
         return response.data;
@@ -22,4 +27,6 @@ export const timbanganscService = {
         const response = await apiClient.post('/timbangan/stonecrusher/delete', payload);
         return response.data;
     },
+
+
 };

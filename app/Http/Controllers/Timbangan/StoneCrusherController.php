@@ -43,6 +43,27 @@ class StoneCrusherController extends Controller
         ], 200);
     }
 
+    public function getMenuJenisSC()
+    {
+        $data = $this->timbanganService->getMenuJenisByPlant($this->plantId);
+
+        if ($data->isEmpty()) {
+            return response()->json([
+                'status'  => 404,
+                'success' => false,
+                'message' => 'Data menu jenis tidak ditemukan',
+                'data'    => []
+            ], 200);
+        }
+
+        return response()->json([
+            'status'  => 200,
+            'success' => true,
+            'message' => 'Data menu jenis berhasil ditemukan',
+            'data'    => $data
+        ], 200);
+    }
+
     public function storeTimbanganSC(Request $request)
     {
         // 1. Validasi Input

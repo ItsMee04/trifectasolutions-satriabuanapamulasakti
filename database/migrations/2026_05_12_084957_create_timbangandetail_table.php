@@ -14,28 +14,13 @@ return new class extends Migration
         Schema::create('timbangandetail', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('timbangan_id');
-            $table->unsignedBigInteger('material_id');
-            $table->unsignedBigInteger('kendaraan_id');
-            $table->unsignedBigInteger('driver_id');
-            $table->unsignedBigInteger('customer_id');
-            $table->unsignedBigInteger('beratjenis_id')->nullable();
-            $table->enum('jenis', ['IN', 'OUT']);
-            $table->decimal('volume', 8, 2)->default(0.0);
-            $table->integer('berattotal')->unsigned()->default(0);
-            $table->integer('beratkendaraan')->unsigned()->default(0);
-            $table->integer('beratmuatan')->unsigned()->default(0);
-            $table->decimal('jarakawal', 8, 2)->nullable()->default(0.0);
-            $table->decimal('jarakakhir', 8, 2)->nullable()->default(0.0);
+            $table->unsignedBigInteger('menujenisplant_id');
             $table->unsignedBigInteger('oleh');
             $table->integer('status')->unsigned()->default(1);
             $table->timestamps();
 
             $table->foreign('timbangan_id')->references('id')->on('timbangan')->onDelete('cascade');
-            $table->foreign('material_id')->references('id')->on('material')->onDelete('cascade');
-            $table->foreign('kendaraan_id')->references('id')->on('kendaraan')->onDelete('cascade');
-            $table->foreign('driver_id')->references('id')->on('driver')->onDelete('cascade');
-            $table->foreign('customer_id')->references('id')->on('customer')->onDelete('cascade');
-            $table->foreign('beratjenis_id')->references('id')->on('beratjenis')->onDelete('cascade');
+            $table->foreign('menujenisplant_id')->references('id')->on('menujenisplant')->onDelete('cascade');
             $table->foreign('oleh')->references('id')->on('users')->onDelete('cascade');
         });
     }

@@ -9,6 +9,7 @@ use App\Http\Controllers\Master\KategoriController;
 use App\Http\Controllers\Master\KendaraanController;
 use App\Http\Controllers\Master\MasterPlantController;
 use App\Http\Controllers\Master\MaterialController;
+use App\Http\Controllers\Master\MenuJenisPlantController;
 use App\Http\Controllers\Master\PegawaiController;
 use App\Http\Controllers\Master\PermissionController;
 use App\Http\Controllers\Master\RoleController;
@@ -136,6 +137,14 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::post('/update', [MasterPlantController::class, 'updateMasterPlant']);   // PUT /api/master/berat-jenis/update
             Route::delete('/delete', [MasterPlantController::class, 'deleteMasterPlant']); // DELETE /api/master/berat-jenis/delete
         });
+
+        // Mengelompokkan route khusus Master Plant
+        Route::prefix('menujenisplant')->group(function () {
+            Route::get('/', [MenuJenisPlantController::class, 'getMenuJenisPlant']);          // GET /api/master/menu-jenis-plant
+            Route::post('/store', [MenuJenisPlantController::class, 'storeMenuJenisPlant']);    // POST /api/master/menu-jenis-plant/store
+            Route::post('/update', [MenuJenisPlantController::class, 'updateMenuJenisPlant']);   // PUT /api/master/menu-jenis-plant/update
+            Route::delete('/delete', [MenuJenisPlantController::class, 'deleteMenuJenisPlant']); // DELETE /api/master/menu-jenis-plant/delete
+        });
     });
 
     // Mengelompokan route khusus Timbangan
@@ -144,6 +153,7 @@ Route::middleware('auth:sanctum')->group(function () {
         // Stone Crusher
         Route::prefix('stonecrusher')->group(function () {
             Route::get('/', [StoneCrusherController::class, 'getTimbanganSC']);
+            Route::get('/menujenis', [StoneCrusherController::class, 'getMenuJenisSC']);
             Route::post('/store', [StoneCrusherController::class, 'storeTimbanganSC']);
             Route::post('/update', [StoneCrusherController::class, 'updateTimbanganSC']);
             Route::post('/delete', [StoneCrusherController::class, 'deleteTimbanganSC']);

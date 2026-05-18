@@ -17,55 +17,53 @@
         <div class="sc-navigation mb-4">
             <div class="nav-wrapper">
 
-                <!-- MATERIAL IN -->
-                <button type="button" class="nav-item" :class="{ active: currentTab === 'IN' }"
-                    @click="switchTab('IN')">
-                    <div class="nav-icon blue">
-                        <i class="feather-download"></i>
+                <button v-for="menu in MenuTimbanganSCList" :key="menu.id" type="button" class="nav-item"
+                    :class="{ active: currentTab === menu.id }" @click="switchTab(menu)">
+                    <div class="nav-icon dark">
+                        <i class="feather-grid"></i>
                     </div>
 
                     <div class="nav-content">
-                        <span class="nav-title">Material In</span>
-                        <span class="nav-subtitle">Barang masuk</span>
+                        <span class="nav-title">
+                            {{ menu.menujenis }}
+                        </span>
+
+                        <span class="nav-subtitle">
+                            Menu Timbangan
+                        </span>
                     </div>
                 </button>
 
-                <!-- MATERIAL OUT -->
-                <button type="button" class="nav-item" :class="{ active: currentTab === 'OUT' }"
-                    @click="switchTab('OUT')">
-                    <div class="nav-icon red">
-                        <i class="feather-upload"></i>
-                    </div>
-
-                    <div class="nav-content">
-                        <span class="nav-title">Material Out</span>
-                        <span class="nav-subtitle">Barang keluar</span>
-                    </div>
-                </button>
             </div>
         </div>
 
         <div class="row">
             <div class="col-lg-12">
-                <TimbanganSCTable />
+                <!-- <TimbanganSCTable /> -->
             </div>
         </div>
 
-        <TimbanganSCModal />
+        <!-- <TimbanganSCModal /> -->
     </div>
 </template>
 
 <script setup>
 import { onMounted, ref, watch } from 'vue';
 import { useTimbanganSC } from '../composables/useTimbanganSC';
-import TimbanganSCTable from '../components/TimbanganSCTable.vue';
-import TimbanganSCModal from '../components/TimbanganSCModal.vue';
+// import TimbanganSCTable from '../components/TimbanganSCTable.vue';
+// import TimbanganSCModal from '../components/TimbanganSCModal.vue';
 
-const { currentTab, switchTab } = useTimbanganSC();
+const {
+    currentTab,
+    isLoading,
+    MenuTimbanganSCList,
+    fetchMenuTimbanganSCList,
+    switchTab
+} = useTimbanganSC();
 
 onMounted(async () => {
     // 1. Jalankan fetch data tabel (default IN)
-    await switchTab('IN');
+    await fetchMenuTimbanganSCList();
 });
 </script>
 
@@ -107,11 +105,9 @@ onMounted(async () => {
 }
 
 .nav-item.active {
-    background: linear-gradient(
-        135deg,
-        #171717,
-        #2E2E2E
-    );
+    background: linear-gradient(135deg,
+            #171717,
+            #2E2E2E);
 
     border-color: transparent;
 }
@@ -178,7 +174,7 @@ onMounted(async () => {
 }
 
 .nav-item.active .nav-icon {
-    background: rgba(255,255,255,0.18);
+    background: rgba(255, 255, 255, 0.18);
     color: #ffffff;
 }
 

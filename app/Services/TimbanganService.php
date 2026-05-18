@@ -2,6 +2,7 @@
 
 namespace App\Services;
 
+use App\Models\MenuJenisPlant;
 use App\Models\Timbangan;
 use App\Models\TimbanganDetail;
 use Carbon\Carbon;
@@ -33,6 +34,14 @@ class TimbanganService
         $nextNumber = str_pad((int)$lastNumber + 1, 4, '0', STR_PAD_LEFT);
 
         return $prefix . $nextNumber;
+    }
+
+    public function getMenuJenisByPlant(int $plantId)
+    {
+        return MenuJenisPlant::where('masterplant_id', $plantId)
+            ->where('status', 1)
+            ->orderBy('id', 'asc')
+            ->get();
     }
 
     /**

@@ -98,6 +98,12 @@ const routes = [
                     import("@/modules/masterplant/views/MasterPlantView.vue"),
             },
             {
+                path: "menujenisplant",
+                name: "menujenisplant",
+                component: () =>
+                    import("@/modules/menujenisplant/views/MenuJenisPlantView.vue"),
+            },
+            {
                 path: "stonecrusher",
                 name: "stonecrusher",
                 component: () =>
