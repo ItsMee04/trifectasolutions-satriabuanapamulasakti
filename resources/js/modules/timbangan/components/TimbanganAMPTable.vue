@@ -4,8 +4,7 @@
             <div class="page-header">
                 <div class="row align-items-center">
                     <div class="col">
-                        <h5 class="card-title">Daftar Stone Crusher / <span class="text-danger">{{ currentTabName
-                                }}</span></h5>
+                        <h5 class="card-title">Daftar Asphalt Mixing Plant / Material {{ currentTab }}</h5>
                     </div>
 
                     <div class="col-auto d-flex align-items-center flex-wrap gap-2">
@@ -114,35 +113,23 @@
                             </td>
                         </tr>
 
-                        <tr v-else-if="!paginatedStoneCrusher || paginatedStoneCrusher.length === 0">
+                        <tr v-else-if="!paginatedAsphaltMixingPlant || paginatedAsphaltMixingPlant.length === 0">
                             <td colspan="13" class="text-center p-5">Tidak ada data.</td>
                         </tr>
 
                         <template v-else>
-                            <tr v-for="(item, index) in paginatedStoneCrusher" :key="item.id" class="text-center">
+                            <tr v-for="(item, index) in paginatedAsphaltMixingPlant" :key="item.id" class="text-center">
                                 <td>{{ ((currentPage - 1) * 10) + (index + 1) }}</td>
-
-                                <!-- Perbaikan: Ubah timbandandetail menjadi timbangaonmaterial -->
-                                <td>{{ item.timbanganmaterial?.[0]?.material?.material }}</td>
-
+                                <td>{{ item.material.material }}</td>
                                 <td>{{ item.tanggal }}</td>
-
                                 <td>{{ item.nomor }}</td>
-
-                                <td>{{ item.timbanganmaterial?.[0]?.kendaraan?.nomor }}</td>
-
-                                <td>{{ item.timbanganmaterial?.[0]?.driver?.nama }}</td>
-
-                                <td>{{ item.timbanganmaterial?.[0]?.customer?.nama }}</td>
-
-                                <td>{{ item.timbanganmaterial?.[0]?.volume }}</td>
-
-                                <td>{{ formatNumber(item.timbanganmaterial?.[0]?.berattotal) }}</td>
-
-                                <td>{{ formatNumber(item.timbanganmaterial?.[0]?.beratkendaraan) }}</td>
-
-                                <td>{{ formatNumber(item.timbanganmaterial?.[0]?.beratmuatan) }}</td>
-
+                                <td>{{ item.kendaraan.nomor }}</td>
+                                <td>{{ item.driver.nama }}</td>
+                                <td>{{ item.customer.nama }}</td>
+                                <td>{{ item.volume }}</td>
+                                <td>{{ formatNumber(item.berattotal) }}</td>
+                                <td>{{ formatNumber(item.beratkendaraan) }}</td>
+                                <td>{{ formatNumber(item.beratmuatan) }}</td>
                                 <td>
                                     <span v-if="item.status == 1" class="badge bg-success">
                                         ACTIVE
@@ -151,7 +138,6 @@
                                         INACTIVE
                                     </span>
                                 </td>
-
                                 <td>
                                     <div class="actions d-flex justify-content-center">
                                         <a @click="handleEdit(item)" class="btn btn-sm bg-success-light me-2">
@@ -166,7 +152,7 @@
                         </template>
                     </tbody>
 
-                    <tfoot v-if="!isLoading && paginatedStoneCrusher.length > 0">
+                    <tfoot v-if="!isLoading && paginatedAsphaltMixingPlant.length > 0">
                         <tr class="text-center fw-bold bg-light">
                             <td colspan="7" class="text-end">TOTAL</td>
                             <td>{{ formatNumber(totalFooter.volumeTotal, 2) }}</td>
@@ -179,12 +165,12 @@
                 </table>
             </div>
 
-            <div v-if="filteredStoneCrusher.length > 0" class="d-flex justify-content-between align-items-center p-3">
+            <div v-if="filteredAsphaltMixingPlant.length > 0" class="d-flex justify-content-between align-items-center p-3">
 
                 <div class="text-muted small">
                     Showing {{ ((currentPage - 1) * 10) + 1 }}
-                    to {{ Math.min(currentPage * 10, filteredStoneCrusher.length) }}
-                    of {{ filteredStoneCrusher.length }} entries
+                    to {{ Math.min(currentPage * 10, filteredAsphaltMixingPlant.length) }}
+                    of {{ filteredAsphaltMixingPlant.length }} entries
                 </div>
 
                 <ul class="pagination mb-0">
@@ -226,7 +212,7 @@
 </template>
 
 <script setup>
-import { useTimbanganSC } from '../composables/useTimbanganSC';
+import { useTimbanganAMP } from '../composables/useTimbanganAMP';
 // Destructure semua yang dibutuhkan dari composable
 const {
     handleCreate,
@@ -242,12 +228,12 @@ const {
     startDate,
     endDate,
     totalFooter,
-    currentTabName,
-    filteredStoneCrusher,
-    paginatedStoneCrusher,
+    currentTab,
+    filteredAsphaltMixingPlant,
+    paginatedAsphaltMixingPlant,
     searchQuery,
     isLoading,
     currentPage,
     totalPages
-} = useTimbanganSC();
+} = useTimbanganAMP();
 </script>

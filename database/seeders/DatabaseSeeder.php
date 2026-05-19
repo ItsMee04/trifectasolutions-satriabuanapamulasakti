@@ -69,6 +69,7 @@ class DatabaseSeeder extends Seeder
         $modKegiatan = Module::create(['module' => 'kegiatanarmada', 'label' => 'Kegiatan Armada', 'status' => 1]);
         $modInvoice = Module::create(['module' => 'invoice', 'label' => 'Invoice', 'status' => 1]);
         $modPenjualan = Module::create(['module' => 'penjualan', 'label' => 'Penjualan', 'status' => 1]);
+        $modSetting = Module::create(['module' => 'setting', 'label' => 'Pengaturan', 'status' => 1]);
 
         // --- 6. SEED PERMISSIONS (GRANULAR / PER MENU) ---
         $permissionsList = [
@@ -86,6 +87,7 @@ class DatabaseSeeder extends Seeder
             ['module_id' => $modMaster->id, 'nama_permission' => 'menu-material'],
             ['module_id' => $modMaster->id, 'nama_permission' => 'menu-beratjenis'],
             ['module_id' => $modMaster->id, 'nama_permission' => 'menu-masterplant'],
+            ['module_id' => $modMaster->id, 'nama_permission' => 'menu-menujenis'],
 
             // Timbangan Permissions
             ['module_id' => $modTimbangan->id, 'nama_permission' => 'menu-sc'],
@@ -104,6 +106,9 @@ class DatabaseSeeder extends Seeder
             // Invoice Permissions
             ['module_id' => $modInvoice->id, 'nama_permission' => 'menu-invoice-upah'],
             ['module_id' => $modInvoice->id, 'nama_permission' => 'menu-upah-tm'],
+
+            // Settings
+            ['module_id' => $modSetting->id, 'nama_permission' => 'menu-setting'],
         ];
 
         foreach ($permissionsList as $p) {

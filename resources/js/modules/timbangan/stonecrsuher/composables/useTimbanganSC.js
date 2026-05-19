@@ -1,5 +1,6 @@
 import { ref, computed, reactive, watch } from 'vue'
 import { toastfy } from '../../../../utilities/toast';
+import Swal from 'sweetalert2';
 
 // services
 import { timbanganscService } from '../services/timbanganscService';
@@ -348,6 +349,76 @@ export function useTimbanganSC() {
         }
     };
 
+    const handleEdit = (item) => {
+        isEdit.value = true;
+        errors.value = {};
+
+        // 1. Ambil data ID dan Tanggal dari objek utama (Root)
+        formStoneCrusher.id = item.id;
+        formStoneCrusher.tanggal = item.tanggal;
+        formStoneCrusher.menujenisplant_id = item.menujenisplant_id;
+
+        // 2. Ambil referensi detail timbangan material indeks ke-0 (jika ada)
+        const detail = item.timbanganmaterial?.[0] || {};
+
+        // 3. Petakan field detail ke dalam formStoneCrusher
+        formStoneCrusher.material_id = detail.material_id || '';
+        formStoneCrusher.kendaraan_id = detail.kendaraan_id || '';
+        formStoneCrusher.driver_id = detail.driver_id || '';
+        formStoneCrusher.customer_id = detail.customer_id || '';
+        formStoneCrusher.beratjenis_id = detail.beratjenis_id || '';
+        formStoneCrusher.volume = detail.volume || 0;
+        formStoneCrusher.berattotal = detail.berattotal || 0;
+        formStoneCrusher.beratkendaraan = detail.beratkendaraan || 0;
+        formStoneCrusher.beratmuatan = detail.beratmuatan || 0;
+        formStoneCrusher.jarakawal = detail.jarakawal || 0;
+        formStoneCrusher.jarakakhir = detail.jarakakhir || 0;
+
+        // Tampilkan modal setelah form terisi dengan benar
+        const modalElement = document.getElementById('modalStoneCrusher');
+        if (modalElement) {
+            const modal = new bootstrap.Modal(modalElement);
+            modal.show();
+        }
+    };
+
+    const handleDelete = async (item) => {
+        // Ambil info material/jenis plant dari item untuk ditampilkan di badge jika perlu
+        const namaMaterial = item.timbanganmaterial?.[0]?.material?.material || 'Material';
+
+        const result = await Swal.fire({
+            title: 'Apakah Anda yakin?',
+            // Menggunakan properti 'html' agar bisa merender tag <span> HTML
+            html: `
+                <div class="mb-3">
+                    <span class="badge bg-info text-dark px-2 py-1 mb-2">Kode: ${item.nomor}</span>
+                    <span class="badge bg-secondary text-white px-2 py-1 mb-2">${namaMaterial}</span>
+                </div>
+                <p class="mb-0">Data Stone Crusher yang dihapus tidak dapat dikembalikan!</p>
+            `,
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Ya, hapus!',
+            cancelButtonText: 'Batal',
+            reverseButtons: true
+        });
+
+        if (result.isConfirmed) {
+            isLoading.value = true;
+            try {
+                const payload = { id: item.id };
+                await timbanganscService.deleteTimbanganSC(payload);
+                toastfy.success('Stone Crusher berhasil dihapus.');
+                await fetchStoneCrusher();
+            } catch (error) {
+                toastfy.error('Gagal menghapus data Stone Crusher.');
+            } finally {
+                isLoading.value = false;
+            }
+        }
+    };
+
     const formatNumber = (value, decimals = 0) => {
         if (value === null || value === undefined || value === '') return "0";
         return new Intl.NumberFormat("id-ID", {
@@ -530,5 +601,8 @@ export function useTimbanganSC() {
         handleRefresh,
         selectedMaterialSatuan,
         submitStoneCrusher,
+        handleEdit,
+        handleDelete,
+        handleRefresh,
     };
 }

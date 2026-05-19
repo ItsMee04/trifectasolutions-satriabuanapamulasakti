@@ -62,7 +62,7 @@ class TimbanganService
                 return $query->where('menujenisplant_id', $menuJenisPlantId);
             })
             ->where('status', 1)
-            ->latest()
+            ->oldest()
             ->get();
     }
 
@@ -134,35 +134,67 @@ class TimbanganService
     public function updateTimbangan(int $id, array $data, int $plantId, int $menuJenisPlantId): Timbangan
     {
         return DB::transaction(function () use ($id, $data, $plantId, $menuJenisPlantId) {
-            // Cari data berdasarkan ID dan Plant agar tidak salah sasaran
+            // 1. Cari data Header (Timbangan) berdasarkan ID dan Plant
             $timbangan = Timbangan::where('id', $id)
                 ->where('masterplant_id', $plantId)
                 ->firstOrFail();
 
-            // Bersihkan format angka
+            // 2. Bersihkan format angka untuk perhitungan berat
             $beratTotal = (float) str_replace(',', '', $data['berattotal'] ?? 0);
             $beratKendaraan = (float) str_replace(',', '', $data['beratkendaraan'] ?? 0);
             $beratMuatan = $beratTotal - $beratKendaraan;
 
+            /**
+             * UPDATE HEADER (Tabel: timbangan)
+             */
             $timbangan->update([
-                'tanggal'         => $data['tanggal'] ?? $timbangan->tanggal,
+                'tanggal'           => $data['tanggal'] ?? $timbangan->tanggal,
                 'menujenisplant_id' => $menuJenisPlantId,
-                'material_id'     => $data['material'],
-                'kendaraan_id'    => $data['kendaraan'],
-                'driver_id'       => $data['driver'],
-                'customer_id'     => $data['suplier'],
-                'beratjenis_id'   => $data['beratjenis'],
-                'berattotal'      => $beratTotal,
-                'beratkendaraan'  => $beratKendaraan,
-                'beratmuatan'     => $beratMuatan,
-                'jarakawal'       => $data['jarakawal'] ?? 0,
-                'jarakakhir'      => $data['jarakakhir'] ?? 0,
-                'jarak'           => $data['jarak'] ?? 0,
-                'volume'          => $data['volume'] ?? 0,
-                // 'nomor' TIDAK diupdate agar history tetap terjaga
             ]);
 
-            return $timbangan;
+            /**
+             * UPDATE DETAIL (Tabel: timbangan_material)
+             */
+            $detail = $timbangan->timbanganmaterial()->first();
+
+            if ($detail) {
+                $detail->update([
+                    'material_id'       => $data['material'],
+                    'kendaraan_id'      => $data['kendaraan'],
+                    'driver_id'         => $data['driver'],
+                    'customer_id'       => $data['suplier'],
+                    'beratjenis_id'     => $data['beratjenis'] ?? null,
+                    'menujenisplant_id' => $menuJenisPlantId,
+                    'volume'            => $data['volume'] ?? 0,
+                    'berattotal'        => $beratTotal,
+                    'beratkendaraan'    => $beratKendaraan,
+                    'beratmuatan'       => $beratMuatan,
+                    'jarakawal'         => $data['jarakawal'] ?? 0,
+                    'jarakakhir'        => $data['jarakakhir'] ?? 0,
+                ]);
+            } else {
+                // Antisipasi fallback jika data detail tidak ditemukan
+                TimbanganMaterial::create([
+                    'timbangan_id'      => $timbangan->id,
+                    'material_id'       => $data['material'],
+                    'kendaraan_id'      => $data['kendaraan'],
+                    'driver_id'         => $data['driver'],
+                    'customer_id'       => $data['suplier'],
+                    'beratjenis_id'     => $data['beratjenis'] ?? null,
+                    'menujenisplant_id' => $menuJenisPlantId,
+                    'volume'            => $data['volume'] ?? 0,
+                    'berattotal'        => $beratTotal,
+                    'beratkendaraan'    => $beratKendaraan,
+                    'beratmuatan'       => $beratMuatan,
+                    'jarakawal'         => $data['jarakawal'] ?? 0,
+                    'jarakakhir'        => $data['jarakakhir'] ?? 0,
+                    'oleh'              => auth()->id(),
+                    'status'            => 1,
+                ]);
+            }
+
+            // Return bersama relasinya agar state di front-end ter-update sempurna
+            return $timbangan->load('timbanganmaterial');
         });
     }
 
@@ -171,13 +203,35 @@ class TimbanganService
      */
     public function deleteTimbangan(int $id): bool
     {
-        $timbangan = Timbangan::find($id);
+        return DB::transaction(function () use ($id) {
+            // 1. Cari data Header (Timbangan)
+            $timbangan = Timbangan::find($id);
 
-        if (!$timbangan) {
-            return false;
-        }
+            if (!$timbangan) {
+                return false;
+            }
 
-        $timbangan->status = 0;
-        return $timbangan->save();
+            /**
+             * 2. SOFT DELETE HEADER (Tabel: timbangan)
+             */
+            $timbangan->status = 0;
+            $timbangan->save();
+
+            /**
+             * 3. SOFT DELETE DETAIL (Tabel: timbangan_material)
+             * Mengubah status semua detail yang terikat dengan timbangan_id ini
+             */
+            // Opsi A: Menggunakan relasi jika sudah didefinisikan di Model Timbangan
+            $timbangan->timbanganmaterial()->update([
+                'status' => 0
+            ]);
+
+            // Opsi B: Jika belum ada relasi Eloquent, gunakan query langsung ke Model Detail:
+            // \App\Models\TimbanganMaterial::where('timbangan_id', $timbangan->id)->update([
+            //     'status' => 0
+            // ]);
+
+            return true;
+        });
     }
 }
