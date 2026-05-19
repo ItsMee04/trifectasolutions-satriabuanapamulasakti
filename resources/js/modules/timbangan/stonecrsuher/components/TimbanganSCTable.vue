@@ -4,7 +4,8 @@
             <div class="page-header">
                 <div class="row align-items-center">
                     <div class="col">
-                        <h5 class="card-title">Daftar Stone Crusher / Material {{ currentTab }}</h5>
+                        <h5 class="card-title">Daftar Stone Crusher / <span class="text-danger">{{ currentTabName
+                                }}</span></h5>
                     </div>
 
                     <div class="col-auto d-flex align-items-center flex-wrap gap-2">
@@ -121,31 +122,31 @@
                             <tr v-for="(item, index) in paginatedStoneCrusher" :key="item.id" class="text-center">
                                 <td>{{ ((currentPage - 1) * 10) + (index + 1) }}</td>
 
-                                <td>{{ item.timbangandetail?.[0]?.material?.material }}</td>
+                                <!-- Perbaikan: Ubah timbandandetail menjadi timbangaonmaterial -->
+                                <td>{{ item.timbanganmaterial?.[0]?.material?.material }}</td>
 
                                 <td>{{ item.tanggal }}</td>
 
                                 <td>{{ item.nomor }}</td>
 
-                                <td>{{ item.timbangandetail?.[0]?.kendaraan?.nomor }}</td>
+                                <td>{{ item.timbanganmaterial?.[0]?.kendaraan?.nomor }}</td>
 
-                                <td>{{ item.timbangandetail?.[0]?.driver?.nama }}</td>
+                                <td>{{ item.timbanganmaterial?.[0]?.driver?.nama }}</td>
 
-                                <td>{{ item.timbangandetail?.[0]?.customer?.nama }}</td>
+                                <td>{{ item.timbanganmaterial?.[0]?.customer?.nama }}</td>
 
-                                <td>{{ item.timbangandetail?.[0]?.volume }}</td>
+                                <td>{{ item.timbanganmaterial?.[0]?.volume }}</td>
 
-                                <td>{{ formatNumber(item.timbangandetail?.[0]?.berattotal) }}</td>
+                                <td>{{ formatNumber(item.timbanganmaterial?.[0]?.berattotal) }}</td>
 
-                                <td>{{ formatNumber(item.timbangandetail?.[0]?.beratkendaraan) }}</td>
+                                <td>{{ formatNumber(item.timbanganmaterial?.[0]?.beratkendaraan) }}</td>
 
-                                <td>{{ formatNumber(item.timbangandetail?.[0]?.beratmuatan) }}</td>
+                                <td>{{ formatNumber(item.timbanganmaterial?.[0]?.beratmuatan) }}</td>
 
                                 <td>
                                     <span v-if="item.status == 1" class="badge bg-success">
                                         ACTIVE
                                     </span>
-
                                     <span v-else class="badge bg-danger">
                                         INACTIVE
                                     </span>
@@ -156,7 +157,6 @@
                                         <a @click="handleEdit(item)" class="btn btn-sm bg-success-light me-2">
                                             <i class="feather-edit"></i>
                                         </a>
-
                                         <a @click="handleDelete(item)" class="btn btn-sm bg-danger-light">
                                             <i class="feather-trash"></i>
                                         </a>
@@ -230,9 +230,9 @@ import { useTimbanganSC } from '../composables/useTimbanganSC';
 // Destructure semua yang dibutuhkan dari composable
 const {
     handleCreate,
-    handleEdit,
-    handleDelete,
-    handleRefresh,
+    // handleEdit,
+    // handleDelete,
+    // handleRefresh,
     formatNumber,
     resetColumnFilters,
     resetDateFilter,
@@ -242,7 +242,7 @@ const {
     startDate,
     endDate,
     totalFooter,
-    currentTab,
+    currentTabName,
     filteredStoneCrusher,
     paginatedStoneCrusher,
     searchQuery,

@@ -107,7 +107,7 @@ const routes = [
                 path: "stonecrusher",
                 name: "stonecrusher",
                 component: () =>
-                    import("@/modules/timbangan/views/TimbanganSCView.vue"),
+                    import("@/modules/timbangan/stonecrsuher/views/TimbanganSCView.vue"),
             },
             {
                 path: "backup",

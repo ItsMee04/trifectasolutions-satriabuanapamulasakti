@@ -4,7 +4,7 @@ namespace App\Services;
 
 use App\Models\MenuJenisPlant;
 use App\Models\Timbangan;
-use App\Models\TimbanganDetail;
+use App\Models\TimbanganMaterial;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
@@ -38,7 +38,8 @@ class TimbanganService
 
     public function getMenuJenisByPlant(int $plantId)
     {
-        return MenuJenisPlant::where('masterplant_id', $plantId)
+        return MenuJenisPlant::with('masterplant')
+            ->where('masterplant_id', $plantId)
             ->where('status', 1)
             ->orderBy('id', 'asc')
             ->get();
@@ -47,20 +48,18 @@ class TimbanganService
     /**
      * Mengambil data berdasarkan filter plant dan jenis (IN/OUT)
      */
-    public function getFiltered(int $plantId, ?string $jenis = null): Collection
+    public function getFiltered(int $plantId, ?int $menuJenisPlantId = null): Collection
     {
         return Timbangan::with([
-            'timbangandetail',
-            'timbangandetail.material',
-            'timbangandetail.kendaraan',
-            'timbangandetail.driver',
-            'timbangandetail.customer'
+            'timbanganmaterial',
+            'timbanganmaterial.material',
+            'timbanganmaterial.kendaraan',
+            'timbanganmaterial.driver',
+            'timbanganmaterial.customer'
         ])
-            ->where('masterplant_id', $plantId)
-            ->when($jenis, function ($query) use ($jenis) {
-                $query->whereHas('timbangandetail', function ($q) use ($jenis) {
-                    $q->where('jenis', $jenis);
-                });
+            ->where('masterplant_id', $plantId) // <--- Menggunakan parameter dinamis
+            ->when($menuJenisPlantId, function ($query) use ($menuJenisPlantId) {
+                return $query->where('menujenisplant_id', $menuJenisPlantId);
             })
             ->where('status', 1)
             ->latest()
@@ -70,7 +69,7 @@ class TimbanganService
     /**
      * Update pada fungsi Create
      */
-    public function createTimbangan(array $data, int $plantId): Timbangan
+    public function createTimbangan(array $data, int $plantId, int $menuJenisPlantId): Timbangan
     {
         DB::beginTransaction();
 
@@ -88,6 +87,7 @@ class TimbanganService
                 'nomor'          => $this->generateNomor(),
                 'tanggal'        => $data['tanggal'],
                 'masterplant_id' => $plantId,
+                'menujenisplant_id' => $menuJenisPlantId,
                 'oleh'           => auth()->id(),
                 'status'         => 1,
             ]);
@@ -102,14 +102,14 @@ class TimbanganService
             /**
              * DETAIL
              */
-            TimbanganDetail::create([
+            TimbanganMaterial::create([
                 'timbangan_id'    => $timbangan->id,
                 'material_id'     => $data['material'],
                 'kendaraan_id'    => $data['kendaraan'],
                 'driver_id'       => $data['driver'],
                 'customer_id'     => $data['suplier'],
                 'beratjenis_id'   => $data['beratjenis'] ?? null,
-                'jenis'           => $data['jenis'],
+                'menujenisplant_id' => $data['menujenisplant_id'] ?? null,
                 'volume'          => $data['volume'] ?? 0,
                 'berattotal'      => $beratTotal,
                 'beratkendaraan'  => $beratKendaraan,
@@ -131,9 +131,9 @@ class TimbanganService
         }
     }
 
-    public function updateTimbangan(int $id, array $data, int $plantId): Timbangan
+    public function updateTimbangan(int $id, array $data, int $plantId, int $menuJenisPlantId): Timbangan
     {
-        return DB::transaction(function () use ($id, $data, $plantId) {
+        return DB::transaction(function () use ($id, $data, $plantId, $menuJenisPlantId) {
             // Cari data berdasarkan ID dan Plant agar tidak salah sasaran
             $timbangan = Timbangan::where('id', $id)
                 ->where('masterplant_id', $plantId)
@@ -146,12 +146,12 @@ class TimbanganService
 
             $timbangan->update([
                 'tanggal'         => $data['tanggal'] ?? $timbangan->tanggal,
+                'menujenisplant_id' => $menuJenisPlantId,
                 'material_id'     => $data['material'],
                 'kendaraan_id'    => $data['kendaraan'],
                 'driver_id'       => $data['driver'],
                 'customer_id'     => $data['suplier'],
                 'beratjenis_id'   => $data['beratjenis'],
-                'jenis'           => $data['jenis'],
                 'berattotal'      => $beratTotal,
                 'beratkendaraan'  => $beratKendaraan,
                 'beratmuatan'     => $beratMuatan,

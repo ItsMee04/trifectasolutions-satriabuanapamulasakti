@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Timbangan;
 
 use App\Http\Controllers\Controller;
+use App\Models\MenuJenisPlant;
 use App\Services\TimbanganService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
@@ -23,10 +24,26 @@ class StoneCrusherController extends Controller
 
     public function getTimbanganSC(Request $request)
     {
-        // Jenis diambil dari request (?jenis=IN)
-        $data = $this->timbanganService->getFiltered($this->plantId, $request->jenis);
+        $request->validate([
+            'menujenisplant_id' => 'nullable|integer'
+        ]);
 
-        if ($data->isEmpty()) {
+        $menuJenisPlantId = $request->query('menujenisplant_id');
+
+        // Cari tab default jika di frontend belum terpilih
+        if (!$menuJenisPlantId) {
+            $defaultMenu = MenuJenisPlant::where('masterplant_id', $this->plantId)
+                ->where('status', 1)
+                ->orderBy('id', 'asc')
+                ->first();
+
+            $menuJenisPlantId = $defaultMenu ? $defaultMenu->id : null;
+        }
+
+        // Oper nilai $this->plantId dari Controller ke Service
+        $data = $this->timbanganService->getFiltered($this->plantId, $menuJenisPlantId);
+
+        if($data->isEmpty()) {
             return response()->json([
                 'status'  => 404,
                 'success' => false,
@@ -38,7 +55,6 @@ class StoneCrusherController extends Controller
         return response()->json([
             'status'  => 200,
             'success' => true,
-            'message' => 'Data timbangan berhasil ditemukan',
             'data'    => $data
         ], 200);
     }
@@ -73,14 +89,14 @@ class StoneCrusherController extends Controller
             'kendaraan'      => 'required|integer',
             'driver'         => 'required|integer',
             'suplier'        => 'required|integer',
-            'jenis'          => 'required|in:IN,OUT',
+            'menujenisplant_id' => 'required|integer',
             'berattotal'     => 'required',
             'beratkendaraan' => 'required',
         ]);
 
         try {
             // 2. Panggil Service
-            $timbangan = $this->timbanganService->createTimbangan($request->all(), $this->plantId);
+            $timbangan = $this->timbanganService->createTimbangan($request->all(), $this->plantId, $request->menujenisplant_id);
 
             // 3. Response Berhasil
             return response()->json([
@@ -119,7 +135,8 @@ class StoneCrusherController extends Controller
             $timbangan = $this->timbanganService->updateTimbangan(
                 $request->id,
                 $request->all(),
-                $this->plantId
+                $this->plantId,
+                $request->menujenisplant_id
             );
 
             // 3. Response

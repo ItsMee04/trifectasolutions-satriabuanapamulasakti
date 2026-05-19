@@ -16,11 +16,13 @@ return new class extends Migration
             $table->bigInteger('nomor');
             $table->date('tanggal');
             $table->unsignedBigInteger('masterplant_id');
+            $table->unsignedBigInteger('menujenisplant_id');
             $table->unsignedBigInteger('oleh');
             $table->integer('status')->unsigned()->default(1);
             $table->timestamps();
 
             $table->foreign('masterplant_id')->references('id')->on('masterplant')->onDelete('cascade');
+            $table->foreign('menujenisplant_id')->references('id')->on('menujenisplant')->onDelete('cascade');
             $table->foreign('oleh')->references('id')->on('users')->onDelete('cascade');
         });
     }

@@ -39,31 +39,37 @@
 
         <div class="row">
             <div class="col-lg-12">
-                <!-- <TimbanganSCTable /> -->
+                <TimbanganSCTable />
             </div>
         </div>
 
-        <!-- <TimbanganSCModal /> -->
+        <TimbanganSCModal />
     </div>
 </template>
 
 <script setup>
 import { onMounted, ref, watch } from 'vue';
 import { useTimbanganSC } from '../composables/useTimbanganSC';
-// import TimbanganSCTable from '../components/TimbanganSCTable.vue';
-// import TimbanganSCModal from '../components/TimbanganSCModal.vue';
+import TimbanganSCTable from '../components/TimbanganSCTable.vue';
+import TimbanganSCModal from '../components/TimbanganSCModal.vue';
 
 const {
     currentTab,
     isLoading,
     MenuTimbanganSCList,
     fetchMenuTimbanganSCList,
+    fetchStoneCrusher,
     switchTab
 } = useTimbanganSC();
 
 onMounted(async () => {
-    // 1. Jalankan fetch data tabel (default IN)
+    // 1. Ambil daftar menu navigasi (misal: IN, OUT, dll)
     await fetchMenuTimbanganSCList();
+
+    // 2. WAJIB: Ambil data tabel pertama kali berdasarkan tab yang otomatis terpilih
+    if (currentTab.value) {
+        await fetchStoneCrusher(currentTab.value);
+    }
 });
 </script>
 

@@ -2,15 +2,21 @@
 
 namespace App\Models;
 
+use App\Models\BeratJenis;
+use App\Models\Customer;
+use App\Models\Driver;
+use App\Models\Kendaraan;
+use App\Models\Material;
 use App\Models\Timbangan;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class TimbanganDetail extends Model
+class TimbanganMaterial extends Model
 {
     use HasFactory;
-    protected $table = 'timbangandetail';
+    protected $table = 'timbanganmaterial';
     protected $fillable = [
         'timbangan_id',
         'material_id',
@@ -18,7 +24,6 @@ class TimbanganDetail extends Model
         'driver_id',
         'customer_id',
         'beratjenis_id',
-        'jenis',
         'volume',
         'berattotal',
         'beratkendaraan',

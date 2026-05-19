@@ -7,7 +7,6 @@ use App\Models\Customer;
 use App\Models\Kendaraan;
 use App\Models\MasterPlant;
 use App\Models\Material;
-use App\Models\TimbanganDetail;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -23,6 +22,7 @@ class Timbangan extends Model
         'nomor',
         'tanggal',
         'masterplant_id',
+        'menujenisplant_id',
         'oleh',
         'status'
     ];
@@ -35,6 +35,16 @@ class Timbangan extends Model
     public function masterplant(): BelongsTo
     {
         return $this->belongsTo(MasterPlant::class, 'masterplant_id', 'id');
+    }
+
+    /**
+     * Get the menujenis that owns the Timbangan
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function menujenis(): BelongsTo
+    {
+        return $this->belongsTo(MenuJenisPlant::class, 'menujenisplant_id', 'id');
     }
 
     /**
@@ -98,12 +108,12 @@ class Timbangan extends Model
     }
 
     /**
-     * Get all of the timbangandetail for the Timbangan
+     * Get all of the timbanganmaterial for the Timbangan
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function timbangandetail(): HasMany
+    public function timbanganmaterial(): HasMany
     {
-        return $this->hasMany(TimbanganDetail::class, 'timbangan_id', 'id');
+        return $this->hasMany(TimbanganMaterial::class, 'timbangan_id', 'id');
     }
 }

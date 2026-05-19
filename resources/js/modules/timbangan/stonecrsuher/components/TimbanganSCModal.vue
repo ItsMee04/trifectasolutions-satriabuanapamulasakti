@@ -5,7 +5,7 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title text-primary">
-                        {{ isEdit ? 'EDIT STONE CRUSHER' : 'TAMBAH STONE CRUSHER' }}
+                        {{ isEdit ? 'EDIT STONE CRUSHER' : 'TAMBAH STONE CRUSHER' }} || {{ currentTabName }}
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -14,7 +14,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-4">
-                                    <div class="form-group local-forms mb-3">
+                                    <div class="form-group mb-3">
                                         <label>Tanggal <span class="login-danger">*</span></label>
                                         <input v-model="formStoneCrusher.tanggal" type="date" class="form-control"
                                             :class="{ 'is-invalid': errors.tanggal }" readonly>
@@ -26,9 +26,9 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-4">
-                                    <div class="form-group local-forms mb-3">
+                                    <div class="form-group mb-3">
                                         <label> Material <span class="login-danger">*</span></label>
-                                        <Multiselect v-model="formStoneCrusher.material_id" :options="materialList"
+                                        <Multiselect v-model="formStoneCrusher.material_id" :options="MaterialList"
                                             :searchable="true" placeholder="Pilih Material"
                                             noOptionsText="Memuat data..."
                                             :class="{ 'is-invalid': errors.material_id }" />
@@ -43,9 +43,9 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-4">
-                                    <div class="form-group local-forms mb-3">
+                                    <div class="form-group mb-3">
                                         <label>No. Polisi <span class="login-danger">*</span></label>
-                                        <Multiselect v-model="formStoneCrusher.kendaraan_id" :options="kendaraanList"
+                                        <Multiselect v-model="formStoneCrusher.kendaraan_id" :options="KendaraanList"
                                             :searchable="true" placeholder="Pilih Kendaraan"
                                             noOptionsText="Memuat data..."
                                             :class="{ 'is-invalid': errors.kendaraan_id }" />
@@ -58,9 +58,9 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-4">
-                                    <div class="form-group local-forms mb-3">
+                                    <div class="form-group mb-3">
                                         <label>Driver <span class="login-danger">*</span></label>
-                                        <Multiselect v-model="formStoneCrusher.driver_id" :options="driverList"
+                                        <Multiselect v-model="formStoneCrusher.driver_id" :options="DriverList"
                                             :searchable="true" placeholder="Pilih Driver" noOptionsText="Memuat data..."
                                             :class="{ 'is-invalid': errors.driver_id }" />
                                         <div class="invalid-feedback" v-if="errors.driver_id">
@@ -74,7 +74,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-4">
-                                    <div class="form-group local-forms mb-3">
+                                    <div class="form-group mb-3">
                                         <label>Berat Total <span class="login-danger">*</span></label>
                                         <input v-model="formStoneCrusher.berattotal" type="text" class="form-control"
                                             :class="{ 'is-invalid': errors.berattotal }">
@@ -87,7 +87,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-4">
-                                    <div class="form-group local-forms mb-3">
+                                    <div class="form-group mb-3">
                                         <label>Berat Kendaraan <span class="login-danger">*</span></label>
                                         <input v-model="formStoneCrusher.beratkendaraan" type="text"
                                             class="form-control" :class="{ 'is-invalid': errors.beratkendaraan }">
@@ -102,9 +102,9 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-4">
-                                    <div class="form-group local-forms mb-3">
+                                    <div class="form-group mb-3">
                                         <label>Berat Jenis <span class="login-danger">*</span></label>
-                                        <Multiselect v-model="formStoneCrusher.beratjenis_id" :options="beratjenisList"
+                                        <Multiselect v-model="formStoneCrusher.beratjenis_id" :options="BeratJenisList"
                                             :searchable="true" placeholder="Pilih Berat Jenis"
                                             noOptionsText="Memuat data..."
                                             :class="{ 'is-invalid': errors.beratjenis_id }" />
@@ -117,9 +117,9 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-4">
-                                    <div class="form-group local-forms mb-3">
+                                    <div class="form-group mb-3">
                                         <label>Customer <span class="login-danger">*</span></label>
-                                        <Multiselect v-model="formStoneCrusher.customer_id" :options="customerList"
+                                        <Multiselect v-model="formStoneCrusher.customer_id" :options="CustomerList"
                                             :searchable="true" placeholder="Pilih Customer"
                                             noOptionsText="Memuat data..."
                                             :class="{ 'is-invalid': errors.customer_id }" />
@@ -134,7 +134,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-4">
-                                    <div class="form-group local-forms mb-3">
+                                    <div class="form-group mb-3">
                                         <label>KM Awal <span class="login-danger">*</span></label>
                                         <input v-model="formStoneCrusher.jarakawal" type="text" class="form-control"
                                             :class="{ 'is-invalid': errors.jarakawal }">
@@ -147,7 +147,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-4">
-                                    <div class="form-group local-forms mb-3">
+                                    <div class="form-group mb-3">
                                         <label>KM Akhir <span class="login-danger">*</span></label>
                                         <input v-model="formStoneCrusher.jarakakhir" type="text" class="form-control"
                                             :class="{ 'is-invalid': errors.jarakakhir }">
@@ -162,11 +162,10 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-4">
-                                    <div class="form-group local-forms mb-3">
-                                        <label>Jarak <span
-                                                class="login-danger">*</span></label>
-                                        <input v-model="formStoneCrusher.jarak" type="number" step="0.01" class="form-control"
-                                            :class="{ 'is-invalid': errors.jarak }" readonly>
+                                    <div class="form-group mb-3">
+                                        <label>Jarak <span class="login-danger">*</span></label>
+                                        <input v-model="formStoneCrusher.jarak" type="number" step="0.01"
+                                            class="form-control" :class="{ 'is-invalid': errors.jarak }" readonly>
                                         <div class="invalid-feedback" v-if="errors.jarak">
                                             {{ Array.isArray(errors.jarak) ? errors.volume[0] : errors.jarak }}
                                         </div>
@@ -175,11 +174,11 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="mb-4">
-                                    <div class="form-group local-forms mb-3">
+                                    <div class="form-group mb-3">
                                         <label>Volume ({{ selectedMaterialSatuan }}) <span
                                                 class="login-danger">*</span></label>
-                                        <input v-model="formStoneCrusher.volume" type="number" step="0.01" class="form-control"
-                                            :class="{ 'is-invalid': errors.volume }"
+                                        <input v-model="formStoneCrusher.volume" type="number" step="0.01"
+                                            class="form-control" :class="{ 'is-invalid': errors.volume }"
                                             :readonly="selectedMaterialSatuan === 'm3' || selectedMaterialSatuan === 'kg'">
                                         <div class="invalid-feedback" v-if="errors.volume">
                                             {{ Array.isArray(errors.volume) ? errors.volume[0] : errors.volume }}
@@ -188,30 +187,15 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="mb-4">
-                                    <div class="form-group local-forms mb-3">
-                                        <label>Berat Muatan <span class="login-danger">*</span></label>
-                                        <input v-model="formStoneCrusher.beratmuatan" type="text" class="form-control"
-                                            :class="{ 'is-invalid': errors.beratmuatan }" readonly>
-                                        <div class="invalid-feedback" v-if="errors.beratmuatan">
-                                            {{ Array.isArray(errors.beratmuatan) ? errors.beratmuatan[0] :
+                        <div class="col-md-12">
+                            <div class="mb-4">
+                                <div class="form-group mb-3">
+                                    <label>Berat Muatan <span class="login-danger">*</span></label>
+                                    <input v-model="formStoneCrusher.beratmuatan" type="text" class="form-control"
+                                        :class="{ 'is-invalid': errors.beratmuatan }" readonly>
+                                    <div class="invalid-feedback" v-if="errors.beratmuatan">
+                                        {{ Array.isArray(errors.beratmuatan) ? errors.beratmuatan[0] :
                                             errors.beratmuatan }}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="mb-4">
-                                    <div class="form-group local-forms mb-3">
-                                        <label>Jenis <span class="login-danger">*</span></label>
-                                        <input v-model="formStoneCrusher.jenis" type="text" class="form-control"
-                                            :class="{ 'is-invalid': errors.jenis }" readonly="">
-                                        <div class="invalid-feedback" v-if="errors.jenis">
-                                            {{ Array.isArray(errors.jenis) ? errors.jenis[0] :
-                                                errors.jenis }}
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -239,11 +223,11 @@ import { useTimbanganSC } from '../composables/useTimbanganSC';
 const {
     isEdit,
     formStoneCrusher,
-    materialList,
-    kendaraanList,
-    driverList,
-    customerList,
-    beratjenisList,
+    MaterialList,
+    KendaraanList,
+    DriverList,
+    CustomerList,
+    BeratJenisList,
     errors,
     selectedMaterialSatuan,
     fetchMaterial,
@@ -252,7 +236,8 @@ const {
     fetchCustomer,
     fetchBeratJenis,
     submitStoneCrusher,
-    isLoading
+    isLoading,
+    currentTabName,
 } = useTimbanganSC();
 
 const handleSubmit = async () => {
