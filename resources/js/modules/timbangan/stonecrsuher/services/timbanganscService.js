@@ -3,8 +3,8 @@ import apiClient from '@/utilities/apiClient';
 
 export const timbanganscService = {
     // Sesuai: api/timbangan/stonecrusher [GET]
-    async getTimbanganSC() {
-        const response = await apiClient.get('/timbangan/stonecrusher');
+    async getTimbanganSC(payload) {
+        const response = await apiClient.post('/timbangan/stonecrusher', payload);
         return response.data;
     },
 
@@ -27,6 +27,4 @@ export const timbanganscService = {
         const response = await apiClient.post('/timbangan/stonecrusher/delete', payload);
         return response.data;
     },
-
-
 };

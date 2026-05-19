@@ -152,7 +152,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Stone Crusher
         Route::prefix('stonecrusher')->group(function () {
-            Route::get('/', [StoneCrusherController::class, 'getTimbanganSC']);
+            Route::post('/', [StoneCrusherController::class, 'getTimbanganSC']);
             Route::get('/menujenis', [StoneCrusherController::class, 'getMenuJenisSC']);
             Route::post('/store', [StoneCrusherController::class, 'storeTimbanganSC']);
             Route::post('/update', [StoneCrusherController::class, 'updateTimbanganSC']);

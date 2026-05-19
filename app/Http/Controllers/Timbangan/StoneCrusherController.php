@@ -25,16 +25,17 @@ class StoneCrusherController extends Controller
     public function getTimbanganSC(Request $request)
     {
         $request->validate([
-            'menujenisplant_id' => 'nullable|integer'
+            // Menggunakan 'query' validation jika datanya berasal dari URL parameter
+            'menujenisplant_id' => 'integer'
         ]);
 
-        $menuJenisPlantId = $request->query('menujenisplant_id');
+        $menuJenisPlantId = $request->input('menujenisplant_id');
 
         // Cari tab default jika di frontend belum terpilih
         if (!$menuJenisPlantId) {
             $defaultMenu = MenuJenisPlant::where('masterplant_id', $this->plantId)
                 ->where('status', 1)
-                ->orderBy('id', 'asc')
+                ->oldest() // <-- Lebih clean dibanding orderBy('id', 'asc')
                 ->first();
 
             $menuJenisPlantId = $defaultMenu ? $defaultMenu->id : null;
@@ -43,7 +44,7 @@ class StoneCrusherController extends Controller
         // Oper nilai $this->plantId dari Controller ke Service
         $data = $this->timbanganService->getFiltered($this->plantId, $menuJenisPlantId);
 
-        if($data->isEmpty()) {
+        if ($data->isEmpty()) {
             return response()->json([
                 'status'  => 404,
                 'success' => false,
@@ -55,7 +56,7 @@ class StoneCrusherController extends Controller
         return response()->json([
             'status'  => 200,
             'success' => true,
-            'data'    => $data
+            'data' => $data
         ], 200);
     }
 

@@ -85,12 +85,17 @@ export function useTimbanganSC() {
     // 2. Ambil data list Timbangan Stone Crusher berdasarkan tab aktif
     const fetchStoneCrusher = async (jenisValue = null) => {
         isLoading.value = true;
+
+        // Ambil ID dari parameter, jika tidak ada pakai tab yang sedang aktif
         const targetJenis = jenisValue || currentTab.value;
 
         try {
-            // PERBAIKAN: Sesuaikan key payload dengan query param backend yaitu 'menujenisplant_id'
-            const payload = { menujenisplant_id: targetJenis };
+            // MEMBUAT PAYLOAD: Hanya mengirimkan jenis yang dipilih saja
+            const payload = {
+                menujenisplant_id: targetJenis
+            };
 
+            // Kirim objek payload ke service
             const response = await timbanganscService.getTimbanganSC(payload);
 
             // Normalisasi penangkapan array data
@@ -107,10 +112,10 @@ export function useTimbanganSC() {
     // BENAR (Ditambahkan async)
     const switchTab = async (menu) => {
         currentTab.value = menu.id;
+        currentPage.value = 1; // <--- SANGAT PENTING: Reset ke halaman pertama setiap ganti jenis tab
         console.log('TAB ACTIVE KINI:', menu.nama || menu.id);
 
         try {
-            // Sekarang penggunaan await di sini sudah aman dan legal
             await fetchStoneCrusher(menu.id);
         } catch (error) {
             console.error("Gagal memuat data setelah pindah tab:", error);
@@ -445,15 +450,15 @@ export function useTimbanganSC() {
     // --- FILTER UTAMA (Text + Date Range) ---
     const filteredStoneCrusher = computed(() => {
         const query = searchQuery.value.toLowerCase();
-        const activeTab = currentTab.value; // Ambil ID tab yang aktif saat ini
+        const activeTab = currentTab.value;
 
         return StoneCrusher.value.filter(item => {
 
-            // PERBAIKAN: Gunakan menujenisplant_id dari objek utama item, bukan mengambil dari timbanganmaterial.jenis
-            const matchesTab = !activeTab || item.menujenisplant_id === activeTab;
+            // PERBAIKAN: Gunakan == agar tidak sensitif terhadap perbedaan tipe data (string vs int)
+            const matchesTab = !activeTab || item.menujenisplant_id == activeTab;
             if (!matchesTab) return false;
 
-            // 1. FILTER SEARCH GLOBAL (Cari di semua field)
+            // 1. FILTER SEARCH GLOBAL
             const matchesSearch = searchMatch(item, query);
 
             // 2. FILTER TANGGAL (Range)
@@ -466,7 +471,7 @@ export function useTimbanganSC() {
                 matchesDate = item.tanggal <= endDate.value;
             }
 
-            // 3. FILTER PER KOLOM (Spesifik)
+            // 3. FILTER PER KOLOM
             const matchesColumns = Object.keys(columnFilters).every(key => {
                 const filterVal = columnFilters[key].toLowerCase();
                 if (!filterVal) return true;
@@ -496,7 +501,6 @@ export function useTimbanganSC() {
                 }
             });
 
-            // KEMBALIKAN DATA HANYA JIKA SEMUA KONDISI TRUE
             return matchesSearch && matchesDate && matchesColumns;
         });
     });
