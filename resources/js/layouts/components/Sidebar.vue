@@ -156,6 +156,7 @@ const masterItems = computed(() => {
     const list = [
         { name: 'Driver', path: '/driver', perm: 'menu-driver' },
         { name: 'Customer', path: '/customer', perm: 'menu-customer' },
+        { name: 'Suplier', path: '/suplier', perm: 'menu-suplier' },
         { name: 'Jenis Kendaraan', path: '/jeniskendaraan', perm: 'menu-jeniskendaraan' },
         { name: 'Kendaraan', path: '/kendaraan', perm: 'menu-kendaraan' },
         { name: 'Kategori', path: '/kategori', perm: 'menu-kategori' },

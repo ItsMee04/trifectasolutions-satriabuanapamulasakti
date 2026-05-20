@@ -16,13 +16,16 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class TimbanganMaterial extends Model
 {
     use HasFactory;
-    protected $table = 'timbanganmaterial';
+    protected $table = 'timbanganmaterial_stonecrusher';
     protected $fillable = [
         'timbangan_id',
         'material_id',
         'kendaraan_id',
         'driver_id',
         'customer_id',
+        'suplier_id',
+        'pengambilan',
+        'tujuan',
         'beratjenis_id',
         'volume',
         'berattotal',
@@ -82,6 +85,16 @@ class TimbanganMaterial extends Model
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class, 'customer_id', 'id');
+    }
+
+    /**
+     * Get the suplier that owns the TimbanganMaterial
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
+     */
+    public function suplier(): BelongsTo
+    {
+        return $this->belongsTo(Suplier::class, 'suplier_id', 'id');
     }
 
     /**

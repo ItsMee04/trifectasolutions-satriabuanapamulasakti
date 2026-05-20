@@ -11,13 +11,16 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('timbanganmaterial', function (Blueprint $table) {
+        Schema::create('timbanganmaterial_stonecrusher', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('timbangan_id');
             $table->unsignedBigInteger('material_id');
             $table->unsignedBigInteger('kendaraan_id');
             $table->unsignedBigInteger('driver_id');
-            $table->unsignedBigInteger('customer_id');
+            $table->unsignedBigInteger('customer_id')->nullable();
+            $table->unsignedBigInteger('suplier_id')->nullable();
+            $table->string('pengambilan', 100)->nullable();
+            $table->string('tujuan', 100)->nullable();
             $table->unsignedBigInteger('beratjenis_id');
             $table->decimal('volume', 15, 2);
             $table->decimal('berattotal', 15, 2);
@@ -34,6 +37,7 @@ return new class extends Migration
             $table->foreign('kendaraan_id')->references('id')->on('kendaraan')->onDelete('cascade');
             $table->foreign('driver_id')->references('id')->on('driver')->onDelete('cascade');
             $table->foreign('customer_id')->references('id')->on('customer')->onDelete('cascade');
+            $table->foreign('suplier_id')->references('id')->on('suplier')->onDelete('cascade');
             $table->foreign('beratjenis_id')->references('id')->on('beratjenis')->onDelete('cascade');
             $table->foreign('oleh')->references('id')->on('users')->onDelete('cascade');
         });
@@ -44,6 +48,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('timbanganmaterial');
+        Schema::dropIfExists('timbanganmaterial_stonecrusher');
     }
 };

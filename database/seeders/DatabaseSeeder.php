@@ -81,6 +81,7 @@ class DatabaseSeeder extends Seeder
             // Master Permissions
             ['module_id' => $modMaster->id, 'nama_permission' => 'menu-driver'],
             ['module_id' => $modMaster->id, 'nama_permission' => 'menu-customer'],
+            ['module_id' => $modMaster->id, 'nama_permission' => 'menu-suplier'],
             ['module_id' => $modMaster->id, 'nama_permission' => 'menu-jeniskendaraan'],
             ['module_id' => $modMaster->id, 'nama_permission' => 'menu-kendaraan'],
             ['module_id' => $modMaster->id, 'nama_permission' => 'menu-kategori'],

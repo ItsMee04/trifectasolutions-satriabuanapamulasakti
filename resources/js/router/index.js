@@ -62,6 +62,12 @@ const routes = [
                     import("@/modules/customer/views/CustomerView.vue"),
             },
             {
+                path: "suplier",
+                name: "suplier",
+                component: () =>
+                    import("@/modules/suplier/views/SuplierView.vue"),
+            },
+            {
                 path: "jeniskendaraan",
                 name: "jeniskendaraan",
                 component: () =>

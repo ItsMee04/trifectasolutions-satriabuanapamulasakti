@@ -13,6 +13,7 @@ use App\Http\Controllers\Master\MenuJenisPlantController;
 use App\Http\Controllers\Master\PegawaiController;
 use App\Http\Controllers\Master\PermissionController;
 use App\Http\Controllers\Master\RoleController;
+use App\Http\Controllers\Master\SuplierController;
 use App\Http\Controllers\Master\UserController;
 use App\Http\Controllers\Setting\BackupController;
 use App\Http\Controllers\Timbangan\ConcreteBatchingPlantController;
@@ -89,6 +90,14 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::post('/store', [CustomerController::class, 'storeCustomer']);    // POST /api/master/customer/store
             Route::post('/update', [CustomerController::class, 'updateCustomer']);   // PUT /api/master/customer/update
             Route::delete('/delete', [CustomerController::class, 'deleteCustomer']); // DELETE /api/master/customer/delete
+        });
+
+        // Mengelompokkan route khusus Suplier
+        Route::prefix('suplier')->group(function () {
+            Route::get('/', [SuplierController::class, 'getSuplier']);          // GET /api/master/suplier
+            Route::post('/store', [SuplierController::class, 'storeSuplier']);    // POST /api/master/suplier/store
+            Route::post('/update', [SuplierController::class, 'updateSuplier']);   // PUT /api/master/suplier/update
+            Route::delete('/delete', [SuplierController::class, 'deleteSuplier']); // DELETE /api/master/suplier/delete
         });
 
         // Mengelompokkan route khusus Jenis Kendaraan
