@@ -3,8 +3,9 @@
 namespace App\Http\Controllers\Timbangan;
 
 use App\Http\Controllers\Controller;
+use App\Models\MenuJenisPlant;
 use App\Services\TimbanganService;
-use Illuminate\Database\Eloquent\ModelNotFoundException;
+// use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
 class ConcreteBatchingPlantController extends Controller
@@ -23,8 +24,25 @@ class ConcreteBatchingPlantController extends Controller
 
     public function getTimbanganCBP(Request $request)
     {
-        // Jenis diambil dari request (?jenis=IN)
-        $data = $this->timbanganService->getFiltered($this->plantId, $request->jenis);
+        $request->validate([
+            // Menggunakan 'query' validation jika datanya berasal dari URL parameter
+            'menujenisplant_id' => 'integer'
+        ]);
+
+        $menuJenisPlantId = $request->input('menujenisplant_id');
+
+        // Cari tab default jika di frontend belum terpilih
+        if (!$menuJenisPlantId) {
+            $defaultMenu = MenuJenisPlant::where('masterplant_id', $this->plantId)
+                ->where('status', 1)
+                ->oldest() // <-- Lebih clean dibanding orderBy('id', 'asc')
+                ->first();
+
+            $menuJenisPlantId = $defaultMenu ? $defaultMenu->id : null;
+        }
+
+        // Oper nilai $this->plantId dari Controller ke Service
+        $data = $this->timbanganService->getFiltered($this->plantId, $menuJenisPlantId);
 
         if ($data->isEmpty()) {
             return response()->json([
@@ -32,130 +50,34 @@ class ConcreteBatchingPlantController extends Controller
                 'success' => false,
                 'message' => 'Data timbangan tidak ditemukan',
                 'data'    => []
-            ], 404);
+            ], 200);
         }
 
         return response()->json([
             'status'  => 200,
             'success' => true,
-            'message' => 'Data timbangan berhasil ditemukan',
-            'data'    => $data
+            'data' => $data
         ], 200);
     }
 
-    public function storeTimbanganCBP(Request $request)
+    public function getMenuJenisCBP()
     {
-        // 1. Validasi Input
-        $validated = $request->validate([
-            'tanggal'        => 'required|date',
-            'material'       => 'required|integer',
-            'kendaraan'      => 'required|integer',
-            'driver'         => 'required|integer',
-            'customer'       => 'required|integer',
-            'jenis'          => 'required|in:IN,OUT',
-            'berattotal'     => 'required',
-            'beratkendaraan' => 'required',
-        ]);
+        $data = $this->timbanganService->getMenuJenisByPlant($this->plantId);
 
-        try {
-            // 2. Panggil Service
-            $timbangan = $this->timbanganService->createTimbangan($request->all(), $this->plantId);
-
-            // 3. Response Berhasil
-            return response()->json([
-                'status'  => 200,
-                'success' => true,
-                'message' => 'Data timbangan berhasil disimpan',
-                'data'    => $timbangan
-            ], 200);
-        } catch (\Exception $e) {
-            // 4. Response Gagal
-            return response()->json([
-                'status'  => 500,
-                'success' => false,
-                'message' => 'Gagal menyimpan data: ' . $e->getMessage(),
-            ], 500);
-        }
-    }
-
-    public function updateTimbanganCBP(Request $request)
-    {
-        // 1. Validasi Input
-        $validated = $request->validate([
-            'id'             => 'required|integer|exists:timbangan,id',
-            'tanggal'        => 'required|date',
-            'material'       => 'required|integer',
-            'kendaraan'      => 'required|integer',
-            'driver'         => 'required|integer',
-            'customer'       => 'required|integer',
-            'jenis'          => 'required|in:IN,OUT',
-            'berattotal'     => 'required',
-            'beratkendaraan' => 'required',
-        ]);
-
-        try {
-            // 2. Panggil Service Update
-            $timbangan = $this->timbanganService->updateTimbangan(
-                $request->id,
-                $request->all(),
-                $this->plantId
-            );
-
-            // 3. Response
-            return response()->json([
-                'status'  => 200,
-                'success' => true,
-                'message' => 'Data timbangan berhasil diperbarui',
-                'data'    => $timbangan
-            ], 200);
-        } catch (ModelNotFoundException $e) {
+        if ($data->isEmpty()) {
             return response()->json([
                 'status'  => 404,
                 'success' => false,
-                'message' => 'Data tidak ditemukan atau Anda tidak memiliki akses.',
-            ], 404);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status'  => 500,
-                'success' => false,
-                'message' => 'Gagal memperbarui data: ' . $e->getMessage(),
-            ], 500);
-        }
-    }
-
-    public function deleteTimbanganCBP(Request $request)
-    {
-        // 1. Validasi untuk memastikan 'id' ada dan berupa angka
-        // Ini juga mencegah 'null' terkirim ke Service
-        $request->validate([
-            'id' => 'required|integer'
-        ]);
-
-        try {
-            // 2. Ambil ID dan paksa menjadi integer (casting)
-            $id = (int) $request->input('id');
-
-            $deleted = $this->timbanganService->deleteTimbangan($id);
-
-            if (!$deleted) {
-                return response()->json([
-                    'status'    => 404,
-                    'success'   => false,
-                    'message'   => 'Data timbangan tidak ditemukan atau sudah tidak aktif',
-                ], 404);
-            }
-
-            return response()->json([
-                'status'    => 200,
-                'success'   => true,
-                'message'   => 'Data timbangan berhasil dihapus',
+                'message' => 'Data menu jenis tidak ditemukan',
+                'data'    => []
             ], 200);
-        } catch (\Exception $e) {
-            return response()->json([
-                'status'    => 500,
-                'success'   => false,
-                'message'   => 'Gagal menghapus data: ' . $e->getMessage(),
-            ], 500);
         }
+
+        return response()->json([
+            'status'  => 200,
+            'success' => true,
+            'message' => 'Data menu jenis berhasil ditemukan',
+            'data'    => $data
+        ], 200);
     }
 }

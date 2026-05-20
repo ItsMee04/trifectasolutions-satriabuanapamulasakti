@@ -110,17 +110,17 @@ const routes = [
                     import("@/modules/timbangan/stonecrsuher/views/TimbanganSCView.vue"),
             },
             {
+                path: "concretebatchingplant",
+                name: "concretebatchingplant",
+                component: () =>
+                    import("@/modules/timbangan/concretebatchingplant/views/TimbanganCBPView.vue"),
+            },
+            {
                 path: "backup",
                 name: "backup",
                 component: () =>
                     import("@/modules/backup/views/BackupView.vue"),
             },
-            // {
-            //     path: "concretebatchingplant",
-            //     name: "concretebatchingplant",
-            //     component: () =>
-            //         import("@/modules/cbp/views/CBPView.vue"),
-            // },
             // {
             //     path: "asphaltmixingplant",
             //     name: "asphaltmixingplant",

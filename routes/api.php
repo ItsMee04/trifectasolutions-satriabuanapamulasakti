@@ -15,6 +15,7 @@ use App\Http\Controllers\Master\PermissionController;
 use App\Http\Controllers\Master\RoleController;
 use App\Http\Controllers\Master\UserController;
 use App\Http\Controllers\Setting\BackupController;
+use App\Http\Controllers\Timbangan\ConcreteBatchingPlantController;
 use App\Http\Controllers\Timbangan\StoneCrusherController;
 use Illuminate\Support\Facades\Route;
 
@@ -160,11 +161,10 @@ Route::middleware('auth:sanctum')->group(function () {
         });
 
         // Concrete Batching Plant (CBP)
-        // Route::prefix('cbp')->group(function () {
-        //     Route::get('/', [ConcreteBatchingController::class, 'getTimbanganCBP']);
-        //     Route::post('/store', [ConcreteBatchingController::class, 'store']);
-        //     Route::delete('/delete/{id}', [ConcreteBatchingController::class, 'delete']);
-        // });
+        Route::prefix('concretebatchingplant')->group(function () {
+            Route::post('/', [ConcreteBatchingPlantController::class, 'getTimbanganCBP']);
+            Route::get('/menujenis', [ConcreteBatchingPlantController::class, 'getMenuJenisCBP']);
+        });
 
         // // Asphalt Mixing Plant (AMP)
         // Route::prefix('amp')->group(function () {

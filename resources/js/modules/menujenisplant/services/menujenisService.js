@@ -17,7 +17,7 @@ export const menujenisService = {
     // Sesuai: api/master/menujenisplant/update [PUT]
     // PENTING: Gunakan .put sesuai daftar route Anda
     async updateMenuJenisPlant(payload) {
-        const response = await apiClient.put('/master/menujenisplant/update', payload);
+        const response = await apiClient.post('/master/menujenisplant/update', payload);
         return response.data;
     },
 
