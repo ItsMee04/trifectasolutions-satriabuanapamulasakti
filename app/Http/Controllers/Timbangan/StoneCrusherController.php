@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Timbangan;
 
 use App\Http\Controllers\Controller;
 use App\Models\MenuJenisPlant;
-use App\Services\TimbanganService;
+use App\Services\TimbanganMaterialStoneCrusherService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\Request;
 
@@ -15,11 +15,11 @@ class StoneCrusherController extends Controller
      * Misal di tabel masterplant, Stone Crusher memiliki ID = 1
      */
     protected int $plantId = 1;
-    protected TimbanganService $timbanganService;
+    protected TimbanganMaterialStoneCrusherService $timbanganmaterialstonecrusherService;
 
-    public function __construct(TimbanganService $timbanganService)
+    public function __construct(TimbanganMaterialStoneCrusherService $timbanganmaterialstonecrusherService)
     {
-        $this->timbanganService = $timbanganService;
+        $this->timbanganmaterialstonecrusherService = $timbanganmaterialstonecrusherService;
     }
 
     public function getTimbanganSC(Request $request)
@@ -42,7 +42,7 @@ class StoneCrusherController extends Controller
         }
 
         // Oper nilai $this->plantId dari Controller ke Service
-        $data = $this->timbanganService->getFiltered($this->plantId, $menuJenisPlantId);
+        $data = $this->timbanganmaterialstonecrusherService->getFiltered($this->plantId, $menuJenisPlantId);
 
         if ($data->isEmpty()) {
             return response()->json([
@@ -62,7 +62,7 @@ class StoneCrusherController extends Controller
 
     public function getMenuJenisSC()
     {
-        $data = $this->timbanganService->getMenuJenisByPlant($this->plantId);
+        $data = $this->timbanganmaterialstonecrusherService->getMenuJenisByPlant($this->plantId);
 
         if ($data->isEmpty()) {
             return response()->json([
@@ -97,7 +97,7 @@ class StoneCrusherController extends Controller
 
         try {
             // 2. Panggil Service
-            $timbangan = $this->timbanganService->createTimbangan($request->all(), $this->plantId, $request->menujenisplant_id);
+            $timbangan = $this->timbanganmaterialstonecrusherService->createTimbangan($request->all(), $this->plantId, $request->menujenisplant_id);
 
             // 3. Response Berhasil
             return response()->json([
@@ -133,7 +133,7 @@ class StoneCrusherController extends Controller
 
         try {
             // 2. Panggil Service Update
-            $timbangan = $this->timbanganService->updateTimbangan(
+            $timbangan = $this->timbanganmaterialstonecrusherService->updateTimbangan(
                 $request->id,
                 $request->all(),
                 $this->plantId,
@@ -174,7 +174,7 @@ class StoneCrusherController extends Controller
             // 2. Ambil ID dan paksa menjadi integer (casting)
             $id = (int) $request->input('id');
 
-            $deleted = $this->timbanganService->deleteTimbangan($id);
+            $deleted = $this->timbanganmaterialstonecrusherService->deleteTimbangan($id);
 
             if (!$deleted) {
                 return response()->json([

@@ -2,20 +2,14 @@
 
 namespace App\Models;
 
-use App\Models\BeratJenis;
-use App\Models\Customer;
-use App\Models\Driver;
-use App\Models\Kendaraan;
-use App\Models\Material;
-use App\Models\Timbangan;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class TimbanganMaterial extends Model
+class TimbanganMaterialStoneCrusher extends Model
 {
     use HasFactory;
+
     protected $table = 'timbanganmaterial_stonecrusher';
     protected $fillable = [
         'timbangan_id',
@@ -38,7 +32,7 @@ class TimbanganMaterial extends Model
     ];
 
     /**
-     * Get the timbangan that owns the TimbanganDetail
+     * Get the timbangan that owns the TimbanganMaterialStoneCrusher
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -48,7 +42,7 @@ class TimbanganMaterial extends Model
     }
 
     /**
-     * Get the material that owns the TimbanganDetail
+     * Get the material that owns the TimbanganMaterialStoneCrusher
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -58,7 +52,7 @@ class TimbanganMaterial extends Model
     }
 
     /**
-     * Get the kendaraan that owns the TimbanganDetail
+     * Get the kendaraan that owns the TimbanganMaterialStoneCrusher
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -68,7 +62,7 @@ class TimbanganMaterial extends Model
     }
 
     /**
-     * Get the driver that owns the TimbanganDetail
+     * Get the driver that owns the TimbanganMaterialStoneCrusher
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -78,7 +72,7 @@ class TimbanganMaterial extends Model
     }
 
     /**
-     * Get the customer that owns the TimbanganDetail
+     * Get the customer that owns the TimbanganMaterialStoneCrusher
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -88,7 +82,7 @@ class TimbanganMaterial extends Model
     }
 
     /**
-     * Get the suplier that owns the TimbanganMaterial
+     * Get the suplier that owns the TimbanganMaterialStoneCrusher
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
@@ -98,22 +92,12 @@ class TimbanganMaterial extends Model
     }
 
     /**
-     * Get the beratjenis that owns the TimbanganDetail
+     * Get the beratjenis that owns the TimbanganMaterialStoneCrusher
      *
      * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
      */
     public function beratjenis(): BelongsTo
     {
         return $this->belongsTo(BeratJenis::class, 'beratjenis_id', 'id');
-    }
-
-    /**
-     * Get the oleh that owns the TimbanganDetail
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function oleh(): BelongsTo
-    {
-        return $this->belongsTo(User::class, 'oleh', 'id');
     }
 }

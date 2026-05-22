@@ -364,7 +364,7 @@ export function useTimbanganSC() {
         formStoneCrusher.menujenisplant_id = item.menujenisplant_id;
 
         // 2. Ambil referensi detail timbangan material indeks ke-0 (jika ada)
-        const detail = item.timbanganmaterial?.[0] || {};
+        const detail = item.timbanganmaterialsc?.[0] || {};
 
         // 3. Petakan field detail ke dalam formStoneCrusher
         formStoneCrusher.material_id = detail.material_id || '';
@@ -389,7 +389,7 @@ export function useTimbanganSC() {
 
     const handleDelete = async (item) => {
         // Ambil info material/jenis plant dari item untuk ditampilkan di badge jika perlu
-        const namaMaterial = item.timbanganmaterial?.[0]?.material?.material || 'Material';
+        const namaMaterial = item.timbanganmaterialsc?.[0]?.material?.material || 'Material';
 
         const result = await Swal.fire({
             title: 'Apakah Anda yakin?',
@@ -436,14 +436,14 @@ export function useTimbanganSC() {
     const searchMatch = (item, query) => {
         return (
             String(item.nomor || '').toLowerCase().includes(query) ||
-            String(item.timbanganmaterial?.[0]?.material?.material || '').toLowerCase().includes(query) ||
-            String(item.timbanganmaterial?.[0]?.kendaraan?.nomor || '').toLowerCase().includes(query) ||
-            String(item.timbanganmaterial?.[0]?.driver?.nama || '').toLowerCase().includes(query) ||
-            String(item.timbanganmaterial?.[0]?.customer?.nama || '').toLowerCase().includes(query) ||
-            String(item.timbanganmaterial?.[0]?.volume || '').toLowerCase().includes(query) ||
-            String(item.timbanganmaterial?.[0]?.berattotal || '').toLowerCase().includes(query) ||
-            String(item.timbanganmaterial?.[0]?.beratkendaraan || '').toLowerCase().includes(query) ||
-            String(item.timbanganmaterial?.[0]?.beratmuatan || '').toLowerCase().includes(query)
+            String(item.timbanganmaterialsc?.[0]?.material?.material || '').toLowerCase().includes(query) ||
+            String(item.timbanganmaterialsc?.[0]?.kendaraan?.nomor || '').toLowerCase().includes(query) ||
+            String(item.timbanganmaterialsc?.[0]?.driver?.nama || '').toLowerCase().includes(query) ||
+            String(item.timbanganmaterialsc?.[0]?.customer?.nama || '').toLowerCase().includes(query) ||
+            String(item.timbanganmaterialsc?.[0]?.volume || '').toLowerCase().includes(query) ||
+            String(item.timbanganmaterialsc?.[0]?.berattotal || '').toLowerCase().includes(query) ||
+            String(item.timbanganmaterialsc?.[0]?.beratkendaraan || '').toLowerCase().includes(query) ||
+            String(item.timbanganmaterialsc?.[0]?.beratmuatan || '').toLowerCase().includes(query)
         );
     }
 
@@ -478,25 +478,25 @@ export function useTimbanganSC() {
 
                 switch (key) {
                     case 'material':
-                        return String(item.timbanganmaterial?.[0]?.material?.material || '').toLowerCase().includes(filterVal);
+                        return String(item.timbanganmaterialsc?.[0]?.material?.material || '').toLowerCase().includes(filterVal);
                     case 'tanggal':
                         return String(item.tanggal || '').toLowerCase().includes(filterVal);
                     case 'nomor':
                         return String(item.nomor || '').toLowerCase().includes(filterVal);
                     case 'kendaraan':
-                        return String(item.timbanganmaterial?.[0]?.kendaraan?.nomor || '').toLowerCase().includes(filterVal);
+                        return String(item.timbanganmaterialsc?.[0]?.kendaraan?.nomor || '').toLowerCase().includes(filterVal);
                     case 'driver':
-                        return String(item.timbanganmaterial?.[0]?.driver?.nama || '').toLowerCase().includes(filterVal);
+                        return String(item.timbanganmaterialsc?.[0]?.driver?.nama || '').toLowerCase().includes(filterVal);
                     case 'customer':
-                        return String(item.timbanganmaterial?.[0]?.customer?.nama || '').toLowerCase().includes(filterVal);
+                        return String(item.timbanganmaterialsc?.[0]?.customer?.nama || '').toLowerCase().includes(filterVal);
                     case 'volume':
-                        return String(item.timbanganmaterial?.[0]?.volume || '').toLowerCase().includes(filterVal);
+                        return String(item.timbanganmaterialsc?.[0]?.volume || '').toLowerCase().includes(filterVal);
                     case 'berattotal':
-                        return String(item.timbanganmaterial?.[0]?.berattotal || '').toLowerCase().includes(filterVal);
+                        return String(item.timbanganmaterialsc?.[0]?.berattotal || '').toLowerCase().includes(filterVal);
                     case 'beratkendaraan':
-                        return String(item.timbanganmaterial?.[0]?.beratkendaraan || '').toLowerCase().includes(filterVal);
+                        return String(item.timbanganmaterialsc?.[0]?.beratkendaraan || '').toLowerCase().includes(filterVal);
                     case 'beratmuatan':
-                        return String(item.timbanganmaterial?.[0]?.beratmuatan || '').toLowerCase().includes(filterVal);
+                        return String(item.timbanganmaterialsc?.[0]?.beratmuatan || '').toLowerCase().includes(filterVal);
                     default: return true;
                 }
             });
@@ -508,7 +508,7 @@ export function useTimbanganSC() {
     const totalFooter = computed(() => {
         // Gunakan reduce dengan mengembalikan objek baru di setiap iterasi (Immutable)
         return filteredStoneCrusher.value.reduce((acc, item) => {
-            const detail = item.timbanganmaterial?.[0];
+            const detail = item.timbanganmaterialsc?.[0];
 
             if (detail) {
                 return {

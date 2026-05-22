@@ -123,25 +123,25 @@
                                 <td>{{ ((currentPage - 1) * 10) + (index + 1) }}</td>
 
                                 <!-- Perbaikan: Ubah timbandandetail menjadi timbangaonmaterial -->
-                                <td>{{ item.timbanganmaterial?.[0]?.material?.material }}</td>
+                                <td>{{ item.timbanganmaterialsc?.[0]?.material?.material }}</td>
 
                                 <td>{{ item.tanggal }}</td>
 
                                 <td>{{ item.nomor }}</td>
 
-                                <td>{{ item.timbanganmaterial?.[0]?.kendaraan?.nomor }}</td>
+                                <td>{{ item.timbanganmaterialsc?.[0]?.kendaraan?.nomor }}</td>
 
-                                <td>{{ item.timbanganmaterial?.[0]?.driver?.nama }}</td>
+                                <td>{{ item.timbanganmaterialsc?.[0]?.driver?.nama }}</td>
 
-                                <td>{{ item.timbanganmaterial?.[0]?.customer?.nama }}</td>
+                                <td>{{ item.timbanganmaterialsc?.[0]?.customer?.nama }}</td>
 
-                                <td>{{ item.timbanganmaterial?.[0]?.volume }}</td>
+                                <td>{{ item.timbanganmaterialsc?.[0]?.volume }}</td>
 
-                                <td>{{ formatNumber(item.timbanganmaterial?.[0]?.berattotal) }}</td>
+                                <td>{{ formatNumber(item.timbanganmaterialsc?.[0]?.berattotal) }}</td>
 
-                                <td>{{ formatNumber(item.timbanganmaterial?.[0]?.beratkendaraan) }}</td>
+                                <td>{{ formatNumber(item.timbanganmaterialsc?.[0]?.beratkendaraan) }}</td>
 
-                                <td>{{ formatNumber(item.timbanganmaterial?.[0]?.beratmuatan) }}</td>
+                                <td>{{ formatNumber(item.timbanganmaterialsc?.[0]?.beratmuatan) }}</td>
 
                                 <td>
                                     <span v-if="item.status == 1" class="badge bg-success">

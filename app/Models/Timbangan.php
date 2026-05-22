@@ -108,12 +108,12 @@ class Timbangan extends Model
     }
 
     /**
-     * Get all of the timbanganmaterial for the Timbangan
+     * Get all of the timbanganmaterialsc for the Timbangan
      *
      * @return \Illuminate\Database\Eloquent\Relations\HasMany
      */
-    public function timbanganmaterial(): HasMany
+    public function timbanganmaterialsc(): HasMany
     {
-        return $this->hasMany(TimbanganMaterial::class, 'timbangan_id', 'id');
+        return $this->hasMany(TimbanganMaterialStoneCrusher::class, 'timbangan_id', 'id');
     }
 }
