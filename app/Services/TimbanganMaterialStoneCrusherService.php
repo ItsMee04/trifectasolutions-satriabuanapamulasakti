@@ -4,37 +4,16 @@ namespace App\Services;
 
 use App\Models\MenuJenisPlant;
 use App\Models\Timbangan;
-// use App\Models\TimbanganMaterial;
 use App\Models\TimbanganMaterialStoneCrusher;
-use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 
 class TimbanganMaterialStoneCrusherService
 {
-    /**
-     * Logic untuk generate nomor otomatis: YYMMDDXXXX
-     */
-    private function generateNomor(): string
+    protected GenerateKodeService $generateKodeService;
+    public function __construct()
     {
-        $today = Carbon::now()->format('Y-m-d');
-        $prefix = Carbon::now()->format('ymd'); // Hasil: 260505
-
-        // Cari nomor terakhir pada hari ini
-        $lastRecord = Timbangan::whereDate('tanggal', $today)
-            ->orderBy('nomor', 'desc')
-            ->first();
-
-        if (!$lastRecord) {
-            // Jika belum ada data hari ini, mulai dari 0001
-            return $prefix . '0001';
-        }
-
-        // Ambil 4 digit terakhir, tambah 1
-        $lastNumber = substr($lastRecord->nomor, -4);
-        $nextNumber = str_pad((int)$lastNumber + 1, 4, '0', STR_PAD_LEFT);
-
-        return $prefix . $nextNumber;
+        $this->generateKodeService = new GenerateKodeService();
     }
 
     public function getMenuJenisByPlant(int $plantId)
@@ -85,7 +64,7 @@ class TimbanganMaterialStoneCrusherService
              * HEADER
              */
             $timbangan = Timbangan::create([
-                'nomor'          => $this->generateNomor(),
+                'nomor'          => $this->generateKodeService->generateNomorTimbangan(),
                 'tanggal'        => $data['tanggal'],
                 'masterplant_id' => $plantId,
                 'menujenisplant_id' => $menuJenisPlantId,
