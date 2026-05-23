@@ -8,6 +8,7 @@ import { materialService } from '../../../material/services/materialService';
 import { kendaraanService } from '../../../kendaraan/services/kendaraanService';
 import { driverService } from '../../../driver/services/driverService';
 import { customerService } from '../../../customer/services/customerService';
+import { suplierService } from '../../../suplier/services/suplierService';
 import { beratjenisService } from '../../../beratjenis/services/beratjenisService';
 
 // shared state
@@ -18,6 +19,7 @@ const materialDataRaw = ref([]);
 const KendaraanList = ref([]);
 const DriverList = ref([]);
 const CustomerList = ref([]);
+const SuplierList = ref([]);
 const BeratJenisList = ref([]);
 
 const isLoading = ref(false);
@@ -32,6 +34,8 @@ const columnFilters = reactive({
     kendaraan: '',
     driver: '',
     customer: '',
+    suplier: '',
+    tujuan: '',
     volume: '',
     berattotal: '',
     beratkendaraan: '',
@@ -49,6 +53,8 @@ const formStoneCrusher = reactive({
     kendaraan_id: null,
     driver_id: null,
     customer_id: null,
+    suplier_id: null,
+    tujuan: '',
     beratjenis_id: null,
     volume: '',
     berattotal: '',
@@ -184,6 +190,18 @@ export function useTimbanganSC() {
         }
     };
 
+    const fetchSuplier = async () => {
+        try {
+            const response = await suplierService.getSuplier();
+            SuplierList.value = response.data.map(item => ({
+                value: item.id,
+                label: item.nama
+            }));
+        } catch (error) {
+            console.error("Gagal memuat suplier:", error);
+        }
+    };
+
     const fetchBeratJenis = async () => {
         try {
             const response = await beratjenisService.getBeratJenis();
@@ -230,6 +248,8 @@ export function useTimbanganSC() {
         formStoneCrusher.kendaraan_id = null;
         formStoneCrusher.driver_id = null;
         formStoneCrusher.customer_id = null;
+        formStoneCrusher.suplier_id = null;
+        formStoneCrusher.tujuan = '';
         formStoneCrusher.beratjenis_id = null;
         formStoneCrusher.menujenisplant_id = currentTab.value;
         formStoneCrusher.volume = '';
@@ -314,7 +334,9 @@ export function useTimbanganSC() {
                 material: formStoneCrusher.material_id,
                 kendaraan: formStoneCrusher.kendaraan_id,
                 driver: formStoneCrusher.driver_id,
-                suplier: formStoneCrusher.customer_id,
+                customer: formStoneCrusher.customer_id,
+                suplier: formStoneCrusher.suplier_id,
+                tujuan: formStoneCrusher.tujuan,
                 beratjenis: formStoneCrusher.beratjenis_id,
                 menujenisplant_id: formStoneCrusher.menujenisplant_id,
                 volume: formStoneCrusher.volume,
@@ -371,6 +393,8 @@ export function useTimbanganSC() {
         formStoneCrusher.kendaraan_id = detail.kendaraan_id || '';
         formStoneCrusher.driver_id = detail.driver_id || '';
         formStoneCrusher.customer_id = detail.customer_id || '';
+        formStoneCrusher.suplier_id = detail.suplier_id || '';
+        formStoneCrusher.tujuan = detail.tujuan || '';
         formStoneCrusher.beratjenis_id = detail.beratjenis_id || '';
         formStoneCrusher.volume = detail.volume || 0;
         formStoneCrusher.berattotal = detail.berattotal || 0;
@@ -443,7 +467,8 @@ export function useTimbanganSC() {
             String(item.timbanganmaterialsc?.[0]?.volume || '').toLowerCase().includes(query) ||
             String(item.timbanganmaterialsc?.[0]?.berattotal || '').toLowerCase().includes(query) ||
             String(item.timbanganmaterialsc?.[0]?.beratkendaraan || '').toLowerCase().includes(query) ||
-            String(item.timbanganmaterialsc?.[0]?.beratmuatan || '').toLowerCase().includes(query)
+            String(item.timbanganmaterialsc?.[0]?.beratmuatan || '').toLowerCase().includes(query) ||
+            String(item.timbanganmaterialsc?.[0]?.tujuan || '').toLowerCase().includes(query)
         );
     }
 
@@ -489,6 +514,8 @@ export function useTimbanganSC() {
                         return String(item.timbanganmaterialsc?.[0]?.driver?.nama || '').toLowerCase().includes(filterVal);
                     case 'customer':
                         return String(item.timbanganmaterialsc?.[0]?.customer?.nama || '').toLowerCase().includes(filterVal);
+                    case 'tujuan':
+                        return String(item.timbanganmaterialsc?.[0]?.tujuan || '').toLowerCase().includes(filterVal);
                     case 'volume':
                         return String(item.timbanganmaterialsc?.[0]?.volume || '').toLowerCase().includes(filterVal);
                     case 'berattotal':
@@ -590,11 +617,13 @@ export function useTimbanganSC() {
         KendaraanList,
         DriverList,
         CustomerList,
+        SuplierList,
         BeratJenisList,
         fetchMaterial,
         fetchKendaraan,
         fetchDriver,
         fetchCustomer,
+        fetchSuplier,
         fetchBeratJenis,
 
         formStoneCrusher,

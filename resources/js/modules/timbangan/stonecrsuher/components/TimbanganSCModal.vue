@@ -115,7 +115,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-6" v-if="isMaterialOut">
                                 <div class="mb-4">
                                     <div class="form-group mb-3">
                                         <label>Customer <span class="login-danger">*</span></label>
@@ -127,6 +127,34 @@
                                             {{ Array.isArray(errors.customer_id) ? errors.customer_id[0] :
                                                 errors.customer_id }}
                                         </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6" v-if="isMaterialIn">
+                                <div class="mb-4">
+                                    <div class="form-group mb-3">
+                                        <label>Suplier <span class="login-danger">*</span></label>
+                                        <Multiselect v-model="formStoneCrusher.suplier_id" :options="SuplierList"
+                                            :searchable="true" placeholder="Pilih Suplier"
+                                            noOptionsText="Memuat data..."
+                                            :class="{ 'is-invalid': errors.suplier_id }" />
+                                        <div class="invalid-feedback d-block" v-if="errors.suplier_id">
+                                            {{ Array.isArray(errors.suplier_id) ? errors.suplier_id[0] :
+                                                errors.suplier_id }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-12" v-if="isMaterialOut">
+                            <div class="mb-4">
+                                <div class="form-group mb-3">
+                                    <label>Tujuan <span class="login-danger">*</span></label>
+                                    <input v-model="formStoneCrusher.tujuan" type="text" class="form-control"
+                                        :class="{ 'is-invalid': errors.tujuan }">
+                                    <div class="invalid-feedback" v-if="errors.tujuan">
+                                        {{ Array.isArray(errors.tujuan) ? errors.tujuan[0] :
+                                            errors.tujuan }}
                                     </div>
                                 </div>
                             </div>
@@ -215,7 +243,7 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
+import { computed, onMounted } from 'vue';
 import Multiselect from '@vueform/multiselect';
 import '@vueform/multiselect/themes/default.css';
 import { useTimbanganSC } from '../composables/useTimbanganSC';
@@ -227,6 +255,7 @@ const {
     KendaraanList,
     DriverList,
     CustomerList,
+    SuplierList,
     BeratJenisList,
     errors,
     selectedMaterialSatuan,
@@ -234,11 +263,20 @@ const {
     fetchKendaraan,
     fetchDriver,
     fetchCustomer,
+    fetchSuplier,
     fetchBeratJenis,
     submitStoneCrusher,
     isLoading,
     currentTabName,
 } = useTimbanganSC();
+
+const isMaterialIn = computed(() =>
+    currentTabName?.value?.toLowerCase() === 'material in'
+);
+
+const isMaterialOut = computed(() =>
+    currentTabName?.value?.toLowerCase() === 'material out'
+);
 
 const handleSubmit = async () => {
     await submitStoneCrusher();
@@ -249,6 +287,7 @@ onMounted(() => {
     fetchKendaraan();
     fetchDriver();
     fetchCustomer();
+    fetchSuplier();
     fetchBeratJenis();
 });
 </script>

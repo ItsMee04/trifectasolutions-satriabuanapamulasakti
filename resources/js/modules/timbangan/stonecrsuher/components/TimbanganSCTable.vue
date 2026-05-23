@@ -5,7 +5,7 @@
                 <div class="row align-items-center">
                     <div class="col">
                         <h5 class="card-title">Daftar Stone Crusher / <span class="text-danger">{{ currentTabName
-                                }}</span></h5>
+                        }}</span></h5>
                     </div>
 
                     <div class="col-auto d-flex align-items-center flex-wrap gap-2">
@@ -67,7 +67,12 @@
                             <th>Kode</th>
                             <th>No. Polisi</th>
                             <th>Driver</th>
-                            <th>Suplier</th>
+                            <th>
+                                {{ isMaterialIn ? 'Suplier' : 'Customer' }}
+                            </th>
+                            <th v-if="isMaterialOut">
+                                Tujuan
+                            </th>
                             <th>Volume</th>
                             <th>Berat Total</th>
                             <th>Berat Kendaraan</th>
@@ -89,6 +94,10 @@
                                     placeholder="Filter..."></td>
                             <td><input v-model="columnFilters.customer" class="form-control form-control-sm"
                                     placeholder="Filter..."></td>
+                            <td v-if="isMaterialOut">
+                                <input v-model="columnFilters.tujuan" class="form-control form-control-sm"
+                                    placeholder="Filter...">
+                            </td>
                             <td><input v-model="columnFilters.volume" class="form-control form-control-sm"
                                     placeholder="Filter..."></td>
                             <td><input v-model="columnFilters.berattotal" class="form-control form-control-sm"
@@ -133,7 +142,17 @@
 
                                 <td>{{ item.timbanganmaterialsc?.[0]?.driver?.nama }}</td>
 
-                                <td>{{ item.timbanganmaterialsc?.[0]?.customer?.nama }}</td>
+                                <td v-if="isMaterialIn">
+                                    {{ item.timbanganmaterialsc?.[0]?.suplier?.nama }}
+                                </td>
+
+                                <td v-if="isMaterialOut">
+                                    {{ item.timbanganmaterialsc?.[0]?.customer?.nama }}
+                                </td>
+
+                                <td v-if="isMaterialOut">
+                                    {{ item.timbanganmaterialsc?.[0]?.tujuan }}
+                                </td>
 
                                 <td>{{ item.timbanganmaterialsc?.[0]?.volume }}</td>
 
@@ -168,7 +187,7 @@
 
                     <tfoot v-if="!isLoading && paginatedStoneCrusher.length > 0">
                         <tr class="text-center fw-bold bg-light">
-                            <td colspan="7" class="text-end">TOTAL</td>
+                            <td colspan="8" class="text-end">TOTAL</td>
                             <td>{{ formatNumber(totalFooter.volumeTotal, 2) }}</td>
                             <td>{{ formatNumber(totalFooter.beratTotal) }}</td>
                             <td>{{ formatNumber(totalFooter.beratKendaraan) }}</td>
@@ -226,6 +245,7 @@
 </template>
 
 <script setup>
+import { computed } from 'vue';
 import { useTimbanganSC } from '../composables/useTimbanganSC';
 // Destructure semua yang dibutuhkan dari composable
 const {
@@ -248,6 +268,14 @@ const {
     searchQuery,
     isLoading,
     currentPage,
-    totalPages
+    totalPages,
 } = useTimbanganSC();
+
+const isMaterialIn = computed(() => {
+    return currentTabName.value?.toLowerCase() === 'material in';
+});
+
+const isMaterialOut = computed(() => {
+    return currentTabName.value?.toLowerCase() === 'material out';
+});
 </script>

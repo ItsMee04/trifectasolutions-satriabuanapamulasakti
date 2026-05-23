@@ -55,8 +55,9 @@ class TimbanganMaterialStoneCrusherService
             'timbanganmaterialsc.material',
             'timbanganmaterialsc.kendaraan',
             'timbanganmaterialsc.driver',
-            'timbanganmaterialsc.customer'
-            ])
+            'timbanganmaterialsc.customer',
+            'timbanganmaterialsc.suplier',
+        ])
             ->where('masterplant_id', $plantId) // <--- Menggunakan parameter dinamis
             ->when($menuJenisPlantId, function ($query) use ($menuJenisPlantId) {
                 return $query->where('menujenisplant_id', $menuJenisPlantId);
@@ -93,13 +94,6 @@ class TimbanganMaterialStoneCrusherService
             ]);
 
             /**
-             * VALIDASI BISNIS
-             */
-            if ($beratMuatan <= 0) {
-                throw new \Exception('Berat muatan tidak valid');
-            }
-
-            /**
              * DETAIL
              */
             TimbanganMaterialStoneCrusher::create([
@@ -107,7 +101,9 @@ class TimbanganMaterialStoneCrusherService
                 'material_id'     => $data['material'],
                 'kendaraan_id'    => $data['kendaraan'],
                 'driver_id'       => $data['driver'],
-                'customer_id'     => $data['suplier'],
+                'customer_id'     => $data['customer'] ?? null,
+                'suplier_id'      => $data['suplier'] ?? null,
+                'tujuan'          => $data['tujuan'] ?? '',
                 'beratjenis_id'   => $data['beratjenis'] ?? null,
                 'menujenisplant_id' => $data['menujenisplant_id'] ?? null,
                 'volume'          => $data['volume'] ?? 0,
@@ -162,7 +158,8 @@ class TimbanganMaterialStoneCrusherService
                     'material_id'       => $data['material'],
                     'kendaraan_id'      => $data['kendaraan'],
                     'driver_id'         => $data['driver'],
-                    'customer_id'       => $data['suplier'],
+                    'customer_id'       => $data['customer'] ?? null,
+                    'suplier_id'        => $data['suplier'] ?? null,
                     'beratjenis_id'     => $data['beratjenis'] ?? null,
                     'menujenisplant_id' => $menuJenisPlantId,
                     'volume'            => $data['volume'] ?? 0,
@@ -179,7 +176,8 @@ class TimbanganMaterialStoneCrusherService
                     'material_id'       => $data['material'],
                     'kendaraan_id'      => $data['kendaraan'],
                     'driver_id'         => $data['driver'],
-                    'customer_id'       => $data['suplier'],
+                    'customer_id'       => $data['customer'] ?? null,
+                    'suplier_id'        => $data['suplier'] ?? null,
                     'beratjenis_id'     => $data['beratjenis'] ?? null,
                     'menujenisplant_id' => $menuJenisPlantId,
                     'volume'            => $data['volume'] ?? 0,
@@ -194,7 +192,13 @@ class TimbanganMaterialStoneCrusherService
             }
 
             // Return bersama relasinya agar state di front-end ter-update sempurna
-            return $timbangan->load('timbanganmaterialsc.material', 'timbanganmaterialsc.kendaraan', 'timbanganmaterialsc.driver', 'timbanganmaterialsc.customer');
+            return $timbangan->load(
+                'timbanganmaterialsc.material',
+                'timbanganmaterialsc.kendaraan',
+                'timbanganmaterialsc.driver',
+                'timbanganmaterialsc.customer',
+                'timbanganmaterialsc.suplier'
+            );
         });
     }
 
