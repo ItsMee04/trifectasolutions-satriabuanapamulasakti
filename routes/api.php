@@ -171,8 +171,13 @@ Route::middleware('auth:sanctum')->group(function () {
 
         // Concrete Batching Plant (CBP)
         Route::prefix('concretebatchingplant')->group(function () {
-            Route::post('/', [ConcreteBatchingPlantController::class, 'getTimbanganCBP']);
             Route::get('/menujenis', [ConcreteBatchingPlantController::class, 'getMenuJenisCBP']);
+            Route::prefix('material')->group(function () {
+                Route::post('/', [ConcreteBatchingPlantController::class, 'getTimbanganMaterialCBP']);
+                Route::post('/store', [ConcreteBatchingPlantController::class, 'storeMaterialCBP']);
+                Route::post('/update', [ConcreteBatchingPlantController::class, 'updateMaterialCBP']);
+                Route::post('/delete', [ConcreteBatchingPlantController::class, 'deleteMaterialCBP']);
+            });
         });
 
         // // Asphalt Mixing Plant (AMP)

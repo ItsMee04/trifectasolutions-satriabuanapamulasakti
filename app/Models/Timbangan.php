@@ -116,4 +116,24 @@ class Timbangan extends Model
     {
         return $this->hasMany(TimbanganMaterialStoneCrusher::class, 'timbangan_id', 'id');
     }
+
+    /**
+     * Get all of the timbanganmaterialcbp for the Timbangan
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function timbanganmaterialcbp(): HasMany
+    {
+        return $this->hasMany(TimbanganMaterialConcreteBatchingPlant::class, 'timbangan_id', 'id');
+    }
+
+    /**
+     * Get all of the timbangansemencbp for the Timbangan
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function timbangansemencbp(): HasMany
+    {
+        return $this->hasMany(TimbanganSemenConcreteBatchingPlant::class, 'timbangan_id', 'id');
+    }
 }

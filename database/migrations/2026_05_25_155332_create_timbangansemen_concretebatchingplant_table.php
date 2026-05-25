@@ -11,21 +11,24 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('timbanganmaterial_concretebatchingplant', function (Blueprint $table) {
+        Schema::create('timbangansemen_concretebatchingplant', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('timbangan_id');
             $table->unsignedBigInteger('material_id');
             $table->unsignedBigInteger('kendaraan_id');
             $table->unsignedBigInteger('driver_id');
-            $table->unsignedBigInteger('customer_id')->nullable();
             $table->unsignedBigInteger('suplier_id')->nullable();
-            $table->string('pengambilan', 100)->nullable();
-            $table->string('tujuan', 100)->nullable();
             $table->unsignedBigInteger('beratjenis_id');
+            $table->dateTime('datang');
+            $table->dateTime('bongkar');
+            $table->date('suratjalan');
+            $table->string('shilo', 100);
             $table->decimal('volume', 15, 2);
             $table->decimal('berattotal', 15, 2);
             $table->decimal('beratkendaraan', 15, 2);
             $table->decimal('beratmuatan', 15, 2);
+            $table->decimal('beratmuatansuratjalan', 15, 2);
+            $table->decimal('selisih', 15, 2);
             $table->decimal('jarakawal', 15, 2);
             $table->decimal('jarakakhir', 15, 2);
             $table->unsignedBigInteger('oleh');
@@ -36,7 +39,6 @@ return new class extends Migration
             $table->foreign('material_id')->references('id')->on('material')->onDelete('cascade');
             $table->foreign('kendaraan_id')->references('id')->on('kendaraan')->onDelete('cascade');
             $table->foreign('driver_id')->references('id')->on('driver')->onDelete('cascade');
-            $table->foreign('customer_id')->references('id')->on('customer')->onDelete('cascade');
             $table->foreign('suplier_id')->references('id')->on('suplier')->onDelete('cascade');
             $table->foreign('beratjenis_id')->references('id')->on('beratjenis')->onDelete('cascade');
             $table->foreign('oleh')->references('id')->on('users')->onDelete('cascade');
@@ -48,6 +50,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('timbanganmaterial_concretebatchingplant');
+        Schema::dropIfExists('timbangansemen_concretebatchingplant');
     }
 };

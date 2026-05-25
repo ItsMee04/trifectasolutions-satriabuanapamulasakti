@@ -39,7 +39,7 @@
 
         <div class="row">
             <div class="col-lg-12">
-                <!-- <TimbanganCBPTable /> -->
+                <TimbanganMaterialCBPTable />
             </div>
         </div>
 
@@ -50,7 +50,7 @@
 <script setup>
 import { onMounted, ref, watch } from 'vue';
 import { useTimbanganCBP } from '../composables/useTimbanganCBP';
-// import TimbanganCBPTable from '../components/TimbanganCBPTable.vue';
+import TimbanganMaterialCBPTable from '../components/TimbanganMaterialCBPTable.vue';
 // import TimbanganCBPModal from '../components/TimbanganCBPModal.vue';
 
 const {

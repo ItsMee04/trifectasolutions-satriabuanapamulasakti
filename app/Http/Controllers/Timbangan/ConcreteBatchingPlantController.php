@@ -4,8 +4,15 @@ namespace App\Http\Controllers\Timbangan;
 
 use App\Http\Controllers\Controller;
 use App\Models\MenuJenisPlant;
-use App\Services\TimbanganService;
-// use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Services\TimbanganBahanBakarConcreteBatchingPlantService;
+use App\Services\TimbanganBesiConcreteBatchingPlantService;
+use App\Services\TimbanganKarsoUditchConcreteBatchingPlantService;
+use App\Services\TimbanganMaterialConcreteBatchingPlantService;
+use App\Services\TimbanganMaterialRenovasiPlantConcreteBatchingPlantService;
+use App\Services\TimbanganObatConcreteBatchingPlantService;
+use App\Services\TimbanganReadyMixConcreteBatchingPlantService;
+use App\Services\TimbanganSemenConcreteBatchingPlantService;
+use App\Services\TimbanganUditchKanstinConcreteBatchingPlantService;
 use Illuminate\Http\Request;
 
 class ConcreteBatchingPlantController extends Controller
@@ -15,54 +22,143 @@ class ConcreteBatchingPlantController extends Controller
      * Misal di tabel masterplant, Stone Crusher memiliki ID = 1
      */
     protected int $plantId = 2;
-    protected TimbanganService $timbanganService;
+    protected TimbanganMaterialConcreteBatchingPlantService $timbanganmaterialconcretebatchingplantService;
+    protected TimbanganSemenConcreteBatchingPlantService $timbangansemenconcretebatchingplantService;
+    protected TimbanganBahanBakarConcreteBatchingPlantService $timbanganbahanbakarconcretebatchingplantService;
+    protected TimbanganObatConcreteBatchingPlantService $timbanganobatconcretebatchingplantService;
+    protected TimbanganReadyMixConcreteBatchingPlantService $timbanganreadymixconcretebatchingplantService;
+    protected TimbanganUditchKanstinConcreteBatchingPlantService $timbanganuditchkanstinconcretebatchingplantService;
+    protected TimbanganKarsoUditchConcreteBatchingPlantService $timbanganKarsoUditchConcreteBatchingPlantService;
+    protected TimbanganBesiConcreteBatchingPlantService $timbanganBesiConcreteBatchingPlantService;
+    protected TimbanganMaterialRenovasiPlantConcreteBatchingPlantService $timbanganMaterialRenovasiPlantConcreteBatchingPlantService;
 
-    public function __construct(TimbanganService $timbanganService)
-    {
-        $this->timbanganService = $timbanganService;
+    public function __construct(
+        TimbanganMaterialConcreteBatchingPlantService $timbanganmaterialconcretebatchingplantService,
+        TimbanganSemenConcreteBatchingPlantService $timbangansemenconcretebatchingplantService,
+        TimbanganBahanBakarConcreteBatchingPlantService $timbanganbahanbakarconcretebatchingplantService,
+        TimbanganObatConcreteBatchingPlantService $timbanganobatconcretebatchingplantService,
+        TimbanganReadyMixConcreteBatchingPlantService $timbanganreadymixconcretebatchingplantService,
+        TimbanganUditchKanstinConcreteBatchingPlantService $timbanganuditchkanstinconcretebatchingplantService,
+        TimbanganKarsoUditchConcreteBatchingPlantService $timbanganKarsoUditchConcreteBatchingPlantService,
+        TimbanganBesiConcreteBatchingPlantService $timbanganBesiConcreteBatchingPlantService,
+        TimbanganMaterialRenovasiPlantConcreteBatchingPlantService $timbanganMaterialRenovasiPlantConcreteBatchingPlantService
+    ) {
+        $this->timbanganmaterialconcretebatchingplantService = $timbanganmaterialconcretebatchingplantService;
+        $this->timbangansemenconcretebatchingplantService = $timbangansemenconcretebatchingplantService;
+        $this->timbanganbahanbakarconcretebatchingplantService = $timbanganbahanbakarconcretebatchingplantService;
+        $this->timbanganobatconcretebatchingplantService = $timbanganobatconcretebatchingplantService;
+        $this->timbanganreadymixconcretebatchingplantService = $timbanganreadymixconcretebatchingplantService;
+        $this->timbanganuditchkanstinconcretebatchingplantService = $timbanganuditchkanstinconcretebatchingplantService;
+        $this->timbanganKarsoUditchConcreteBatchingPlantService = $timbanganKarsoUditchConcreteBatchingPlantService;
+        $this->timbanganBesiConcreteBatchingPlantService = $timbanganBesiConcreteBatchingPlantService;
+        $this->timbanganMaterialRenovasiPlantConcreteBatchingPlantService = $timbanganMaterialRenovasiPlantConcreteBatchingPlantService;
     }
 
-    public function getTimbanganCBP(Request $request)
+    public function getTimbanganMaterialCBP(Request $request)
     {
         $request->validate([
-            // Menggunakan 'query' validation jika datanya berasal dari URL parameter
-            'menujenisplant_id' => 'integer'
+            'menujenisplant_id' => 'required|integer'
         ]);
 
-        $menuJenisPlantId = $request->input('menujenisplant_id');
+        $menuJenisPlantId = $request->menujenisplant_id;
 
-        // Cari tab default jika di frontend belum terpilih
-        if (!$menuJenisPlantId) {
-            $defaultMenu = MenuJenisPlant::where('masterplant_id', $this->plantId)
-                ->where('status', 1)
-                ->oldest() // <-- Lebih clean dibanding orderBy('id', 'asc')
-                ->first();
+        // Ambil data menu jenis
+        $menuJenisPlant = MenuJenisPlant::find($menuJenisPlantId);
 
-            $menuJenisPlantId = $defaultMenu ? $defaultMenu->id : null;
+        if (!$menuJenisPlant) {
+            return response()->json([
+                'status' => 404,
+                'success' => false,
+                'message' => 'Menu jenis plant tidak ditemukan',
+                'data' => []
+            ], 200);
         }
 
-        // Oper nilai $this->plantId dari Controller ke Service
-        $data = $this->timbanganService->getFiltered($this->plantId, $menuJenisPlantId);
+        /**
+         * Mapping service berdasarkan menujenisplant_id
+         * atau bisa juga berdasarkan nama/kode menu
+         */
+        switch ($menuJenisPlantId) {
+
+            case 3:
+                $data = $this->timbanganmaterialconcretebatchingplantService
+                    ->getFiltered($this->plantId, $menuJenisPlantId);
+                break;
+
+            case 4:
+                $data = $this->timbanganmaterialconcretebatchingplantService
+                    ->getFiltered($this->plantId, $menuJenisPlantId);
+                break;
+
+            case 5:
+                $data = $this->timbangansemenconcretebatchingplantService
+                    ->getFiltered($this->plantId, $menuJenisPlantId);
+                break;
+
+            case 6:
+                $data = $this->timbanganbahanbakarconcretebatchingplantService
+                    ->getFiltered($this->plantId, $menuJenisPlantId);
+                break;
+
+            case 7:
+                $data = $this->timbanganobatconcretebatchingplantService
+                    ->getFiltered($this->plantId, $menuJenisPlantId);
+                break;
+
+            case 8:
+                $data = $this->timbanganreadymixconcretebatchingplantService
+                    ->getFiltered($this->plantId, $menuJenisPlantId);
+                break;
+
+            case 9:
+                $data = $this->timbanganuditchkanstinconcretebatchingplantService
+                    ->getFiltered($this->plantId, $menuJenisPlantId);
+                break;
+
+            case 10:
+                $data = $this->timbanganKarsoUditchConcreteBatchingPlantService
+                    ->getFiltered($this->plantId, $menuJenisPlantId);
+                break;
+
+            case 11:
+                $data = $this->timbanganBesiConcreteBatchingPlantService
+                    ->getFiltered($this->plantId, $menuJenisPlantId);
+                break;
+
+            case 12:
+                $data = $this->timbanganMaterialRenovasiPlantConcreteBatchingPlantService
+                    ->getFiltered($this->plantId, $menuJenisPlantId);
+                break;
+
+            default:
+                return response()->json([
+                    'status' => 400,
+                    'success' => false,
+                    'message' => 'Menu jenis plant tidak valid',
+                    'data' => []
+                ], 200);
+        }
 
         if ($data->isEmpty()) {
             return response()->json([
-                'status'  => 404,
+                'status' => 404,
                 'success' => false,
                 'message' => 'Data timbangan tidak ditemukan',
-                'data'    => []
+                'data' => []
             ], 200);
         }
 
         return response()->json([
-            'status'  => 200,
+            'status' => 200,
             'success' => true,
+            'message' => 'Data berhasil ditemukan',
             'data' => $data
         ], 200);
     }
 
     public function getMenuJenisCBP()
     {
-        $data = $this->timbanganService->getMenuJenisByPlant($this->plantId);
+        $data = $this->timbanganmaterialconcretebatchingplantService->getMenuJenisByPlant($this->plantId);
 
         if ($data->isEmpty()) {
             return response()->json([

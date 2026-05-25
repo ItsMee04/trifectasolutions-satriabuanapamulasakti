@@ -4,7 +4,7 @@ import apiClient from '@/utilities/apiClient';
 export const timbangancbpService = {
     // Sesuai: api/timbangan/concretebatchingplant [GET]
     async getTimbanganCBP(payload) {
-        const response = await apiClient.post('/timbangan/concretebatchingplant', payload);
+        const response = await apiClient.post('/timbangan/concretebatchingplant/material', payload);
         return response.data;
     },
 
@@ -14,17 +14,17 @@ export const timbangancbpService = {
     },
 
     async storeTimbanganCBP(payload) {
-        const response = await apiClient.post('/timbangan/concretebatchingplant/store', payload);
+        const response = await apiClient.post('/timbangan/concretebatchingplant/material/store', payload);
         return response.data;
     },
 
     async updateTimbanganCBP(payload) {
-        const response = await apiClient.post('/timbangan/concretebatchingplant/update', payload);
+        const response = await apiClient.post('/timbangan/concretebatchingplant/material/update', payload);
         return response.data;
     },
 
     async deleteTimbanganCBP(payload) {
-        const response = await apiClient.post('/timbangan/concretebatchingplant/delete', payload);
+        const response = await apiClient.post('/timbangan/concretebatchingplant/material/delete', payload);
         return response.data;
     },
 };

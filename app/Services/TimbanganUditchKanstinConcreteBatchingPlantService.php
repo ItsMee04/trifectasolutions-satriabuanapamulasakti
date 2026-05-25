@@ -6,7 +6,7 @@ use App\Models\MenuJenisPlant;
 use App\Models\Timbangan;
 use Illuminate\Database\Eloquent\Collection;
 
-class TimbanganMaterialConcreteBatchingPlantService
+class TimbanganUditchKanstinConcreteBatchingPlantService
 {
     protected GenerateKodeService $generateKodeService;
     public function __construct()
@@ -29,11 +29,11 @@ class TimbanganMaterialConcreteBatchingPlantService
     public function getFiltered(int $plantId, ?int $menuJenisPlantId = null): Collection
     {
         return Timbangan::with([
-            'timbanganmaterialcbp.material',
-            'timbanganmaterialcbp.kendaraan',
-            'timbanganmaterialcbp.driver',
-            'timbanganmaterialcbp.customer',
-            'timbanganmaterialcbp.suplier',
+            'timbanganuditchkanstin.material',
+            'timbanganuditchkanstin.kendaraan',
+            'timbanganuditchkanstin.driver',
+            'timbanganuditchkanstin.customer',
+            'timbanganuditchkanstin.suplier',
         ])
             ->where('masterplant_id', $plantId) // <--- Menggunakan parameter dinamis
             ->when($menuJenisPlantId, function ($query) use ($menuJenisPlantId) {
