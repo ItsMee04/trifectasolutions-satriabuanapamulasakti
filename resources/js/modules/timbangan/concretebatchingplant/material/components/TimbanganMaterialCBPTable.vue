@@ -5,7 +5,7 @@
                 <div class="row align-items-center">
                     <div class="col">
                         <h5 class="card-title">Daftar Concrete Batching Plant / <span class="text-danger">{{
-                                currentTabName
+                            currentTabName
                                 }}</span></h5>
                     </div>
 
@@ -102,7 +102,6 @@
                                     placeholder="Filter..."></td>
                             <td><input v-model="columnFilters.beratmuatan" class="form-control form-control-sm"
                                     placeholder="Filter..."></td>
-                            <td></td>
                             <td>
                                 <button @click="resetColumnFilters" class="btn btn-outline-danger btn-sm"
                                     title="Reset Filter">
@@ -240,8 +239,14 @@
 
 <script setup>
 import { computed } from 'vue';
-import { useTimbanganCBP } from '../composables/useTimbanganCBP';
+import { useNavigationCBP } from '../../composables/useNavigasiCBP';
+import { useTimbanganMaterialCBP } from '../composables/useTimbanganMaterialCBP';
 // Destructure semua yang dibutuhkan dari composable
+const {
+    currentTab,
+    currentTabName,
+} = useNavigationCBP();
+
 const {
     handleCreate,
     handleEdit,
@@ -256,20 +261,21 @@ const {
     startDate,
     endDate,
     totalFooter,
-    currentTabName,
-    filteredConcreteBatchingPlant,
-    paginatedConcreteBatchingPlant,
     searchQuery,
-    isLoading,
     currentPage,
     totalPages,
-} = useTimbanganCBP();
+
+    // Sesuaikan mapping nama variabel di bawah ini:
+    isMaterialLoading: isLoading,
+    filteredMaterialCBP: filteredConcreteBatchingPlant,
+    paginatedMaterialCBP: paginatedConcreteBatchingPlant
+} = useTimbanganMaterialCBP();
 
 const isMaterialIn = computed(() => {
-    return currentTabName.value?.toLowerCase() === 'material in';
+    return Number(currentTab.value) === 3;
 });
 
 const isMaterialOut = computed(() => {
-    return currentTabName.value?.toLowerCase() === 'material out';
+    return Number(currentTab.value) === 4;
 });
 </script>

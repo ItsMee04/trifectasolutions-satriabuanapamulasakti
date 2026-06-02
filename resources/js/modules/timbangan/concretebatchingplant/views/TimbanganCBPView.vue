@@ -18,7 +18,7 @@
             <div class="nav-wrapper">
 
                 <button v-for="menu in MenuTimbanganCBPList" :key="menu.id" type="button" class="nav-item"
-                    :class="{ active: currentTab === menu.id }" @click="switchTab(menu)">
+                    :class="{ active: currentTab === menu.id }" @click="handleTabClick(menu)">
                     <div class="nav-icon dark">
                         <i class="feather-grid"></i>
                     </div>
@@ -39,37 +39,113 @@
 
         <div class="row">
             <div class="col-lg-12">
-                <TimbanganMaterialCBPTable />
+                <div v-if="globalLoading" class="text-center my-4">
+                    <p>Memuat data...</p>
+                </div>
+
+                <div v-else>
+                    <component :is="activeTableComponent" />
+                </div>
             </div>
         </div>
-
-        <!-- <TimbanganCBPModal /> -->
     </div>
 </template>
 
 <script setup>
-import { onMounted, ref, watch } from 'vue';
-import { useTimbanganCBP } from '../composables/useTimbanganCBP';
-import TimbanganMaterialCBPTable from '../components/TimbanganMaterialCBPTable.vue';
-// import TimbanganCBPModal from '../components/TimbanganCBPModal.vue';
+import { onMounted, computed, h } from 'vue';
 
+// 1. Import Composable Navigasi Utama
+import { useNavigationCBP } from '../composables/useNavigasiCBP.js';
+
+// 2. Import Composable Fitur Spesifik
+import { useTimbanganMaterialCBP } from '../material/composables/useTimbanganMaterialCBP.js';
+// import { useTimbanganSemenCBP } from '../composables/useTimbanganSemenCBP';
+
+// // 3. Import Components Tabel Spesifik
+import TimbanganMaterialCBPTable from '../material/components/TimbanganMaterialCBPTable.vue';
+import TimbanganMaterialCBPModal from '../material/components/TimbanganMaterialCBPModal.vue';
+
+// // import TimbanganSemenCBPTable from '../components/TimbanganSemenCBPTable.vue'; // Contoh masa depan
+
+// Destruktur fungsi & state dari Navigasi Pusat
 const {
-    currentTab,
-    isLoading,
     MenuTimbanganCBPList,
+    currentTab,
+    currentPage,
+    currentTabName,
+    isMenuLoading,
     fetchMenuTimbanganCBPList,
-    fetchConcreteBatchingPlant,
-    switchTab,
-    currentTabName
-} = useTimbanganCBP();
+    switchTab
+} = useNavigationCBP();
+
+// Inisialisasi Composable Kelompok Fitur
+const materialCBP = useTimbanganMaterialCBP();
+
+// Daftarkan semua instance composable
+const registeredComposables = {
+    materialCBP,
+};
+
+// SWITCH CASE UNTUK RENDERING COMPONENT TABEL
+const activeTableComponent = computed(() => {
+    const menuId = Number(currentTab.value);
+
+    switch (menuId) {
+        case 3: // MATERIAL IN
+        case 4: // MATERIAL OUT
+            return TimbanganMaterialCBPTable; // Langsung return komponennya saja tanpa await fetch
+
+        case 5: // SEMEN
+            return h('div', { class: 'd-flex align-items-center justify-content-center my-4 text-danger' }, `Component untuk ${currentTabName.value} belum tersedia.`);
+
+        case 6: // BAHAN BAKAR
+            return h('div', { class: 'd-flex align-items-center justify-content-center my-4 text-danger' }, `Component untuk ${currentTabName.value} belum tersedia.`);
+
+        case 7: // OBAT
+            return h('div', { class: 'd-flex align-items-center justify-content-center my-4 text-danger' }, `Component untuk ${currentTabName.value} belum tersedia.`);
+
+        case 8: // READY MIX
+            return h('div', { class: 'd-flex align-items-center justify-content-center my-4 text-danger' }, `Component untuk ${currentTabName.value} belum tersedia.`);
+
+        case 9: // U-DITCH & KANSTIN
+            return h('div', { class: 'd-flex align-items-center justify-content-center my-4 text-danger' }, `Component untuk ${currentTabName.value} belum tersedia.`);
+
+        case 10: // KARSO & U-DITCH
+            return h('div', { class: 'd-flex align-items-center justify-content-center my-4 text-danger' }, `Component untuk ${currentTabName.value} belum tersedia.`);
+
+        case 11: // BESI
+            return h('div', { class: 'd-flex align-items-center justify-content-center my-4 text-danger' }, `Component untuk ${currentTabName.value} belum tersedia.`);
+
+        case 12: // MATERIAL RENOVASI PLANT
+            return h('div', { class: 'd-flex align-items-center justify-content-center my-4 text-danger' }, `Component untuk ${currentTabName.value} belum tersedia.`);
+
+        default:
+            return h('div', { class: 'text-center my-4' }, 'Silakan pilih menu timbangan.');
+    }
+});
+
+// Kombinasikan semua state loading dari sub-composable aktif
+const globalLoading = computed(() => {
+    if (isMenuLoading.value) return true;
+
+    switch (currentTab.value) {
+        case 3:
+        case 4:
+            return materialCBP.isMaterialLoading.value;
+        default:
+            return false;
+    }
+});
+
+// Fungsi pembungkus klik tab
+const handleTabClick = async (menu) => {
+    await switchTab(menu, registeredComposables);
+};
 
 onMounted(async () => {
-    // 1. Ambil daftar menu navigasi (misal: IN, OUT, dll)
-    await fetchMenuTimbanganCBPList();
-
-    // 2. WAJIB: Ambil data tabel pertama kali berdasarkan tab yang otomatis terpilih
-    if (currentTab.value) {
-        await fetchConcreteBatchingPlant(currentTab.value);
+    const defaultMenu = await fetchMenuTimbanganCBPList();
+    if (defaultMenu) {
+        await handleTabClick(defaultMenu);
     }
 });
 </script>

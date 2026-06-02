@@ -29,11 +29,11 @@ class TimbanganMaterialRenovasiPlantConcreteBatchingPlantService
     public function getFiltered(int $plantId, ?int $menuJenisPlantId = null): Collection
     {
         return Timbangan::with([
-            'timbanganmaterialrenovasiplant.material',
-            'timbanganmaterialrenovasiplant.kendaraan',
-            'timbanganmaterialrenovasiplant.driver',
-            'timbanganmaterialrenovasiplant.customer',
-            'timbanganmaterialrenovasiplant.suplier',
+            'timbanganmaterialrenovasiplantcbp.material',
+            'timbanganmaterialrenovasiplantcbp.kendaraan',
+            'timbanganmaterialrenovasiplantcbp.driver',
+            'timbanganmaterialrenovasiplantcbp.customer',
+            'timbanganmaterialrenovasiplantcbp.suplier',
         ])
             ->where('masterplant_id', $plantId) // <--- Menggunakan parameter dinamis
             ->when($menuJenisPlantId, function ($query) use ($menuJenisPlantId) {
