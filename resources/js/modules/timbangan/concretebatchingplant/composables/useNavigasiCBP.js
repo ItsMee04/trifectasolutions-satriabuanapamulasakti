@@ -1,6 +1,6 @@
 import { ref, computed } from 'vue';
-import { timbangancbpService } from '../services/timbangancbpService';
-import { toastfy } from '../../../../utilities/toast';
+import { timbangancbpService } from '@/modules/timbangan/concretebatchingplant/services/timbangancbpService';
+import { toastfy } from '@/utilities/toast';
 
 // Shared state agar data menu dan status halaman aktif konsisten di seluruh aplikasi
 const MenuTimbanganCBPList = ref([]);

@@ -239,8 +239,8 @@
 
 <script setup>
 import { computed } from 'vue';
-import { useNavigationCBP } from '../../composables/useNavigasiCBP';
-import { useTimbanganMaterialCBP } from '../composables/useTimbanganMaterialCBP';
+import { useNavigationCBP } from '@/modules/timbangan/concretebatchingplant/composables/useNavigasiCBP';
+import { useTimbanganMaterialCBP } from '@/modules/timbangan/concretebatchingplant/material/composables/useTimbanganMaterialCBP';
 // Destructure semua yang dibutuhkan dari composable
 const {
     currentTab,

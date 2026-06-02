@@ -48,6 +48,8 @@
                 </div>
             </div>
         </div>
+
+        <component :is="activeModalComponent" />
     </div>
 </template>
 
@@ -55,15 +57,15 @@
 import { onMounted, computed, h } from 'vue';
 
 // 1. Import Composable Navigasi Utama
-import { useNavigationCBP } from '../composables/useNavigasiCBP.js';
+import { useNavigationCBP } from '@/modules/timbangan/concretebatchingplant/composables/useNavigasiCBP.js';
 
 // 2. Import Composable Fitur Spesifik
-import { useTimbanganMaterialCBP } from '../material/composables/useTimbanganMaterialCBP.js';
+import { useTimbanganMaterialCBP } from '@/modules/timbangan/concretebatchingplant/material/composables/useTimbanganMaterialCBP.js';
 // import { useTimbanganSemenCBP } from '../composables/useTimbanganSemenCBP';
 
 // // 3. Import Components Tabel Spesifik
-import TimbanganMaterialCBPTable from '../material/components/TimbanganMaterialCBPTable.vue';
-import TimbanganMaterialCBPModal from '../material/components/TimbanganMaterialCBPModal.vue';
+import TimbanganMaterialCBPTable from '@/modules/timbangan/concretebatchingplant/material/components/TimbanganMaterialCBPTable.vue';
+import TimbanganMaterialCBPModal from '@/modules/timbangan/concretebatchingplant/material/components/TimbanganMaterialCBPModal.vue';
 
 // // import TimbanganSemenCBPTable from '../components/TimbanganSemenCBPTable.vue'; // Contoh masa depan
 
@@ -121,6 +123,24 @@ const activeTableComponent = computed(() => {
 
         default:
             return h('div', { class: 'text-center my-4' }, 'Silakan pilih menu timbangan.');
+    }
+});
+
+// SWITCH CASE UNTUK RENDERING COMPONENT MODAL
+const activeModalComponent = computed(() => {
+    const menuId = Number(currentTab.value);
+
+    switch (menuId) {
+        case 3: // MATERIAL IN
+        case 4: // MATERIAL OUT
+            return TimbanganMaterialCBPModal;
+
+        case 5: // SEMEN (Contoh jika besok sudah dibuat)
+            // return TimbanganSemenCBPModal;
+            return null;
+
+        default:
+            return null; // Menu lain yang belum ada modalnya tidak akan merender apa pun
     }
 });
 

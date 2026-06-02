@@ -1,15 +1,15 @@
 import { ref, computed, reactive, watch } from 'vue'
-import { toastfy } from '../../../../../utilities/toast';
+import { toastfy } from '@/utilities/toast';
 import Swal from 'sweetalert2';
 
 // Services
-import { timbangancbpService } from '../../services/timbangancbpService';
-import { materialService } from '../../../../material/services/materialService';
-import { kendaraanService } from '../../../../kendaraan/services/kendaraanService';
-import { driverService } from '../../../../driver/services/driverService';
-import { customerService } from '../../../../customer/services/customerService';
-import { suplierService } from '../../../../suplier/services/suplierService';
-import { beratjenisService } from '../../../../beratjenis/services/beratjenisService';
+import { timbanganmaterialcbpService } from '@/modules/timbangan/concretebatchingplant/material/services/timbanganmaterialcbpService';
+import { materialService } from '@/modules/material/services/materialService';
+import { kendaraanService } from '@/modules/kendaraan/services/kendaraanService';
+import { driverService } from '@/modules/driver/services/driverService';
+import { customerService } from '@/modules/customer/services/customerService';
+import { suplierService } from '@/modules/suplier/services/suplierService';
+import { beratjenisService } from '@/modules/beratjenis/services/beratjenisService';
 
 // Shared State Khusus Kelompok Timbangan Material
 const materialItems = ref([]);
@@ -47,7 +47,7 @@ const columnFilters = reactive({
     beratmuatan: '',
 });
 
-const formConcreteBatchingPlant = reactive({
+const formMaterialCBP = reactive({
     id: null,
     tanggal: '',
     material_id: null,
@@ -74,7 +74,7 @@ export function useTimbanganMaterialCBP() {
 
         try {
             const payload = { menujenisplant_id: menuJenisPlantId };
-            const response = await timbangancbpService.getTimbanganCBP(payload);
+            const response = await timbanganmaterialcbpService.getTimbanganCBP(payload);
             materialItems.value = response.data;
         } catch (error) {
             toastfy.error('Gagal mengambil data Timbangan Material');
@@ -169,16 +169,16 @@ export function useTimbanganMaterialCBP() {
     const validateForm = () => {
         errors.value = {};
 
-        if (!formConcreteBatchingPlant.tanggal) errors.value.tanggal = 'Tanggal tidak boleh kosong.';
-        if (!formConcreteBatchingPlant.material_id) errors.value.material_id = 'Pilih Material terlebih dahulu.';
+        if (!formMaterialCBP.tanggal) errors.value.tanggal = 'Tanggal tidak boleh kosong.';
+        if (!formMaterialCBP.material_id) errors.value.material_id = 'Pilih Material terlebih dahulu.';
 
-        if (formConcreteBatchingPlant.volume === null || formConcreteBatchingPlant.volume === '') {
+        if (formMaterialCBP.volume === null || formMaterialCBP.volume === '') {
             errors.value.volume = 'Volume tidak boleh kosong.';
         }
-        if (formConcreteBatchingPlant.berattotal === null || formConcreteBatchingPlant.berattotal === '') {
+        if (formMaterialCBP.berattotal === null || formMaterialCBP.berattotal === '') {
             errors.value.berattotal = 'Berat Total tidak boleh kosong.';
         }
-        if (formConcreteBatchingPlant.beratkendaraan === null || formConcreteBatchingPlant.beratkendaraan === '') {
+        if (formMaterialCBP.beratkendaraan === null || formMaterialCBP.beratkendaraan === '') {
             errors.value.beratkendaraan = 'Berat Kendaraan tidak boleh kosong.';
         }
 
@@ -192,25 +192,25 @@ export function useTimbanganMaterialCBP() {
     const handleCreate = () => {
         isEdit.value = false;
         errors.value = {};
-        formConcreteBatchingPlant.id = null;
-        formConcreteBatchingPlant.tanggal = getTodayDate();
-        formConcreteBatchingPlant.material_id = null;
-        formConcreteBatchingPlant.kendaraan_id = null;
-        formConcreteBatchingPlant.driver_id = null;
-        formConcreteBatchingPlant.customer_id = null;
-        formConcreteBatchingPlant.suplier_id = null;
-        formConcreteBatchingPlant.tujuan = '';
-        formConcreteBatchingPlant.beratjenis_id = null;
-        formConcreteBatchingPlant.menujenisplant_id = activeMenuId.value; // Set sesuai menu aktif
-        formConcreteBatchingPlant.volume = '';
-        formConcreteBatchingPlant.berattotal = '';
-        formConcreteBatchingPlant.beratkendaraan = '';
-        formConcreteBatchingPlant.beratmuatan = '';
-        formConcreteBatchingPlant.jarakawal = '';
-        formConcreteBatchingPlant.jarakakhir = '';
-        formConcreteBatchingPlant.jarak = '';
+        formMaterialCBP.id = null;
+        formMaterialCBP.tanggal = getTodayDate();
+        formMaterialCBP.material_id = null;
+        formMaterialCBP.kendaraan_id = null;
+        formMaterialCBP.driver_id = null;
+        formMaterialCBP.customer_id = null;
+        formMaterialCBP.suplier_id = null;
+        formMaterialCBP.tujuan = '';
+        formMaterialCBP.beratjenis_id = null;
+        formMaterialCBP.menujenisplant_id = activeMenuId.value; // Set sesuai menu aktif
+        formMaterialCBP.volume = '';
+        formMaterialCBP.berattotal = '';
+        formMaterialCBP.beratkendaraan = '';
+        formMaterialCBP.beratmuatan = '';
+        formMaterialCBP.jarakawal = '';
+        formMaterialCBP.jarakakhir = '';
+        formMaterialCBP.jarak = '';
 
-        const modal = new bootstrap.Modal(document.getElementById('modalConcreteBatchingPlant'));
+        const modal = new bootstrap.Modal(document.getElementById('modalMaterialCBP'));
         modal.show();
     };
 
@@ -219,7 +219,7 @@ export function useTimbanganMaterialCBP() {
     const isTabOut = computed(() => activeMenuId.value === 4);
 
     const isTruckMixer = computed(() => {
-        const kendaraan = KendaraanList.value.find(k => k.value === formConcreteBatchingPlant.kendaraan_id);
+        const kendaraan = KendaraanList.value.find(k => k.value === formMaterialCBP.kendaraan_id);
         return kendaraan ? kendaraan.label.toUpperCase().includes('TM') : false;
     });
 
@@ -227,54 +227,54 @@ export function useTimbanganMaterialCBP() {
     const showTMOutFields = computed(() => isTabOut.value && isTruckMixer.value);
 
     const selectedMaterialSatuan = computed(() => {
-        const material = materialDataRaw.value.find(m => m.id === formConcreteBatchingPlant.material_id);
+        const material = materialDataRaw.value.find(m => m.id === formMaterialCBP.material_id);
         return material ? material.satuan.toLowerCase() : '';
     });
 
     // 4. Logika Perhitungan Otomatis (Watchers)
     watch(
-        () => [formConcreteBatchingPlant.beratmuatan, formConcreteBatchingPlant.beratjenis_id, formConcreteBatchingPlant.material_id, formConcreteBatchingPlant.kendaraan_id],
+        () => [formMaterialCBP.beratmuatan, formMaterialCBP.beratjenis_id, formMaterialCBP.material_id, formMaterialCBP.kendaraan_id],
         () => {
-            const beratMuatan = parseFloat(formConcreteBatchingPlant.beratmuatan) || 0;
+            const beratMuatan = parseFloat(formMaterialCBP.beratmuatan) || 0;
             const satuan = selectedMaterialSatuan.value;
 
-            const bjTerpilih = BeratJenisList.value.find(b => b.value === formConcreteBatchingPlant.beratjenis_id);
+            const bjTerpilih = BeratJenisList.value.find(b => b.value === formMaterialCBP.beratjenis_id);
             const nilaiBJ = bjTerpilih ? parseFloat(bjTerpilih.label) : 0;
 
             if (satuan === 'm3') {
                 if (isTruckMixer.value) {
-                    formConcreteBatchingPlant.volume = 1;
+                    formMaterialCBP.volume = 1;
                 } else {
-                    formConcreteBatchingPlant.volume = nilaiBJ > 0 ? (beratMuatan / nilaiBJ).toFixed(2) : 0;
+                    formMaterialCBP.volume = nilaiBJ > 0 ? (beratMuatan / nilaiBJ).toFixed(2) : 0;
                 }
             } else if (satuan === 'kg') {
-                formConcreteBatchingPlant.volume = beratMuatan;
+                formMaterialCBP.volume = beratMuatan;
             } else if (satuan === 'liter' || satuan === 'pcs') {
                 // Manual input oleh user
             } else {
-                formConcreteBatchingPlant.volume = 0;
+                formMaterialCBP.volume = 0;
             }
         }
     );
 
     watch(
-        () => [formConcreteBatchingPlant.berattotal, formConcreteBatchingPlant.beratkendaraan],
+        () => [formMaterialCBP.berattotal, formMaterialCBP.beratkendaraan],
         ([total, kendaraan]) => {
             const t = parseFloat(total) || 0;
             const k = parseFloat(kendaraan) || 0;
             const hasil = t - k;
-            formConcreteBatchingPlant.beratmuatan = hasil > 0 ? hasil : 0;
+            formMaterialCBP.beratmuatan = hasil > 0 ? hasil : 0;
         }
     );
 
     watch(
-        () => [formConcreteBatchingPlant.jarakawal, formConcreteBatchingPlant.jarakakhir],
+        () => [formMaterialCBP.jarakawal, formMaterialCBP.jarakakhir],
         ([awal, akhir]) => {
             const valAwal = parseFloat(awal) || 0;
             const valAkhir = parseFloat(akhir) || 0;
             const hasil = valAkhir - valAwal;
 
-            formConcreteBatchingPlant.jarak = hasil > 0 ? Number(hasil.toFixed(2)) : 0;
+            formMaterialCBP.jarak = hasil > 0 ? Number(hasil.toFixed(2)) : 0;
         }
     );
 
@@ -284,33 +284,33 @@ export function useTimbanganMaterialCBP() {
         isMaterialLoading.value = true;
         try {
             const payload = {
-                id: formConcreteBatchingPlant.id,
-                tanggal: formConcreteBatchingPlant.tanggal,
-                material: formConcreteBatchingPlant.material_id,
-                kendaraan: formConcreteBatchingPlant.kendaraan_id,
-                driver: formConcreteBatchingPlant.driver_id,
-                customer: formConcreteBatchingPlant.customer_id,
-                suplier: formConcreteBatchingPlant.suplier_id,
-                beratjenis: formConcreteBatchingPlant.beratjenis_id,
-                menujenisplant_id: formConcreteBatchingPlant.menujenisplant_id,
-                volume: formConcreteBatchingPlant.volume,
-                berattotal: formConcreteBatchingPlant.berattotal,
-                beratkendaraan: formConcreteBatchingPlant.beratkendaraan,
-                beratmuatan: formConcreteBatchingPlant.beratmuatan,
-                jarakawal: formConcreteBatchingPlant.jarakawal,
-                jarakakhir: formConcreteBatchingPlant.jarakakhir,
-                jarak: formConcreteBatchingPlant.jarak,
+                id: formMaterialCBP.id,
+                tanggal: formMaterialCBP.tanggal,
+                material: formMaterialCBP.material_id,
+                kendaraan: formMaterialCBP.kendaraan_id,
+                driver: formMaterialCBP.driver_id,
+                customer: formMaterialCBP.customer_id,
+                suplier: formMaterialCBP.suplier_id,
+                beratjenis: formMaterialCBP.beratjenis_id,
+                menujenisplant_id: formMaterialCBP.menujenisplant_id,
+                volume: formMaterialCBP.volume,
+                berattotal: formMaterialCBP.berattotal,
+                beratkendaraan: formMaterialCBP.beratkendaraan,
+                beratmuatan: formMaterialCBP.beratmuatan,
+                jarakawal: formMaterialCBP.jarakawal,
+                jarakakhir: formMaterialCBP.jarakakhir,
+                jarak: formMaterialCBP.jarak,
             };
 
             let response;
             if (isEdit.value) {
-                response = await timbangancbpService.updateTimbanganCBP(payload);
+                response = await timbanganmaterialcbpService.updateTimbanganCBP(payload);
             } else {
-                response = await timbangancbpService.storeTimbanganCBP(payload);
+                response = await timbanganmaterialcbpService.storeTimbanganCBP(payload);
             }
 
             toastfy.success(response.message || 'Data berhasil disimpan');
-            const modalElement = document.getElementById('modalConcreteBatchingPlant');
+            const modalElement = document.getElementById('modalMaterialCBP');
             const modalInstance = bootstrap.Modal.getInstance(modalElement);
             if (modalInstance) modalInstance.hide();
 
@@ -334,27 +334,27 @@ export function useTimbanganMaterialCBP() {
         isEdit.value = true;
         errors.value = {};
 
-        formConcreteBatchingPlant.id = item.id;
-        formConcreteBatchingPlant.tanggal = item.tanggal;
-        formConcreteBatchingPlant.menujenisplant_id = item.menujenisplant_id;
+        formMaterialCBP.id = item.id;
+        formMaterialCBP.tanggal = item.tanggal;
+        formMaterialCBP.menujenisplant_id = item.menujenisplant_id;
 
         const detail = item.timbanganmaterialcbp?.[0] || {};
 
-        formConcreteBatchingPlant.material_id = detail.material_id || '';
-        formConcreteBatchingPlant.kendaraan_id = detail.kendaraan_id || '';
-        formConcreteBatchingPlant.driver_id = detail.driver_id || '';
-        formConcreteBatchingPlant.customer_id = detail.customer_id || '';
-        formConcreteBatchingPlant.suplier_id = detail.suplier_id || '';
-        formConcreteBatchingPlant.tujuan = detail.tujuan || '';
-        formConcreteBatchingPlant.beratjenis_id = detail.beratjenis_id || '';
-        formConcreteBatchingPlant.volume = detail.volume || 0;
-        formConcreteBatchingPlant.berattotal = detail.berattotal || 0;
-        formConcreteBatchingPlant.beratkendaraan = detail.beratkendaraan || 0;
-        formConcreteBatchingPlant.beratmuatan = detail.beratmuatan || 0;
-        formConcreteBatchingPlant.jarakawal = detail.jarakawal || 0;
-        formConcreteBatchingPlant.jarakakhir = detail.jarakakhir || 0;
+        formMaterialCBP.material_id = detail.material_id || '';
+        formMaterialCBP.kendaraan_id = detail.kendaraan_id || '';
+        formMaterialCBP.driver_id = detail.driver_id || '';
+        formMaterialCBP.customer_id = detail.customer_id || '';
+        formMaterialCBP.suplier_id = detail.suplier_id || '';
+        formMaterialCBP.tujuan = detail.tujuan || '';
+        formMaterialCBP.beratjenis_id = detail.beratjenis_id || '';
+        formMaterialCBP.volume = detail.volume || 0;
+        formMaterialCBP.berattotal = detail.berattotal || 0;
+        formMaterialCBP.beratkendaraan = detail.beratkendaraan || 0;
+        formMaterialCBP.beratmuatan = detail.beratmuatan || 0;
+        formMaterialCBP.jarakawal = detail.jarakawal || 0;
+        formMaterialCBP.jarakakhir = detail.jarakakhir || 0;
 
-        const modalElement = document.getElementById('modalConcreteBatchingPlant');
+        const modalElement = document.getElementById('modalMaterialCBP');
         if (modalElement) {
             const modal = new bootstrap.Modal(modalElement);
             modal.show();
@@ -385,7 +385,7 @@ export function useTimbanganMaterialCBP() {
             isMaterialLoading.value = true;
             try {
                 const payload = { id: item.id };
-                await timbangancbpService.deleteTimbanganCBP(payload);
+                await timbanganmaterialcbpService.deleteTimbanganCBP(payload);
                 toastfy.success('Timbangan Material berhasil dihapus.');
                 await handleRefresh();
             } catch (error) {
@@ -524,7 +524,7 @@ export function useTimbanganMaterialCBP() {
         CustomerList,
         BeratJenisList,
         SuplierList,
-        formConcreteBatchingPlant,
+        formMaterialCBP,
 
         searchQuery,
         startDate,
