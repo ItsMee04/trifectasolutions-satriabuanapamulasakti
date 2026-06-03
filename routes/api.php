@@ -174,9 +174,9 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::get('/menujenis', [ConcreteBatchingPlantController::class, 'getMenuJenisCBP']);
             Route::prefix('material')->group(function () {
                 Route::post('/', [ConcreteBatchingPlantController::class, 'getTimbanganMaterialCBP']);
-                Route::post('/store', [ConcreteBatchingPlantController::class, 'storeMaterialCBP']);
-                Route::post('/update', [ConcreteBatchingPlantController::class, 'updateMaterialCBP']);
-                Route::post('/delete', [ConcreteBatchingPlantController::class, 'deleteMaterialCBP']);
+                Route::post('/store', [ConcreteBatchingPlantController::class, 'storeTimbanganMaterialCBP']);
+                Route::post('/update', [ConcreteBatchingPlantController::class, 'updateTimbanganMaterialCBP']);
+                Route::post('/delete', [ConcreteBatchingPlantController::class, 'deleteTimbanganMaterialCBP']);
             });
         });
 

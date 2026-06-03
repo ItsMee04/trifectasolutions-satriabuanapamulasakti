@@ -146,19 +146,6 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-12" v-if="isMaterialOut">
-                            <div class="mb-4">
-                                <div class="form-group mb-3">
-                                    <label>Tujuan <span class="login-danger">*</span></label>
-                                    <input v-model="formMaterialCBP.tujuan" type="text" class="form-control"
-                                        :class="{ 'is-invalid': errors.tujuan }">
-                                    <div class="invalid-feedback" v-if="errors.tujuan">
-                                        {{ Array.isArray(errors.tujuan) ? errors.tujuan[0] :
-                                            errors.tujuan }}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="mb-4">
@@ -273,7 +260,7 @@ const {
     fetchCustomer,
     fetchSuplier,
     fetchBeratJenis,
-    submitMaterialCBP,
+    submitConcreteBatchingPlant,
     isLoading,
 } = useTimbanganMaterialCBP();
 
@@ -286,7 +273,7 @@ const isMaterialOut = computed(() => {
 });
 
 const handleSubmit = async () => {
-    await submitMaterialCBP();
+    await submitConcreteBatchingPlant();
 }
 
 onMounted(() => {
