@@ -70,7 +70,7 @@ import TimbanganMaterialCBPModal from '@/modules/timbangan/concretebatchingplant
 
 // SEMEN
 import TimbanganSemenCBPTable from '@/modules/timbangan/concretebatchingplant/semen/components/TimbanganSemenCBPTable.vue';
-// import TimbanganSemenCBPModal from '@/modules/timbangan/concretebatchingplant/semen/components/TimbanganSemenCBPModal.vue';
+import TimbanganSemenCBPModal from '@/modules/timbangan/concretebatchingplant/semen/components/TimbanganSemenCBPModal.vue';
 
 // // import TimbanganSemenCBPTable from '../components/TimbanganSemenCBPTable.vue'; // Contoh masa depan
 
@@ -142,9 +142,9 @@ const activeModalComponent = computed(() => {
         case 4: // MATERIAL OUT
             return TimbanganMaterialCBPModal;
 
-        // case 5: // SEMEN (Contoh jika besok sudah dibuat)
-        //     // return TimbanganSemenCBPModal;
-        //     return TimbanganSemenCBPModal;
+        case 5: // SEMEN (Contoh jika besok sudah dibuat)
+            // return TimbanganSemenCBPModal;
+            return TimbanganSemenCBPModal;
 
         default:
             return null; // Menu lain yang belum ada modalnya tidak akan merender apa pun
