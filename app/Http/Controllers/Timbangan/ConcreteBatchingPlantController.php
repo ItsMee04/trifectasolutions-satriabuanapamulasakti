@@ -55,7 +55,7 @@ class ConcreteBatchingPlantController extends Controller
         $this->timbanganMaterialRenovasiPlantConcreteBatchingPlantService = $timbanganMaterialRenovasiPlantConcreteBatchingPlantService;
     }
 
-    public function getTimbanganMaterialCBP(Request $request)
+    public function getTimbanganCBP(Request $request)
     {
         $request->validate([
             'menujenisplant_id' => 'required|integer'
@@ -178,34 +178,113 @@ class ConcreteBatchingPlantController extends Controller
         ], 200);
     }
 
-    public function storeTimbanganMaterialCBP(Request $request)
+    public function storeTimbanganCBP(Request $request)
     {
-        // 1. Validasi Input
-        $validated = $request->validate([
-            'tanggal'        => 'required|date',
-            'material'       => 'required|integer',
-            'kendaraan'      => 'required|integer',
-            'driver'         => 'required|integer',
-            'customer'       => 'nullable|integer',
-            'suplier'        => 'nullable|integer',
-            'menujenisplant_id' => 'required|integer',
-            'berattotal'     => 'required',
-            'beratkendaraan' => 'required',
+        // 1. Validasi awal untuk memastikan ID menu dikirim dan berupa angka
+        $request->validate([
+            'menujenisplant_id' => 'required|integer'
         ]);
 
+        $menuJenisPlantId = $request->menujenisplant_id;
+
+        // Ambil data menu jenis plant untuk memastikan menu tersebut terdaftar
+        $menuJenisPlant = MenuJenisPlant::find($menuJenisPlantId);
+        if (!$menuJenisPlant) {
+            return response()->json([
+                'status' => 404,
+                'success' => false,
+                'message' => 'Menu jenis plant tidak ditemukan',
+                'data' => []
+            ], 200); // Mengikuti pola response error project kamu (200 OK dengan status 404 didalam body)
+        }
+
         try {
-            // 2. Panggil Service
-            $timbangan = $this->timbanganmaterialconcretebatchingplantService->createTimbanganMaterial($request->all(), $this->plantId, $request->menujenisplant_id);
+            // 2. Mapping Service & Validasi Spesifik Berdasarkan menujenisplant_id
+            switch ($menuJenisPlantId) {
+
+                case 3: // MATERIAL IN
+                case 4: // MATERIAL OUT
+                    // Validasi khusus untuk rumpun timbangan material
+                    $payload = $request->validate([
+                        'tanggal'           => 'required|date',
+                        'material'          => 'required|integer',
+                        'kendaraan'         => 'required|integer',
+                        'driver'            => 'required|integer',
+                        'customer'          => 'nullable|integer',
+                        'suplier'           => 'nullable|integer',
+                        'berattotal'        => 'required',
+                        'beratkendaraan'    => 'required',
+                    ]);
+
+                    $timbangan = $this->timbanganmaterialconcretebatchingplantService
+                        ->createTimbanganMaterial($request->all(), $this->plantId, $menuJenisPlantId);
+                    break;
+
+                // case 5: // SEMEN
+                //     // Contoh jika validasi semen berbeda (misal: butuh silo / vendor khusus)
+                //     $payload = $request->validate([
+                //         'tanggal'   => 'required|date',
+                //         'semen_id'  => 'required|integer',
+                //         // tambahkan field semen lainnya disini...
+                //     ]);
+
+                //     $timbangan = $this->timbangansemenconcretebatchingplantService
+                //         ->createTimbanganSemen($request->all(), $this->plantId, $menuJenisPlantId);
+                //     break;
+
+                // case 6: // BAHAN BAKAR
+                //     $timbangan = $this->timbanganbahanbakarconcretebatchingplantService
+                //         ->createTimbanganBahanBakar($request->all(), $this->plantId, $menuJenisPlantId);
+                //     break;
+
+                // case 7: // OBAT
+                //     $timbangan = $this->timbanganobatconcretebatchingplantService
+                //         ->createTimbanganObat($request->all(), $this->plantId, $menuJenisPlantId);
+                //     break;
+
+                // case 8: // READY MIX
+                //     $timbangan = $this->timbanganreadymixconcretebatchingplantService
+                //         ->createTimbanganReadyMix($request->all(), $this->plantId, $menuJenisPlantId);
+                //     break;
+
+                // case 9: // U-DITCH & KANSTIN
+                //     $timbangan = $this->timbanganuditchkanstinconcretebatchingplantService
+                //         ->createTimbanganUDitchKanstin($request->all(), $this->plantId, $menuJenisPlantId);
+                //     break;
+
+                // case 10: // KARSO & U-DITCH
+                //     $timbangan = $this->timbanganKarsoUditchConcreteBatchingPlantService
+                //         ->createTimbanganKarsoUditch($request->all(), $this->plantId, $menuJenisPlantId);
+                //     break;
+
+                // case 11: // BESI
+                //     $timbangan = $this->timbanganBesiConcreteBatchingPlantService
+                //         ->createTimbanganBesi($request->all(), $this->plantId, $menuJenisPlantId);
+                //     break;
+
+                // case 12: // MATERIAL RENOVASI PLANT
+                //     $timbangan = $this->timbanganMaterialRenovasiPlantConcreteBatchingPlantService
+                //         ->createTimbanganRenovasi($request->all(), $this->plantId, $menuJenisPlantId);
+                //     break;
+
+                default:
+                    return response()->json([
+                        'status' => 400,
+                        'success' => false,
+                        'message' => 'Menu jenis plant tidak valid untuk menyimpan data',
+                        'data' => []
+                    ], 200);
+            }
 
             // 3. Response Berhasil
             return response()->json([
                 'status'  => 200,
                 'success' => true,
-                'message' => 'Data timbangan berhasil disimpan',
+                'message' => 'Data timbangan ' . $menuJenisPlant->menujenis . ' berhasil disimpan',
                 'data'    => $timbangan
             ], 200);
         } catch (\Exception $e) {
-            // 4. Response Gagal
+            // 4. Response Gagal Interal Server
             return response()->json([
                 'status'  => 500,
                 'success' => false,
@@ -214,45 +293,120 @@ class ConcreteBatchingPlantController extends Controller
         }
     }
 
-    public function updateTimbanganMaterialCBP(Request $request)
+    public function updateTimbanganCBP(Request $request)
     {
-        // 1. Validasi Input
-        $validated = $request->validate([
-            'id'             => 'required|integer|exists:timbangan,id',
-            'tanggal'        => 'required|date',
-            'material'       => 'required|integer',
-            'kendaraan'      => 'required|integer',
-            'driver'         => 'required|integer',
-            'suplier'        => 'nullable|integer',
-            'customer'       => 'nullable|integer',
-            'menujenisplant_id' => 'required|integer',
-            'berattotal'     => 'required',
-            'beratkendaraan' => 'required',
+        // 1. Validasi awal untuk memastikan ID Data dan ID Menu dikirim
+        $request->validate([
+            'id'                => 'required|integer|exists:timbangan,id',
+            'menujenisplant_id' => 'required|integer'
         ]);
 
-        try {
-            // 2. Panggil Service Update
-            $timbangan = $this->timbanganmaterialconcretebatchingplantService->updateTimbanganMaterial(
-                $request->id,
-                $request->all(),
-                $this->plantId,
-                $request->menujenisplant_id
-            );
+        $menuJenisPlantId = $request->menujenisplant_id;
 
-            // 3. Response
+        // Ambil data menu jenis plant untuk memastikan menu tersebut terdaftar
+        $menuJenisPlant = MenuJenisPlant::find($menuJenisPlantId);
+        if (!$menuJenisPlant) {
+            return response()->json([
+                'status' => 404,
+                'success' => false,
+                'message' => 'Menu jenis plant tidak ditemukan',
+                'data' => []
+            ], 200);
+        }
+
+        try {
+            // 2. Mapping Service & Validasi Spesifik Berdasarkan menujenisplant_id
+            switch ($menuJenisPlantId) {
+
+                case 3: // MATERIAL IN
+                case 4: // MATERIAL OUT
+                    // Validasi khusus rumpun timbangan material
+                    $payload = $request->validate([
+                        'tanggal'        => 'required|date',
+                        'material'       => 'required|integer',
+                        'kendaraan'      => 'required|integer',
+                        'driver'         => 'required|integer',
+                        'suplier'        => 'nullable|integer',
+                        'customer'       => 'nullable|integer',
+                        'berattotal'     => 'required',
+                        'beratkendaraan' => 'required',
+                    ]);
+
+                    $timbangan = $this->timbanganmaterialconcretebatchingplantService
+                        ->updateTimbanganMaterial($request->id, $request->all(), $this->plantId, $menuJenisPlantId);
+                    break;
+
+                // case 5: // SEMEN
+                //     $payload = $request->validate([
+                //         'tanggal'  => 'required|date',
+                //         'semen_id' => 'required|integer',
+                //         // field semen lainnya...
+                //     ]);
+
+                //     $timbangan = $this->timbangansemenconcretebatchingplantService
+                //         ->updateTimbanganSemen($request->id, $request->all(), $this->plantId, $menuJenisPlantId);
+                //     break;
+
+                // case 6: // BAHAN BAKAR
+                //     $timbangan = $this->timbanganbahanbakarconcretebatchingplantService
+                //         ->updateTimbanganBahanBakar($request->id, $request->all(), $this->plantId, $menuJenisPlantId);
+                //     break;
+
+                // case 7: // OBAT
+                //     $timbangan = $this->timbanganobatconcretebatchingplantService
+                //         ->updateTimbanganObat($request->id, $request->all(), $this->plantId, $menuJenisPlantId);
+                //     break;
+
+                // case 8: // READY MIX
+                //     $timbangan = $this->timbanganreadymixconcretebatchingplantService
+                //         ->updateTimbanganReadyMix($request->id, $request->all(), $this->plantId, $menuJenisPlantId);
+                //     break;
+
+                // case 9: // U-DITCH & KANSTIN
+                //     $timbangan = $this->timbanganuditchkanstinconcretebatchingplantService
+                //         ->updateTimbanganUDitchKanstin($request->id, $request->all(), $this->plantId, $menuJenisPlantId);
+                //     break;
+
+                // case 10: // KARSO & U-DITCH
+                //     $timbangan = $this->timbanganKarsoUditchConcreteBatchingPlantService
+                //         ->updateTimbanganKarsoUditch($request->id, $request->all(), $this->plantId, $menuJenisPlantId);
+                //     break;
+
+                // case 11: // BESI
+                //     $timbangan = $this->timbanganBesiConcreteBatchingPlantService
+                //         ->updateTimbanganBesi($request->id, $request->all(), $this->plantId, $menuJenisPlantId);
+                //     break;
+
+                // case 12: // MATERIAL RENOVASI PLANT
+                //     $timbangan = $this->timbanganMaterialRenovasiPlantConcreteBatchingPlantService
+                //         ->updateTimbanganRenovasi($request->id, $request->all(), $this->plantId, $menuJenisPlantId);
+                //     break;
+
+                default:
+                    return response()->json([
+                        'status' => 400,
+                        'success' => false,
+                        'message' => 'Menu jenis plant tidak valid untuk memperbarui data',
+                        'data' => []
+                    ], 200);
+            }
+
+            // 3. Response Berhasil
             return response()->json([
                 'status'  => 200,
                 'success' => true,
-                'message' => 'Data timbangan berhasil diperbarui',
+                'message' => 'Data timbangan ' . $menuJenisPlant->menujenis . ' berhasil diperbarui',
                 'data'    => $timbangan
             ], 200);
         } catch (ModelNotFoundException $e) {
+            // Response jika data ID timbangan tidak ditemukan di database/service
             return response()->json([
                 'status'  => 404,
                 'success' => false,
                 'message' => 'Data tidak ditemukan atau Anda tidak memiliki akses.',
             ], 404);
         } catch (\Exception $e) {
+            // Response jika terjadi kesalahan sistem/query internal
             return response()->json([
                 'status'  => 500,
                 'success' => false,
@@ -261,34 +415,102 @@ class ConcreteBatchingPlantController extends Controller
         }
     }
 
-    public function deleteTimbanganMaterialCBP(Request $request)
+    public function deleteTimbanganCBP(Request $request)
     {
-        // 1. Validasi untuk memastikan 'id' ada dan berupa angka
-        // Ini juga mencegah 'null' terkirim ke Service
+        // 1. Validasi awal untuk memastikan ID data dan ID menu dikirim
         $request->validate([
-            'id' => 'required|integer'
+            'id'                => 'required|integer',
+            'menujenisplant_id' => 'required|integer'
         ]);
 
+        $menuJenisPlantId = $request->menujenisplant_id;
+        $id = (int) $request->input('id');
+
+        // Ambil data menu jenis plant untuk memastikan menu tersebut valid
+        $menuJenisPlant = MenuJenisPlant::find($menuJenisPlantId);
+        if (!$menuJenisPlant) {
+            return response()->json([
+                'status' => 404,
+                'success' => false,
+                'message' => 'Menu jenis plant tidak ditemukan',
+            ], 200);
+        }
+
         try {
-            // 2. Ambil ID dan paksa menjadi integer (casting)
-            $id = (int) $request->input('id');
+            // 2. Mapping Service Penghapusan Berdasarkan menujenisplant_id
+            switch ($menuJenisPlantId) {
 
-            $deleted = $this->timbanganmaterialconcretebatchingplantService->deleteTimbanganMaterial($id);
+                case 3: // MATERIAL IN
+                case 4: // MATERIAL OUT
+                    $deleted = $this->timbanganmaterialconcretebatchingplantService
+                        ->deleteTimbanganMaterial($id);
+                    break;
 
+                // case 5: // SEMEN
+                //     $deleted = $this->timbangansemenconcretebatchingplantService
+                //         ->deleteTimbanganSemen($id);
+                //     break;
+
+                // case 6: // BAHAN BAKAR
+                //     $deleted = $this->timbanganbahanbakarconcretebatchingplantService
+                //         ->deleteTimbanganBahanBakar($id);
+                //     break;
+
+                // case 7: // OBAT
+                //     $deleted = $this->timbanganobatconcretebatchingplantService
+                //         ->deleteTimbanganObat($id);
+                //     break;
+
+                // case 8: // READY MIX
+                //     $deleted = $this->timbanganreadymixconcretebatchingplantService
+                //         ->deleteTimbanganReadyMix($id);
+                //     break;
+
+                // case 9: // U-DITCH & KANSTIN
+                //     $deleted = $this->timbanganuditchkanstinconcretebatchingplantService
+                //         ->deleteTimbanganUDitchKanstin($id);
+                //     break;
+
+                // case 10: // KARSO & U-DITCH
+                //     $deleted = $this->timbanganKarsoUditchConcreteBatchingPlantService
+                //         ->deleteTimbanganKarsoUditch($id);
+                //     break;
+
+                // case 11: // BESI
+                //     $deleted = $this->timbanganBesiConcreteBatchingPlantService
+                //         ->deleteTimbanganBesi($id);
+                //     break;
+
+                // case 12: // MATERIAL RENOVASI PLANT
+                //     $deleted = $this->timbanganMaterialRenovasiPlantConcreteBatchingPlantService
+                //         ->deleteTimbanganRenovasi($id);
+                //     break;
+
+                default:
+                    return response()->json([
+                        'status' => 400,
+                        'success' => false,
+                        'message' => 'Menu jenis plant tidak valid untuk menghapus data',
+                    ], 200);
+            }
+
+            // 3. Cek apakah baris data berhasil dihapus/diubah statusnya oleh service
             if (!$deleted) {
                 return response()->json([
                     'status'    => 404,
                     'success'   => false,
-                    'message'   => 'Data timbangan tidak ditemukan atau sudah tidak aktif',
+                    'message'   => 'Data timbangan ' . $menuJenisPlant->menujenis . ' tidak ditemukan atau sudah tidak aktif',
                 ], 404);
             }
 
+            // 4. Response Berhasil
             return response()->json([
                 'status'    => 200,
                 'success'   => true,
-                'message'   => 'Data timbangan berhasil dihapus',
+                'message'   => 'Data timbangan ' . $menuJenisPlant->menujenis . ' berhasil dihapus',
             ], 200);
         } catch (\Exception $e) {
+            // 5. Response Gagal Sistem
             return response()->json([
                 'status'    => 500,
                 'success'   => false,

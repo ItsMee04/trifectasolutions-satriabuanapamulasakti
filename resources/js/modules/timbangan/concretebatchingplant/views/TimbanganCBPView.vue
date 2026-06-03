@@ -61,11 +61,16 @@ import { useNavigationCBP } from '@/modules/timbangan/concretebatchingplant/comp
 
 // 2. Import Composable Fitur Spesifik
 import { useTimbanganMaterialCBP } from '@/modules/timbangan/concretebatchingplant/material/composables/useTimbanganMaterialCBP.js';
-// import { useTimbanganSemenCBP } from '../composables/useTimbanganSemenCBP';
+import { useTimbanganSemenCBP } from '@/modules/timbangan/concretebatchingplant/semen/composables/useTimbanganSemenCBP.js';
 
 // // 3. Import Components Tabel Spesifik
+// MATERIAL
 import TimbanganMaterialCBPTable from '@/modules/timbangan/concretebatchingplant/material/components/TimbanganMaterialCBPTable.vue';
 import TimbanganMaterialCBPModal from '@/modules/timbangan/concretebatchingplant/material/components/TimbanganMaterialCBPModal.vue';
+
+// SEMEN
+import TimbanganSemenCBPTable from '@/modules/timbangan/concretebatchingplant/semen/components/TimbanganSemenCBPTable.vue';
+// import TimbanganSemenCBPModal from '@/modules/timbangan/concretebatchingplant/semen/components/TimbanganSemenCBPModal.vue';
 
 // // import TimbanganSemenCBPTable from '../components/TimbanganSemenCBPTable.vue'; // Contoh masa depan
 
@@ -82,10 +87,12 @@ const {
 
 // Inisialisasi Composable Kelompok Fitur
 const materialCBP = useTimbanganMaterialCBP();
+const semenCBP = useTimbanganSemenCBP();
 
 // Daftarkan semua instance composable
 const registeredComposables = {
     materialCBP,
+    semenCBP
 };
 
 // SWITCH CASE UNTUK RENDERING COMPONENT TABEL
@@ -98,7 +105,7 @@ const activeTableComponent = computed(() => {
             return TimbanganMaterialCBPTable; // Langsung return komponennya saja tanpa await fetch
 
         case 5: // SEMEN
-            return h('div', { class: 'd-flex align-items-center justify-content-center my-4 text-danger' }, `Component untuk ${currentTabName.value} belum tersedia.`);
+            return TimbanganSemenCBPTable;
 
         case 6: // BAHAN BAKAR
             return h('div', { class: 'd-flex align-items-center justify-content-center my-4 text-danger' }, `Component untuk ${currentTabName.value} belum tersedia.`);
@@ -135,9 +142,9 @@ const activeModalComponent = computed(() => {
         case 4: // MATERIAL OUT
             return TimbanganMaterialCBPModal;
 
-        case 5: // SEMEN (Contoh jika besok sudah dibuat)
-            // return TimbanganSemenCBPModal;
-            return null;
+        // case 5: // SEMEN (Contoh jika besok sudah dibuat)
+        //     // return TimbanganSemenCBPModal;
+        //     return TimbanganSemenCBPModal;
 
         default:
             return null; // Menu lain yang belum ada modalnya tidak akan merender apa pun
@@ -152,6 +159,8 @@ const globalLoading = computed(() => {
         case 3:
         case 4:
             return materialCBP.isMaterialLoading.value;
+        case 5:
+            return semenCBP.isSemenLoading.value;
         default:
             return false;
     }

@@ -172,11 +172,19 @@ Route::middleware('auth:sanctum')->group(function () {
         // Concrete Batching Plant (CBP)
         Route::prefix('concretebatchingplant')->group(function () {
             Route::get('/menujenis', [ConcreteBatchingPlantController::class, 'getMenuJenisCBP']);
+
             Route::prefix('material')->group(function () {
-                Route::post('/', [ConcreteBatchingPlantController::class, 'getTimbanganMaterialCBP']);
-                Route::post('/store', [ConcreteBatchingPlantController::class, 'storeTimbanganMaterialCBP']);
-                Route::post('/update', [ConcreteBatchingPlantController::class, 'updateTimbanganMaterialCBP']);
-                Route::post('/delete', [ConcreteBatchingPlantController::class, 'deleteTimbanganMaterialCBP']);
+                Route::post('/', [ConcreteBatchingPlantController::class, 'getTimbanganCBP']);
+                Route::post('/store', [ConcreteBatchingPlantController::class, 'storeTimbanganCBP']);
+                Route::post('/update', [ConcreteBatchingPlantController::class, 'updateTimbanganCBP']);
+                Route::post('/delete', [ConcreteBatchingPlantController::class, 'deleteTimbanganCBP']);
+            });
+
+            Route::prefix('semen')->group(function () {
+                Route::post('/', [ConcreteBatchingPlantController::class, 'getTimbanganCBP']);
+                Route::post('/store', [ConcreteBatchingPlantController::class, 'storeTimbanganCBP']);
+                Route::post('/update', [ConcreteBatchingPlantController::class, 'updateTimbanganCBP']);
+                Route::post('/delete', [ConcreteBatchingPlantController::class, 'deleteTimbanganCBP']);
             });
         });
 
