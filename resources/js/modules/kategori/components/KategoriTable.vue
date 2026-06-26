@@ -129,6 +129,7 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue';
 import { useKategori } from '../composables/useKategori';
 // Destructure semua yang dibutuhkan dari composable
 const {
@@ -144,4 +145,10 @@ const {
     currentPage,
     totalPages
 } = useKategori();
+
+const { fetchKategori } = useKategori();
+
+onMounted(() => {
+    fetchKategori();
+});
 </script>

@@ -25,7 +25,7 @@ class RoleController extends Controller
                 'success'   => false,
                 'message'   => 'Data role tidak ditemukan',
                 'data'      => []
-            ], 404);
+            ], 200);
         }
 
         return response()->json([
@@ -62,7 +62,7 @@ class RoleController extends Controller
                 'success'   => false,
                 'message'   => 'Data role tidak ditemukan',
                 'data'      => null
-            ], 404);
+            ], 200);
         }
 
         return response()->json([

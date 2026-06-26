@@ -25,14 +25,6 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
-import { useMasterPlant } from '../composables/useMasterPlant';
 import MasterPlantTable from '../components/MasterPlantTable.vue';
 import MasterPlantModal from '../components/MasterPlantModal.vue';
-
-const { fetchMasterPlant } = useMasterPlant();
-
-onMounted(() => {
-    fetchMasterPlant();
-});
 </script>

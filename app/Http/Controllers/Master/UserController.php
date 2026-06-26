@@ -25,7 +25,7 @@ class UserController extends Controller
                 'success'   => false,
                 'message'   => 'Data pengguna tidak ditemukan',
                 'data'      => []
-            ], 404);
+            ], 200);
         }
 
         return response()->json([

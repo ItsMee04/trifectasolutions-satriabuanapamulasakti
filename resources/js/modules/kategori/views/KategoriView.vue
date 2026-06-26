@@ -25,14 +25,7 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
-import { useKategori } from '../composables/useKategori';
 import KategoriTable from '../components/KategoriTable.vue';
 import KategoriModal from '../components/KategoriModal.vue';
 
-const { fetchKategori } = useKategori();
-
-onMounted(() => {
-    fetchKategori();
-});
 </script>

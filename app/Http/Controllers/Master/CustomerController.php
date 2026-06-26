@@ -25,7 +25,7 @@ class CustomerController extends Controller
                 'success'   => false,
                 'message'   => 'Data customer tidak ditemukan',
                 'data'      => []
-            ], 404);
+            ], 200);
         }
 
         return response()->json([
@@ -70,7 +70,7 @@ class CustomerController extends Controller
                 'success'   => false,
                 'message'   => 'Data customer tidak ditemukan',
                 'data'      => null
-            ], 404);
+            ], 200);
         }
 
         return response()->json([
@@ -90,7 +90,7 @@ class CustomerController extends Controller
                 'status'    => 404,
                 'success'   => false,
                 'message'   => 'Data customer tidak ditemukan',
-            ], 404);
+            ], 200);
         }
 
         return response()->json([

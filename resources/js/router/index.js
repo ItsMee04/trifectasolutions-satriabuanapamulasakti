@@ -86,6 +86,12 @@ const routes = [
                     import("@/modules/kategori/views/KategoriView.vue"),
             },
             {
+                path: "shilo",
+                name: "shilo",
+                component: () =>
+                    import("@/modules/shilo/views/ShiloView.vue"),
+            },
+            {
                 path: "material",
                 name: "material",
                 component: () =>

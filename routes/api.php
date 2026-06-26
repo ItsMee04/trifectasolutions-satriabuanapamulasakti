@@ -13,6 +13,7 @@ use App\Http\Controllers\Master\MenuJenisPlantController;
 use App\Http\Controllers\Master\PegawaiController;
 use App\Http\Controllers\Master\PermissionController;
 use App\Http\Controllers\Master\RoleController;
+use App\Http\Controllers\Master\ShiloController;
 use App\Http\Controllers\Master\SuplierController;
 use App\Http\Controllers\Master\UserController;
 use App\Http\Controllers\Setting\BackupController;
@@ -122,6 +123,11 @@ Route::middleware('auth:sanctum')->group(function () {
             Route::post('/store', [KategoriController::class, 'storeKategori']);    // POST /api/master/kategori/store
             Route::post('/update', [KategoriController::class, 'updateKategori']);   // PUT /api/master/kategori/update
             Route::delete('/delete', [KategoriController::class, 'deleteKategori']); // DELETE /api/master/kategori/delete
+        });
+
+        Route::prefix('shilo')->group(function() {
+            Route::get('/', [ShiloController::class, 'getShilo']);
+            Route::post('/store', [ShiloController::class, 'storeShilo']);
         });
 
         // Mengelompokkan route khusus Material

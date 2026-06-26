@@ -143,6 +143,7 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue';
 import { usePegawai } from '../composables/usePegawai';
 // Destructure semua yang dibutuhkan dari composable
 const {
@@ -159,4 +160,10 @@ const {
     currentPage,
     totalPages
 } = usePegawai();
+
+const { fetchPegawai } = usePegawai();
+
+onMounted(() => {
+    fetchPegawai();
+});
 </script>

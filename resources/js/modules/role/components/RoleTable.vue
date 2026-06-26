@@ -129,6 +129,7 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue';
 import { useRole } from '../composables/useRole';
 // Destructure semua yang dibutuhkan dari composable
 const {
@@ -145,4 +146,10 @@ const {
     currentPage,
     totalPages
 } = useRole();
+
+const { fetchRoles } = useRole();
+
+onMounted(() => {
+    fetchRoles();
+});
 </script>

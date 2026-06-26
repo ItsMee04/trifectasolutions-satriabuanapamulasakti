@@ -135,6 +135,7 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue';
 import { useKendaraan } from '../composables/useKendaraan';
 // Destructure semua yang dibutuhkan dari composable
 const {
@@ -151,4 +152,10 @@ const {
     currentPage,
     totalPages
 } = useKendaraan();
+
+const { fetchKendaraan } = useKendaraan();
+
+onMounted(() => {
+    fetchKendaraan();
+});
 </script>

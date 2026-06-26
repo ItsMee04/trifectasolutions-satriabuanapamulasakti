@@ -25,7 +25,7 @@ class KategoriController extends Controller
                 'success'   => false,
                 'message'   => 'Data kategori tidak ditemukan',
                 'data'      => []
-            ], 404);
+            ], 200);
         }
 
         return response()->json([
@@ -62,7 +62,7 @@ class KategoriController extends Controller
                 'success'   => false,
                 'message'   => 'Data kategori tidak ditemukan',
                 'data'      => null
-            ], 404);
+            ], 200);
         }
 
         return response()->json([

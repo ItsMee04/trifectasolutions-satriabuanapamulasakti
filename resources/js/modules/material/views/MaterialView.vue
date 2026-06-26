@@ -25,14 +25,6 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
-import { useMaterial } from '../composables/useMaterial';
 import MaterialTable from '../components/MaterialTable.vue';
 import MaterialModal from '../components/MaterialModal.vue';
-
-const { fetchMaterial } = useMaterial();
-
-onMounted(() => {
-    fetchMaterial();
-});
 </script>

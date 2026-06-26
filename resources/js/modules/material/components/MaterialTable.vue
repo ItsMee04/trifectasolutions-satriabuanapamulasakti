@@ -135,6 +135,7 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue';
 import { useMaterial } from '../composables/useMaterial';
 // Destructure semua yang dibutuhkan dari composable
 const {
@@ -151,4 +152,10 @@ const {
     currentPage,
     totalPages
 } = useMaterial();
+
+const { fetchMaterial } = useMaterial();
+
+onMounted(() => {
+    fetchMaterial();
+});
 </script>

@@ -37,7 +37,7 @@
                     <thead class="bg-light">
                         <tr class="text-center">
                             <th style="width: 5%">#</th>
-                            <th style="width: 20%">Berat Jenis</th>
+                            <th style="width: 20%">Shilo</th>
                             <th style="width: 20%">Status</th>
                             <th style="width: 20%">Action</th>
                         </tr>
@@ -50,14 +50,14 @@
                             </td>
                         </tr>
 
-                        <tr v-else-if="!paginatedBeratJenis || paginatedBeratJenis.length === 0">
+                        <tr v-else-if="!paginatedShilo || paginatedShilo.length === 0">
                             <td colspan="4" class="text-center p-5">Tidak ada data.</td>
                         </tr>
 
                         <template v-else>
-                            <tr v-for="(item, index) in paginatedBeratJenis" :key="item.id" class="text-center">
+                            <tr v-for="(item, index) in paginatedShilo" :key="item.id" class="text-center">
                                 <td>{{ ((currentPage - 1) * 10) + (index + 1) }}</td>
-                                <td>{{ item.beratjenis }}</td>
+                                <td>{{ item.shilo }}</td>
                                 <td>
                                     <span v-if="item.status == 1" class="badge bg-success">
                                         ACTIVE
@@ -82,12 +82,12 @@
                 </table>
             </div>
 
-            <div v-if="filteredBeratJenis.length > 0" class="d-flex justify-content-between align-items-center p-3">
+            <div v-if="filteredShilo.length > 0" class="d-flex justify-content-between align-items-center p-3">
 
                 <div class="text-muted small">
                     Showing {{ ((currentPage - 1) * 10) + 1 }}
-                    to {{ Math.min(currentPage * 10, filteredBeratJenis.length) }}
-                    of {{ filteredBeratJenis.length }} entries
+                    to {{ Math.min(currentPage * 10, filteredShilo.length) }}
+                    of {{ filteredShilo.length }} entries
                 </div>
 
                 <ul class="pagination mb-0">
@@ -130,7 +130,7 @@
 
 <script setup>
 import { onMounted } from 'vue';
-import { useBeratJenis } from '../composables/useBeratJenis';
+import { useShilo } from '../composables/useShilo';
 // Destructure semua yang dibutuhkan dari composable
 const {
     handleCreate,
@@ -139,17 +139,17 @@ const {
     handleRefresh,
 
     displayedPages,
-    filteredBeratJenis,
-    paginatedBeratJenis,
+    filteredShilo,
+    paginatedShilo,
     searchQuery,
     isLoading,
     currentPage,
     totalPages
-} = useBeratJenis();
+} = useShilo();
 
-const { fetchBeratJenis } = useBeratJenis();
+const { fetchShilo } = useShilo();
 
 onMounted(() => {
-    fetchBeratJenis();
+    fetchShilo();
 });
 </script>

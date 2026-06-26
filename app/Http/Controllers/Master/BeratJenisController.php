@@ -25,7 +25,7 @@ class BeratJenisController extends Controller
                 'success'   => false,
                 'message'   => 'Data berat jenis tidak ditemukan',
                 'data'      => []
-            ], 404);
+            ], 200);
         }
 
         return response()->json([
@@ -66,7 +66,7 @@ class BeratJenisController extends Controller
                 'success'   => false,
                 'message'   => 'Data berat jenis tidak ditemukan',
                 'data'      => null
-            ], 404);
+            ], 200);
         }
 
         return response()->json([
@@ -86,7 +86,7 @@ class BeratJenisController extends Controller
                 'status'    => 404,
                 'success'   => false,
                 'message'   => 'Data berat jenis tidak ditemukan',
-            ], 404);
+            ], 200);
         }
 
         return response()->json([

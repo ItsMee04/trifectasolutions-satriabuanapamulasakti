@@ -25,14 +25,6 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
-import { useDrivers } from '../composables/useDriver';
 import DriverTable from '../components/DriverTable.vue';
 import DriverModal from '../components/DriverModal.vue';
-
-const { fetchDriver } = useDrivers();
-
-onMounted(() => {
-    fetchDriver();
-});
 </script>

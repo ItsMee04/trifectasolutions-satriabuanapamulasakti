@@ -28,7 +28,7 @@ class PegawaiController extends Controller
                 'success'   => false,
                 'message'   => 'Data pegawai tidak ditemukan',
                 'data'      => []
-            ], 404);
+            ], 200);
         }
 
         return response()->json([
@@ -84,7 +84,7 @@ class PegawaiController extends Controller
                 'status'    => 404,
                 'success'   => false,
                 'message'   => 'Data pegawai tidak ditemukan'
-            ], 404);
+            ], 200);
         }
 
         return response()->json([

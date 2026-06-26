@@ -25,14 +25,6 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
-import { useKendaraan } from '../composables/useKendaraan';
 import KendaraanTable from '../components/KendaraanTable.vue';
 import KendaraanModal from '../components/KendaraanModal.vue';
-
-const { fetchKendaraan } = useKendaraan();
-
-onMounted(() => {
-    fetchKendaraan();
-});
 </script>

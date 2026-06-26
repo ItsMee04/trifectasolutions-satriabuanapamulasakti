@@ -25,14 +25,6 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
-import { useSuplier } from '../composables/useSuplier';
 import SuplierTable from '../components/SuplierTable.vue';
 import SuplierModal from '../components/SuplierModal.vue';
-
-const { fetchSuplier } = useSuplier();
-
-onMounted(() => {
-    fetchSuplier();
-});
 </script>

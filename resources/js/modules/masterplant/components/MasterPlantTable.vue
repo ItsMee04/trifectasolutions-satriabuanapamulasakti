@@ -129,6 +129,7 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue';
 import { useMasterPlant } from '../composables/useMasterPlant';
 // Destructure semua yang dibutuhkan dari composable
 const {
@@ -145,4 +146,10 @@ const {
     currentPage,
     totalPages
 } = useMasterPlant();
+
+const { fetchMasterPlant } = useMasterPlant();
+
+onMounted(() => {
+    fetchMasterPlant();
+});
 </script>

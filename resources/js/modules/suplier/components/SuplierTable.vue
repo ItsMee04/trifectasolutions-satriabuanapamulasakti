@@ -133,6 +133,7 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue';
 import { useSuplier } from '../composables/useSuplier';
 // Destructure semua yang dibutuhkan dari composable
 const {
@@ -149,4 +150,10 @@ const {
     currentPage,
     totalPages
 } = useSuplier();
+
+const { fetchSuplier } = useSuplier();
+
+onMounted(() => {
+    fetchSuplier();
+});
 </script>

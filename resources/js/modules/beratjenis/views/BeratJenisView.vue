@@ -25,14 +25,6 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
-import { useBeratJenis } from '../composables/useBeratJenis';
 import BeratJenisTable from '../components/BeratJenisTable.vue';
 import BeratJenisModal from '../components/BeratJenisModal.vue';
-
-const { fetchBeratJenis } = useBeratJenis();
-
-onMounted(() => {
-    fetchBeratJenis();
-});
 </script>

@@ -133,6 +133,7 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue';
 import { useCustomer } from '../composables/useCustomer';
 // Destructure semua yang dibutuhkan dari composable
 const {
@@ -149,4 +150,11 @@ const {
     currentPage,
     totalPages
 } = useCustomer();
+
+
+const { fetchCustomer } = useCustomer();
+
+onMounted(() => {
+    fetchCustomer();
+});
 </script>

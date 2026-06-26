@@ -25,14 +25,6 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
-import { useCustomer } from '../composables/useCustomer';
 import CustomerTable from '../components/CustomerTable.vue';
 import CustomerModal from '../components/CustomerModal.vue';
-
-const { fetchCustomer } = useCustomer();
-
-onMounted(() => {
-    fetchCustomer();
-});
 </script>

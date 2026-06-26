@@ -67,7 +67,7 @@ class MenuJenisPlantController extends Controller
                 'status'    => 404,
                 'success'   => false,
                 'message'   => 'Data menu jenis plant tidak ditemukan'
-            ], 404);
+            ], 200);
         }
 
         return response()->json([

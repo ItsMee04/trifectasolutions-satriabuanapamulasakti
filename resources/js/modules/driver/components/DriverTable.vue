@@ -135,6 +135,7 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue';
 import { useDrivers } from '../composables/useDriver';
 // Destructure semua yang dibutuhkan dari composable
 const {
@@ -151,4 +152,10 @@ const {
     currentPage,
     totalPages
 } = useDrivers();
+
+const { fetchDriver } = useDrivers();
+
+onMounted(() => {
+    fetchDriver();
+});
 </script>

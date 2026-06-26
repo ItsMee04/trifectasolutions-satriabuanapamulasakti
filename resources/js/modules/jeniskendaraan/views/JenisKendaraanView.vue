@@ -25,14 +25,6 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
-import { useJenisKendaraan } from '../composables/useJenisKendaraan';
 import JenisKendaraanTable from '../components/JenisKendaraanTable.vue';
 import JenisKendaraanModal from '../components/JenisKendaraanModal.vue';
-
-const { fetchJenisKendaraan } = useJenisKendaraan();
-
-onMounted(() => {
-    fetchJenisKendaraan();
-});
 </script>

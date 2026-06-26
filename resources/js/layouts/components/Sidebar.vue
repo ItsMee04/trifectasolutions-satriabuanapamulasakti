@@ -159,6 +159,7 @@ const masterItems = computed(() => {
         { name: 'Suplier', path: '/suplier', perm: 'menu-suplier' },
         { name: 'Jenis Kendaraan', path: '/jeniskendaraan', perm: 'menu-jeniskendaraan' },
         { name: 'Kendaraan', path: '/kendaraan', perm: 'menu-kendaraan' },
+        { name: 'Shilo', path: '/shilo', perm: 'menu-shilo' },
         { name: 'Kategori', path: '/kategori', perm: 'menu-kategori' },
         { name: 'Material', path: '/material', perm: 'menu-material' },
         { name: 'Berat Jenis', path: '/beratjenis', perm: 'menu-beratjenis' },

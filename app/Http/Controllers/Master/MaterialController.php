@@ -25,7 +25,7 @@ class MaterialController extends Controller
                 'success'   => false,
                 'message'   => 'Data material tidak ditemukan',
                 'data'      => []
-            ], 404);
+            ], 200);
         }
 
         return response()->json([
@@ -70,7 +70,7 @@ class MaterialController extends Controller
                 'success'   => false,
                 'message'   => 'Data material tidak ditemukan',
                 'data'      => null
-            ], 404);
+            ], 200);
         }
 
         return response()->json([

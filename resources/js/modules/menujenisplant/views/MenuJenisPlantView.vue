@@ -25,7 +25,6 @@
 </template>
 
 <script setup>
-import { useMenuJenisPlant } from '../composables/useMenuJenisPlant';
 import MenuJenisPlantTable from '../components/MenuJenisPlantTable.vue';
 import MenuJenisPlantModal from '../components/MenuJenisPlantModal.vue';
 </script>
