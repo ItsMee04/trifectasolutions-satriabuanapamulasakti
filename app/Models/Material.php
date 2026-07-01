@@ -2,10 +2,10 @@
 
 namespace App\Models;
 
-use App\Models\Kategori;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Material extends Model
 {
@@ -14,22 +14,11 @@ class Material extends Model
     protected $table = 'material';
     protected $fillable = [
         'kode',
-        'kategori_id',
         'material',
         'satuan',
         'oleh',
         'status',
     ];
-
-    /**
-     * Get the kategori that owns the Material
-     *
-     * @return \Illuminate\Database\Eloquent\Relations\BelongsTo
-     */
-    public function kategori(): BelongsTo
-    {
-        return $this->belongsTo(Kategori::class, 'kategori_id', 'id');
-    }
 
     /**
      * Get the user that owns the Material
@@ -39,5 +28,15 @@ class Material extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'foreign_key', 'other_key');
+    }
+
+    /**
+     * The masterplants that belong to the Material
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function masterplants(): BelongsToMany
+    {
+        return $this->belongsToMany(MasterPlant::class, 'groupmaterial', 'material_id', 'masterplant_id');
     }
 }

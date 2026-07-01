@@ -36,4 +36,14 @@ class MasterPlant extends Model
     {
         return $this->belongsToMany(Suplier::class, 'groupsuplier', 'masterplant_id', 'suplier_id');
     }
+
+    /**
+     * The material that belong to the MasterPlant
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function material(): BelongsToMany
+    {
+        return $this->belongsToMany(Material::class, 'groupmaterial', 'masterplant_id', 'material_id');
+    }
 }

@@ -14,14 +14,11 @@ return new class extends Migration
         Schema::create('material', function (Blueprint $table) {
             $table->id();
             $table->string('kode', 100)->unique();
-            $table->unsignedBigInteger('kategori_id');
             $table->string('material');
             $table->string('satuan', 100);
             $table->unsignedBigInteger('oleh');
             $table->integer('status')->unsigned()->default(1);
             $table->timestamps();
-
-            $table->foreign('kategori_id')->references('id')->on('kategori')->onDelete('cascade');
             $table->foreign('oleh')->references('id')->on('users')->onDelete('cascade');
         });
     }
