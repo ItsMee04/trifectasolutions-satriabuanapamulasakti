@@ -63,23 +63,35 @@ class CustomerService
 
     public function updateCustomer(int $id, array $data): ?Customer
     {
-        $customer = Customer::find($id);
+        // Menggunakan DB::transaction untuk memastikan data utama dan pivot aman ter-update bersamaan
+        return DB::transaction(function () use ($id, $data) {
+            $customer = Customer::find($id);
 
-        if (!$customer) {
-            return null;
-        }
+            if (!$customer) {
+                return null;
+            }
 
-        $customer->update([
-            // Umumnya kode tidak diubah saat update,
-            // tapi jika tetap ingin bisa diubah, gunakan $data['kode']
-            'kode' => $data['kode'] ?? $customer->kode,
-            'nama' => strtoupper($data['nama']),
-            'kontak' => $data['kontak'],
-            'alamat' => strtoupper($data['alamat']),
-            'oleh' => Auth::id() // Pastikan Anda menggunakan ID user yang sedang login sebagai 'oleh'
-        ]);
+            // 1. Update data profil utama customer
+            $customer->update([
+                'kode' => $data['kode'] ?? $customer->kode, // Mempertahankan kode lama jika tidak diubah
+                'nama' => strtoupper($data['nama']),
+                'kontak' => $data['kontak'],
+                'alamat' => strtoupper($data['alamat']),
+                'oleh' => Auth::id()
+            ]);
 
-        return $customer;
+            // 2. OTOMATIS UPDATE TABLE PIVOT (groupcustomer)
+            // Pastikan parameter yang dilempar dari controller membawa array 'masterplant_ids'
+            if (isset($data['masterplant_ids']) && is_array($data['masterplant_ids'])) {
+                // sync() akan menghapus relasi lama yang tidak terpilih dan menambah relasi baru yang dicentang
+                $customer->masterplants()->sync($data['masterplant_ids']);
+            } else {
+                // Jika user mengosongkan semua checkbox masterplant (opsional, tergantung kebijakan bisnis)
+                $customer->masterplants()->detach();
+            }
+
+            return $customer;
+        });
     }
 
     public function deleteCustomer(int $id): bool
