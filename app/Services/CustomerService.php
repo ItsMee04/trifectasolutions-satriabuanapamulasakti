@@ -75,6 +75,7 @@ class CustomerService
             $customer->update([
                 'kode' => $data['kode'] ?? $customer->kode, // Mempertahankan kode lama jika tidak diubah
                 'nama' => strtoupper($data['nama']),
+                'email' => $data['email'],
                 'kontak' => $data['kontak'],
                 'alamat' => strtoupper($data['alamat']),
                 'oleh' => Auth::id()
