@@ -40,6 +40,7 @@
                             <th style="width: 20%">Kode Customer</th>
                             <th style="width: 20%">Nama</th>
                             <th style="width: 20%">Kontak</th>
+                            <th style="width: 20%">Plant</th>
                             <th style="width: 20%;">Status</th>
                             <th style="width: 20%">Action</th>
                         </tr>
@@ -62,6 +63,7 @@
                                 <td>{{ item.kode }}</td>
                                 <td>{{ item.nama }}</td>
                                 <td>{{ item.kontak }}</td>
+                                <td>{{ item.masterplants?.map(plant => plant.plant).join(', ') || 'Tidak ada plant' }}</td>
                                 <td>
                                     <span v-if="item.status == 1" class="badge bg-success">
                                         ACTIVE

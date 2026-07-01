@@ -1,10 +1,12 @@
 import { ref, computed, reactive } from 'vue';
 import { customerService } from '../services/customerService';
+import { masterplantService } from '../../masterplant/services/masterplantService';
 import { toastfy } from '../../../utilities/toast';
 import Swal from 'sweetalert2';
 
 // Shared State
 const customers = ref([]);
+const masterplants = ref([]);
 const isLoading = ref(false);
 const searchQuery = ref('');
 const currentPage = ref(1);
@@ -15,8 +17,10 @@ const errors = ref({}); // Error ditaruh di shared state agar sinkron dengan mod
 const formCustomer = reactive({
     id: null,
     nama: '',
-    kontak: '',
     alamat: '',
+    email: '',
+    kontak: '',
+    masterplant_ids: [],
 });
 
 export function useCustomer() {
@@ -33,17 +37,23 @@ export function useCustomer() {
         }
     };
 
+    const fetchMasterPlant = async () => {
+        try {
+            const response = await masterplantService.getMasterPlant();
+            masterplants.value = Array.isArray(response) ? response : (response.data || []);
+        } catch (error) {
+            masterplants.value = [];
+        }
+    };
+
     // --- LOGIKA VALIDASI ---
     const validateForm = () => {
         errors.value = {}; // Reset error
         if (!formCustomer.nama || formCustomer.nama.trim() === '') {
             errors.value.nama = 'Nama Customer tidak boleh kosong.';
         }
-        if (!formCustomer.kontak || formCustomer.kontak.trim() === '') {
-            errors.value.kontak = 'Kontak Customer tidak boleh kosong.';
-        }
-        if (!formCustomer.alamat || formCustomer.alamat.trim() === '') {
-            errors.value.alamat = 'Alamat Customer tidak boleh kosong.';
+        if (formCustomer.masterplant_ids.length === 0) {
+            errors.value.masterplant_ids = 'Pilih minimal satu Master Plant.';
         }
         return Object.keys(errors.value).length === 0;
     };
@@ -57,8 +67,10 @@ export function useCustomer() {
             // 📦 Siapkan Payload
             const payload = {
                 nama: formCustomer.nama,
-                kontak: formCustomer.kontak,
                 alamat: formCustomer.alamat,
+                kontak: formCustomer.kontak,
+                email: formCustomer.email,
+                masterplant_ids: formCustomer.masterplant_ids, // Sertakan array masterplant_ids
             };
 
             let response;
@@ -104,8 +116,10 @@ export function useCustomer() {
         isEdit.value = false;
         formCustomer.id = null;
         formCustomer.nama = '';
+        formCustomer.email = '';
         formCustomer.kontak = '';
         formCustomer.alamat = '';
+        formCustomer.masterplant_ids = [];
         errors.value = {};
         const modal = new bootstrap.Modal(document.getElementById('modalCustomer'));
         modal.show();
@@ -118,6 +132,14 @@ export function useCustomer() {
         formCustomer.nama = item.nama;
         formCustomer.kontak = item.kontak;
         formCustomer.alamat = item.alamat;
+        formCustomer.email = item.email;
+        // ✨ PROSES EKSTRAK ID: Otomatis mencentang checkbox masterplant
+        if (item.masterplants && Array.isArray(item.masterplants)) {
+            // Mengambil id dari setiap object di dalam array masterplants
+            formCustomer.masterplant_ids = item.masterplants.map(plant => plant.id);
+        } else {
+            formCustomer.masterplant_ids = [];
+        }
         const modal = new bootstrap.Modal(document.getElementById('modalCustomer'));
         modal.show();
     };
@@ -191,7 +213,7 @@ export function useCustomer() {
     });
 
     return {
-        customers, isLoading, searchQuery, currentPage, isEdit, formCustomer, errors, totalPages, displayedPages,
+        customers, masterplants, isLoading, searchQuery, currentPage, isEdit, formCustomer, errors, totalPages, displayedPages,
         filteredCustomer: computed(() => {
             const query = searchQuery.value.toLowerCase();
             return customers.value.filter(item => (item.nama || '').toLowerCase().includes(query));
@@ -201,6 +223,6 @@ export function useCustomer() {
             return (customers.value.filter(item => (item.nama || '').toLowerCase().includes(searchQuery.value.toLowerCase())))
                 .slice(start, start + itemsPerPage);
         }),
-        fetchCustomer, handleCreate, handleEdit, handleDelete, handleRefresh, submitCustomer
+        fetchCustomer, fetchMasterPlant, handleCreate, handleEdit, handleDelete, handleRefresh, submitCustomer
     };
 }

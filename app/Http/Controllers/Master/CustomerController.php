@@ -39,11 +39,12 @@ class CustomerController extends Controller
     public function storeCustomer(Request $request)
     {
         $request->validate([
-            'nama' => 'required|max:255',
-            'kontak' => 'required|max:255',
-            'alamat' => 'required|max:255',
+            'nama'            => 'required|max:255',
+            'masterplant_ids' => 'required|array', // Harus berupa array (misal: [1, 2, 3])
+            'masterplant_ids.*' => 'exists:masterplant,id', // Setiap ID di dalam array harus terdaftar di tabel masterplant
         ]);
 
+        // $request->all() sekarang sudah membawa array 'masterplant_ids' ke Service
         $customer = $this->customerService->createCustomer($request->all());
 
         return response()->json([
@@ -60,6 +61,9 @@ class CustomerController extends Controller
             'nama' => 'required|max:255',
             'kontak' => 'required|max:255',
             'alamat' => 'required|max:255',
+            'email' => 'required|email|max:255',
+            'masterplant_ids' => 'required|array',
+            'masterplant_ids.*' => 'exists:masterplant,id',
         ]);
 
         $customer = $this->customerService->updateCustomer($request->id, $request->all());

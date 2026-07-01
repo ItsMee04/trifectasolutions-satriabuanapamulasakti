@@ -15,8 +15,9 @@ return new class extends Migration
             $table->id();
             $table->string('kode', 100);
             $table->string('nama', 100);
-            $table->string('kontak', 100);
-            $table->text('alamat');
+            $table->text('alamat')->nullable();
+            $table->string('email', 100)->unique()->nullable();
+            $table->string('kontak', 100)->nullable();
             $table->unsignedBigInteger('oleh');
             $table->integer('status')->unsigned()->default(1);
             $table->timestamps();

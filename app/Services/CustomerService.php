@@ -5,44 +5,60 @@ namespace App\Services;
 use App\Models\Customer;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class CustomerService
 {
     public static function generateKodeCustomer(): string
     {
-        // Perbaikan: Panggil model Customer, bukan self
+        // Panggil model Customer untuk mengambil data terakhir berdasarkan ID terbesar
         $lastCustomer = Customer::orderBy('id', 'desc')->first();
 
         if (!$lastCustomer) {
             $number = 1;
         } else {
-            // Mengambil angka setelah 'CUS-' (indeks ke-4)
+            // Mengambil angka setelah 'CS' (indeks ke-2)
+            // Contoh: 'CS000001' akan dipotong dari karakter ke-2 sampai akhir, menghasilkan '000001'
             $lastCode = $lastCustomer->kode;
-            $lastNumber = (int) substr($lastCode, 4);
+            $lastNumber = (int) substr($lastCode, 2);
             $number = $lastNumber + 1;
         }
 
-        // Format angka menjadi 3 digit (contoh: 001)
-        $formattedNumber = str_pad($number, 3, '0', STR_PAD_LEFT);
+        // Perbaikan format angka menjadi 6 digit (contoh: 000001)
+        $formattedNumber = str_pad($number, 6, '0', STR_PAD_LEFT);
 
-        return 'CUS-' . $formattedNumber;
+        // Menggabungkan prefix 'CS' dengan angka yang sudah di-format
+        return 'CS' . $formattedNumber;
     }
 
     public function getAllActive(): Collection
     {
-        return Customer::where('status', 1)->get();
+        return Customer::with(['masterplants'])->where('status', 1)->get();
     }
 
     public function createCustomer(array $data): Customer
     {
-        return Customer::create([
-            // Otomatis generate kode di sini jika tidak dikirim dari front-end
-            'kode' => self::generateKodeCustomer(),
-            'nama' => strtoupper($data['nama']),
-            'kontak' => $data['kontak'],
-            'alamat' => strtoupper($data['alamat']),
-            'oleh' => Auth::id()
-        ]);
+        // Menggunakan DB::transaction agar jika salah satu proses error, database tidak corupt
+        return DB::transaction(function () use ($data) {
+
+            // 1. Simpan data utama ke tabel customer
+            $customer = Customer::create([
+                'kode' => self::generateKodeCustomer(),
+                'nama' => strtoupper($data['nama']),
+                'email' => $data['email'],
+                'kontak' => $data['kontak'],
+                'alamat' => strtoupper($data['alamat']),
+                'oleh' => Auth::id()
+            ]);
+
+            // 2. Otomatis input ke tabel groupcustomer (pivot) jika ada data masterplant_ids
+            // Pastikan di front-end (Vue.js) Anda mengirimkan array ID seperti: masterplant_ids: [1, 2, 3]
+            if (isset($data['masterplant_ids']) && is_array($data['masterplant_ids'])) {
+                $customer->masterplants()->attach($data['masterplant_ids']);
+            }
+
+            return $customer;
+        });
     }
 
     public function updateCustomer(int $id, array $data): ?Customer

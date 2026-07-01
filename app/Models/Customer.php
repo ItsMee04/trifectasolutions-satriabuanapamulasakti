@@ -6,6 +6,7 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Customer extends Model
 {
@@ -15,8 +16,9 @@ class Customer extends Model
     protected $fillable = [
         'kode',
         'nama',
-        'kontak',
         'alamat',
+        'email',
+        'kontak',
         'oleh',
         'status',
     ];
@@ -29,5 +31,15 @@ class Customer extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'oleh', 'id');
+    }
+
+    /**
+     * The roles that belong to the Customer
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function masterplants(): BelongsToMany
+    {
+        return $this->belongsToMany(MasterPlant::class, 'groupcustomer', 'customer_id', 'masterplant_id');
     }
 }
