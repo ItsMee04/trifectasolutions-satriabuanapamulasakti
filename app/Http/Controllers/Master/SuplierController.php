@@ -40,8 +40,8 @@ class SuplierController extends Controller
     {
         $request->validate([
             'nama' => 'required|max:255',
-            'kontak' => 'required|max:255',
-            'alamat' => 'required|max:255',
+            'masterplant_ids' => 'required|array', // Harus berupa array (misal: [1, 2, 3])
+            'masterplant_ids.*' => 'exists:masterplant,id', // Setiap ID di dalam array harus terdaftar di tabel masterplant
         ]);
 
         $suplier = $this->suplierService->createSuplier($request->all());
@@ -58,8 +58,8 @@ class SuplierController extends Controller
     {
         $request->validate([
             'nama' => 'required|max:255',
-            'kontak' => 'required|max:255',
-            'alamat' => 'required|max:255',
+            'masterplant_ids' => 'required|array', // Harus berupa array (misal: [1, 2, 3])
+            'masterplant_ids.*' => 'exists:masterplant,id', // Setiap ID di dalam array harus terdaftar di tabel masterplant
         ]);
 
         $suplier = $this->suplierService->updateSuplier($request->id, $request->all());

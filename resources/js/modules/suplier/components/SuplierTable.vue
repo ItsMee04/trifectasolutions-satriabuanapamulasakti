@@ -39,21 +39,24 @@
                             <th style="width: 5%">#</th>
                             <th style="width: 20%">Kode Suplier</th>
                             <th style="width: 20%">Nama</th>
+                            <th style="width: 20%">Email</th>
                             <th style="width: 20%">Kontak</th>
+                            <th style="width: 20%">Alamat</th>
+                            <th style="width: 20%">Plant</th>
                             <th style="width: 20%;">Status</th>
                             <th style="width: 20%">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-if="isLoading">
-                            <td colspan="7" class="text-center p-5">
+                            <td colspan="9" class="text-center p-5">
                                 <div class="spinner-border text-primary" role="status"></div>
                                 <p class="mt-2 mb-0">Memuat data...</p>
                             </td>
                         </tr>
 
                         <tr v-else-if="!paginatedSuplier || paginatedSuplier.length === 0">
-                            <td colspan="7" class="text-center p-5">Tidak ada data.</td>
+                            <td colspan="9" class="text-center p-5">Tidak ada data.</td>
                         </tr>
 
                         <template v-else>
@@ -61,7 +64,11 @@
                                 <td>{{ ((currentPage - 1) * 10) + (index + 1) }}</td>
                                 <td>{{ item.kode }}</td>
                                 <td>{{ item.nama }}</td>
+                                <td>{{ item.email }}</td>
                                 <td>{{ item.kontak }}</td>
+                                <td>{{ item.alamat }}</td>
+                                <td>{{item.masterplants?.map(plant => plant.plant).join(', ') || 'Tidak ada plant'}}
+                                </td>
                                 <td>
                                     <span v-if="item.status == 1" class="badge bg-success">
                                         ACTIVE

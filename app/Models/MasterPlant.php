@@ -26,4 +26,14 @@ class MasterPlant extends Model
     {
         return $this->belongsToMany(Customer::class, 'groupcustomer', 'masterplant_id', 'customer_id');
     }
+
+    /**
+     * The suplier that belong to the MasterPlant
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\BelongsToMany
+     */
+    public function suplier(): BelongsToMany
+    {
+        return $this->belongsToMany(Suplier::class, 'groupsuplier', 'masterplant_id', 'suplier_id');
+    }
 }

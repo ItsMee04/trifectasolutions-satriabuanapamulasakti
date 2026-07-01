@@ -1,10 +1,13 @@
 import { ref, computed, reactive } from 'vue';
-import { suplierService } from '../services/suplierService';
 import { toastfy } from '../../../utilities/toast';
 import Swal from 'sweetalert2';
 
+import { suplierService } from '../services/suplierService';
+import { masterplantService } from '../../masterplant/services/masterplantService';
+
 // Shared State
 const supliers = ref([]);
+const masterplants = ref([]);
 const isLoading = ref(false);
 const searchQuery = ref('');
 const currentPage = ref(1);
@@ -15,8 +18,10 @@ const errors = ref({}); // Error ditaruh di shared state agar sinkron dengan mod
 const formSuplier = reactive({
     id: null,
     nama: '',
+    email: '',
     kontak: '',
     alamat: '',
+    masterplant_ids: [],
 });
 
 export function useSuplier() {
@@ -33,17 +38,23 @@ export function useSuplier() {
         }
     };
 
+    const fetchMasterPlants = async () => {
+        try {
+            const response = await masterplantService.getMasterPlant();
+            masterplants.value = Array.isArray(response) ? response : (response.data || []);
+        } catch (error) {
+            masterplants.value = [];
+        }
+    };
+
     // --- LOGIKA VALIDASI ---
     const validateForm = () => {
         errors.value = {}; // Reset error
         if (!formSuplier.nama || formSuplier.nama.trim() === '') {
             errors.value.nama = 'Nama Suplier tidak boleh kosong.';
         }
-        if (!formSuplier.kontak || formSuplier.kontak.trim() === '') {
-            errors.value.kontak = 'Kontak Suplier tidak boleh kosong.';
-        }
-        if (!formSuplier.alamat || formSuplier.alamat.trim() === '') {
-            errors.value.alamat = 'Alamat Suplier tidak boleh kosong.';
+        if (formSuplier.masterplant_ids.length === 0) {
+            errors.value.masterplant_ids = 'Pilih minimal satu Master Plant.';
         }
         return Object.keys(errors.value).length === 0;
     };
@@ -57,8 +68,10 @@ export function useSuplier() {
             // 📦 Siapkan Payload
             const payload = {
                 nama: formSuplier.nama,
+                email: formSuplier.email,
                 kontak: formSuplier.kontak,
                 alamat: formSuplier.alamat,
+                masterplant_ids: formSuplier.masterplant_ids,
             };
 
             let response;
@@ -104,8 +117,10 @@ export function useSuplier() {
         isEdit.value = false;
         formSuplier.id = null;
         formSuplier.nama = '';
+        formSuplier.email = '';
         formSuplier.kontak = '';
         formSuplier.alamat = '';
+        formSuplier.masterplant_ids = [];
         errors.value = {};
         const modal = new bootstrap.Modal(document.getElementById('modalSuplier'));
         modal.show();
@@ -116,8 +131,12 @@ export function useSuplier() {
         errors.value = {};
         formSuplier.id = item.id;
         formSuplier.nama = item.nama;
+        formSuplier.email = item.email;
         formSuplier.kontak = item.kontak;
         formSuplier.alamat = item.alamat;
+
+        formSuplier.masterplant_ids = item.masterplants ? item.masterplants.map(mp => mp.id) : [];
+
         const modal = new bootstrap.Modal(document.getElementById('modalSuplier'));
         modal.show();
     };
@@ -191,7 +210,7 @@ export function useSuplier() {
     });
 
     return {
-        supliers, isLoading, searchQuery, currentPage, isEdit, formSuplier, errors, totalPages, displayedPages,
+        supliers, masterplants, isLoading, searchQuery, currentPage, isEdit, formSuplier, errors, totalPages, displayedPages,
         filteredSuplier: computed(() => {
             const query = searchQuery.value.toLowerCase();
             return supliers.value.filter(item => (item.nama || '').toLowerCase().includes(query));
@@ -201,6 +220,6 @@ export function useSuplier() {
             return (supliers.value.filter(item => (item.nama || '').toLowerCase().includes(searchQuery.value.toLowerCase())))
                 .slice(start, start + itemsPerPage);
         }),
-        fetchSuplier, handleCreate, handleEdit, handleDelete, handleRefresh, submitSuplier
+        fetchSuplier, fetchMasterPlants, handleCreate, handleEdit, handleDelete, handleRefresh, submitSuplier
     };
 }

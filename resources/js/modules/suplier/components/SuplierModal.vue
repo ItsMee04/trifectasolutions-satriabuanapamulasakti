@@ -24,7 +24,17 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group local-forms mb-3">
-                                    <label>Kontak <span class="login-danger">*</span></label>
+                                    <label>Email</label>
+                                    <input v-model="formSuplier.email" type="text" class="form-control"
+                                        :class="{ 'is-invalid': errors.email }">
+                                    <div class="invalid-feedback" v-if="errors.email">
+                                        {{ Array.isArray(errors.email) ? errors.email[0] : errors.email }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group local-forms mb-3">
+                                    <label>Kontak</label>
                                     <input v-model="formSuplier.kontak" type="text" class="form-control"
                                         :class="{ 'is-invalid': errors.kontak }">
                                     <div class="invalid-feedback" v-if="errors.kontak">
@@ -34,10 +44,32 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group local-forms mb-3">
-                                    <label>Alamat <span class="login-danger">*</span></label>
+                                    <label>Alamat</label>
                                     <textarea v-model="formSuplier.alamat" cols="4" rows="4" class="form-control" :class="{'is-invalid' : errors.alamat}"></textarea>
                                     <div class="invalid-feedback" v-if="errors.alamat">
                                         {{ Array.isArray(errors.alamat) ? errors.alamat[0] : errors.alamat }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group mb-3">
+                                    <label class="form-label d-block">Pilih Masterplant <span class="login-danger">*</span></label>
+                                    <div :class="{ 'is-invalid': errors.masterplant_ids }">
+                                        <div v-for="plant in masterplants" :key="plant.id" class="form-check form-check-inline mb-2">
+                                            <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                :id="'plant-' + plant.id"
+                                                :value="plant.id"
+                                                v-model="formSuplier.masterplant_ids"
+                                            >
+                                            <label class="form-check-label" :for="'plant-' + plant.id">
+                                                {{ plant.plant }}
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="invalid-feedback" v-if="errors.masterplant_ids">
+                                        {{ Array.isArray(errors.masterplant_ids) ? errors.masterplant_ids[0] : errors.masterplant_ids }}
                                     </div>
                                 </div>
                             </div>
@@ -56,10 +88,15 @@
 </template>
 
 <script setup>
+import { onMounted } from 'vue';
 import { useSuplier } from '../composables/useSuplier';
 
 // Ambil state dan action dari composable
-const { isEdit, formSuplier, isLoading, errors, submitSuplier } = useSuplier();
+const { isEdit, formSuplier, isLoading, errors, masterplants, fetchMasterPlants, submitSuplier } = useSuplier();
+
+onMounted(() => {
+    fetchMasterPlants();
+});
 
 const handleSubmit = async () => {
     // submitRole akan mengembalikan true jika berhasil
