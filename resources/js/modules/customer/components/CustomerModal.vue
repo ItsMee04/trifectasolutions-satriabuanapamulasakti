@@ -24,7 +24,7 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group local-forms mb-3">
-                                    <label>Email <span class="login-danger">*</span></label>
+                                    <label>Email</label>
                                     <input v-model="formCustomer.email" type="email" class="form-control"
                                         :class="{ 'is-invalid': errors.email }">
                                     <div class="invalid-feedback" v-if="errors.email">
@@ -34,7 +34,7 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group local-forms mb-3">
-                                    <label>Kontak <span class="login-danger">*</span></label>
+                                    <label>Kontak</label>
                                     <input v-model="formCustomer.kontak" type="text" class="form-control"
                                         :class="{ 'is-invalid': errors.kontak }">
                                     <div class="invalid-feedback" v-if="errors.kontak">
@@ -44,7 +44,7 @@
                             </div>
                             <div class="col-md-12">
                                 <div class="form-group local-forms mb-3">
-                                    <label>Alamat <span class="login-danger">*</span></label>
+                                    <label>Alamat</label>
                                     <textarea v-model="formCustomer.alamat" cols="4" rows="4" class="form-control" :class="{'is-invalid' : errors.alamat}"></textarea>
                                     <div class="invalid-feedback" v-if="errors.alamat">
                                         {{ Array.isArray(errors.alamat) ? errors.alamat[0] : errors.alamat }}
