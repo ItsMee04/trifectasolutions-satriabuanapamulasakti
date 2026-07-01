@@ -59,9 +59,6 @@ class CustomerController extends Controller
     {
         $request->validate([
             'nama' => 'required|max:255',
-            'kontak' => 'required|max:255',
-            'alamat' => 'required|max:255',
-            'email' => 'required|email|max:255',
             'masterplant_ids' => 'required|array',
             'masterplant_ids.*' => 'exists:masterplant,id',
         ]);
