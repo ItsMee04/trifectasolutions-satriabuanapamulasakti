@@ -17,7 +17,7 @@ export const masterplantService = {
     // Sesuai: api/master/masterplant/update [PUT]
     // PENTING: Gunakan .put sesuai daftar route Anda
     async updateMasterPlant(payload) {
-        const response = await apiClient.put('/master/masterplant/update', payload);
+        const response = await apiClient.post('/master/masterplant/update', payload);
         return response.data;
     },
 

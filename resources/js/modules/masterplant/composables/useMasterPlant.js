@@ -14,6 +14,7 @@ const errors = ref({}); // Error ditaruh di shared state agar sinkron dengan mod
 
 const formMasterPlant = reactive({
     id: null,
+    kode: '',
     plant: ''
 });
 
@@ -48,6 +49,7 @@ export function useMasterPlant() {
         try {
             // 📦 Siapkan Payload
             const payload = {
+                kode: formMasterPlant.kode,
                 plant: formMasterPlant.plant,
             };
 
@@ -93,6 +95,7 @@ export function useMasterPlant() {
     const handleCreate = () => {
         isEdit.value = false;
         formMasterPlant.id = null;
+        formMasterPlant.kode = '';
         formMasterPlant.plant = '';
         errors.value = {};
         const modal = new bootstrap.Modal(document.getElementById('modalMasterPlant'));
@@ -103,6 +106,7 @@ export function useMasterPlant() {
         isEdit.value = true;
         errors.value = {};
         formMasterPlant.id = item.id;
+        formMasterPlant.kode = item.kode;
         formMasterPlant.plant = item.plant;
         const modal = new bootstrap.Modal(document.getElementById('modalMasterPlant'));
         modal.show();

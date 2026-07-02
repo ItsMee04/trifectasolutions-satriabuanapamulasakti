@@ -13,6 +13,7 @@ class MasterPlant extends Model
     protected $table = "masterplant";
 
     protected $fillable = [
+        'kode',
         'plant',
         'status'
     ];

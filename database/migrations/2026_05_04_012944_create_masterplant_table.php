@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('masterplant', function (Blueprint $table) {
             $table->id();
+            $table->string('kode', 100)->unique();
             $table->string('plant', 100);
             $table->integer('status')->unsigned()->default(1);
             $table->timestamps();

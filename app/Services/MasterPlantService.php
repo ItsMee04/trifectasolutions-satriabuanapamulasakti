@@ -15,6 +15,7 @@ class MasterPlantService
     public function createMasterPlant(array $data): MasterPlant
     {
         return MasterPlant::create([
+            'kode'  => strtoupper($data['kode']),
             'plant' => strtoupper($data['plant'])
         ]);
     }
@@ -28,7 +29,9 @@ class MasterPlantService
         }
 
         $masterplant->update([
-            'plant' => strtoupper($data['plant'])
+            'kode'  => strtoupper($data['kode']),
+            'plant' => strtoupper($data['plant']),
+
         ]);
 
         return $masterplant;

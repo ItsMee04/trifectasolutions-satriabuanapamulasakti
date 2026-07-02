@@ -154,6 +154,8 @@ const managementUserItems = computed(() => {
 const masterItems = computed(() => {
     if (!hasModule('master')) return [];
     const list = [
+        { name: 'Master Plant', path: '/masterplant', perm: 'menu-masterplant' },
+        { name: 'Menu Jenis Plant', path: '/menujenisplant', perm: 'menu-menujenis' },
         { name: 'Driver', path: '/driver', perm: 'menu-driver' },
         { name: 'Customer', path: '/customer', perm: 'menu-customer' },
         { name: 'Suplier', path: '/suplier', perm: 'menu-suplier' },
@@ -163,8 +165,6 @@ const masterItems = computed(() => {
         { name: 'Kategori', path: '/kategori', perm: 'menu-kategori' },
         { name: 'Material', path: '/material', perm: 'menu-material' },
         { name: 'Berat Jenis', path: '/beratjenis', perm: 'menu-beratjenis' },
-        { name: 'Master Plant', path: '/masterplant', perm: 'menu-masterplant' },
-        { name: 'Menu Jenis Plant', path: '/menujenisplant', perm: 'menu-menujenis' },
     ];
     return list.filter(item => hasPermission(item.perm));
 });

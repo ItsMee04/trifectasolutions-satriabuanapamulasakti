@@ -38,7 +38,10 @@ class MasterPlantController extends Controller
 
     public function storeMasterPlant(Request $request)
     {
-        $request->validate(['plant' => 'required|max:255']);
+        $request->validate([
+            'kode'  => 'required|max:100|unique:masterplant,kode,',
+            'plant' => 'required|max:255'
+        ]);
 
         $masterplant = $this->masterplantService->createMasterPlant($request->all());
 
@@ -52,7 +55,10 @@ class MasterPlantController extends Controller
 
     public function updateMasterPlant(Request $request)
     {
-        $request->validate(['plant' => 'required|max:255']);
+        $request->validate([
+            'kode'  => 'required|max:100|unique:masterplant,kode,',
+            'plant' => 'required|max:255'
+        ]);
 
         $masterplant = $this->masterplantService->updateMasterPlant($request->id, $request->all());
 

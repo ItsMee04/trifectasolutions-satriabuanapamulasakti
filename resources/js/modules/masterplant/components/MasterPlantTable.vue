@@ -37,6 +37,7 @@
                     <thead class="bg-light">
                         <tr class="text-center">
                             <th style="width: 5%">#</th>
+                            <th style="width: 20%">Kode</th>
                             <th style="width: 20%">Plant</th>
                             <th style="width: 20%">Status</th>
                             <th style="width: 20%">Action</th>
@@ -44,19 +45,20 @@
                     </thead>
                     <tbody>
                         <tr v-if="isLoading">
-                            <td colspan="6" class="text-center p-5">
+                            <td colspan="7" class="text-center p-5">
                                 <div class="spinner-border text-primary" role="status"></div>
                                 <p class="mt-2 mb-0">Memuat data...</p>
                             </td>
                         </tr>
 
                         <tr v-else-if="!paginatedMasterPlant || paginatedMasterPlant.length === 0">
-                            <td colspan="6" class="text-center p-5">Tidak ada data.</td>
+                            <td colspan="7" class="text-center p-5">Tidak ada data.</td>
                         </tr>
 
                         <template v-else>
                             <tr v-for="(item, index) in paginatedMasterPlant" :key="item.id" class="text-center">
                                 <td>{{ ((currentPage - 1) * 10) + (index + 1) }}</td>
+                                <td>{{ item.kode }}</td>
                                 <td>{{ item.plant }}</td>
                                 <td>
                                     <span v-if="item.status == 1" class="badge bg-success">

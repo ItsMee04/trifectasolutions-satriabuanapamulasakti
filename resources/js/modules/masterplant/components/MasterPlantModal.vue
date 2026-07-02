@@ -14,6 +14,16 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="form-group local-forms mb-3">
+                                    <label>Kode <span class="login-danger">*</span></label>
+                                    <input v-model="formMasterPlant.kode" type="text" class="form-control"
+                                        :class="{ 'is-invalid': errors.kode }">
+                                    <div class="invalid-feedback" v-if="errors.kode">
+                                        {{ Array.isArray(errors.kode) ? errors.kode[0] : errors.kode }}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
+                                <div class="form-group local-forms mb-3">
                                     <label>Nama Plant <span class="login-danger">*</span></label>
                                     <input v-model="formMasterPlant.plant" type="text" class="form-control"
                                         :class="{ 'is-invalid': errors.plant }">
