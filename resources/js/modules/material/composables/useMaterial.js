@@ -1,12 +1,13 @@
 import { ref, computed, reactive } from 'vue';
-import { materialService } from '../services/materialService';
-import { kategoriService } from '../../kategori/services/kategoriService'
 import { toastfy } from '../../../utilities/toast';
 import Swal from 'sweetalert2';
 
+import { materialService } from '../services/materialService';
+import { masterplantService } from '../../masterplant/services/masterplantService';
+
 // Shared State
 const materials = ref([]);
-const kategori = ref([]);
+const masterplants = ref([]);
 const isLoading = ref(false);
 const searchQuery = ref('');
 const currentPage = ref(1);
@@ -24,8 +25,8 @@ const satuanList = [
 const formMaterial = reactive({
     id: null,
     kode: '',
-    kategori_id: null,
     material: '', // 2. UBAH 'role' menjadi 'role_id' agar cocok dengan value Multiselect (ID)
+    masterplant_ids: [], // 6. UBAH 'role' menjadi 'role_id' agar cocok dengan value Multiselect (ID)
     satuan: ''
 });
 
@@ -43,28 +44,25 @@ export function useMaterial() {
         }
     };
 
-    // 3. TAMBAHKAN fungsi fetchKategori untuk mengisi pilihan di Multiselect
-    const fetchKategori = async () => {
+    const fetchMasterPlant = async () => {
         try {
-            const response = await kategoriService.getKategori();
-            // Map data agar formatnya { value: id, label: 'nama' } sesuai standar Multiselect
-            kategori.value = response.data.map(kategori => ({
-                value: kategori.id,
-                label: kategori.kategori // Sesuaikan field 'role' dengan nama kolom di tabel roles Anda
-            }));
+            const response = await masterplantService.getMasterPlant();
+            masterplants.value = Array.isArray(response) ? response : (response.data || []);
         } catch (error) {
-            console.error("Gagal memuat kategori:", error);
+            masterplants.value = [];
         }
     };
 
     const validateForm = () => {
         errors.value = {};
+        if (!formMaterial.kode || formMaterial.kode.trim() === '') {
+            errors.value.kode = 'Kode tidak boleh kosong.';
+        }
         if (!formMaterial.material || formMaterial.material.trim() === '') {
             errors.value.material = 'Material tidak boleh kosong.';
         }
-        // 4. TAMBAHKAN validasi kategori
-        if (!formMaterial.kategori_id) {
-            errors.value.kategori_id = 'Pilih Kategori terlebih dahulu.';
+        if (formMaterial.masterplant_ids.length === 0) {
+            errors.value.masterplant_ids = 'Pilih minimal satu Master Plant.';
         }
         return Object.keys(errors.value).length === 0;
     };
@@ -76,8 +74,9 @@ export function useMaterial() {
         try {
             const payload = {
                 id: formMaterial.id,
+                kode: formMaterial.kode,
                 material: formMaterial.material,
-                kategori_id: formMaterial.kategori_id, // 5. Kirim role_id (integer) ke backend
+                masterplant_ids: formMaterial.masterplant_ids, // 5. Kirim masterplant_ids (array) ke backend
                 satuan: formMaterial.satuan,
             };
 
@@ -120,8 +119,9 @@ export function useMaterial() {
         isEdit.value = false;
         errors.value = {};
         formMaterial.id = null;
+        formMaterial.kode = '';
         formMaterial.material = '';
-        formMaterial.kategori_id = null; // 7. Pastikan mengambil role_id, bukan objek role
+        formMaterial.masterplant_ids = []; // 7. Pastikan mengambil masterplant_ids, bukan objek masterplant
         formMaterial.satuan = ''
 
         const modal = new bootstrap.Modal(document.getElementById('modalMaterial'));
@@ -132,8 +132,14 @@ export function useMaterial() {
         isEdit.value = true;
         errors.value = {};
         formMaterial.id = item.id;
+        formMaterial.kode = item.kode || '';
         formMaterial.material = item.material;
-        formMaterial.kategori_id = item.kategori_id; // 7. Pastikan mengambil role_id, bukan objek role
+        if (item.masterplants && Array.isArray(item.masterplants)) {
+            // Mengambil id dari setiap object di dalam array masterplants
+            formMaterial.masterplant_ids = item.masterplants.map(plant => plant.id);
+        } else {
+            formMaterial.masterplant_ids = [];
+        } // 7. Pastikan mengambil masterplant_ids, bukan objek masterplant
         formMaterial.satuan = item.satuan;
 
         const modal = new bootstrap.Modal(document.getElementById('modalMaterial'));
@@ -210,7 +216,7 @@ export function useMaterial() {
     });
 
     return {
-        materials, kategori, satuanList, isLoading, searchQuery, currentPage, isEdit, formMaterial, errors, totalPages, displayedPages,
+        materials, masterplants, satuanList, isLoading, searchQuery, currentPage, isEdit, formMaterial, errors, totalPages, displayedPages,
         filteredMaterial: computed(() => {
             const query = searchQuery.value.toLowerCase();
             return materials.value.filter(item => {
@@ -234,6 +240,6 @@ export function useMaterial() {
             const start = (currentPage.value - 1) * itemsPerPage;
             return filtered.slice(start, start + itemsPerPage);
         }),
-        fetchMaterial, fetchKategori, handleCreate, handleEdit, handleDelete, handleRefresh, submitMaterial
+        fetchMaterial, fetchMasterPlant, handleCreate, handleEdit, handleDelete, handleRefresh, submitMaterial
     };
 }

@@ -39,7 +39,6 @@ class MaterialController extends Controller
     public function storeMaterial(Request $request)
     {
         $request->validate([
-            'kategori_id' => 'required|exists:kategori,id',
             'material' => 'required|max:255',
             'satuan' => 'required|max:255'
         ]);
@@ -57,7 +56,6 @@ class MaterialController extends Controller
     public function updateMaterial(Request $request)
     {
         $request->validate([
-            'kategori_id' => 'required|exists:kategori,id',
             'material' => 'required|max:255',
             'satuan' => 'required|max:255'
         ]);

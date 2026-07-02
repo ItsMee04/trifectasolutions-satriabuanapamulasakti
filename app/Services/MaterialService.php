@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Models\Material;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class MaterialService
 {
@@ -30,40 +31,62 @@ class MaterialService
 
     public function getAllActive(): Collection
     {
-        return Material::with('kategori')->where('status', 1)->get();
+        return Material::with('masterplants')->where('status', 1)->get();
     }
 
     public function createMaterial(array $data): Material
     {
-        return Material::create([
-            // Otomatis generate kode di sini jika tidak dikirim dari front-end
-            'kode' => self::generateKodeMaterial(),
-            'kategori_id' => $data['kategori_id'],
-            'material' => strtoupper($data['material']),
-            'satuan' => $data['satuan'],
-            'oleh' => Auth::id()
-        ]);
+        // Menggunakan DB::transaction agar jika salah satu proses error, database tidak corupt
+        return DB::transaction(function () use ($data) {
+
+            // 1. Simpan data utama ke tabel material
+            $material = Material::create([
+                'kode' => strtoupper($data['kode']),
+                'material' => strtoupper($data['material']),
+                'satuan' => $data['satuan'],
+                'oleh' => Auth::id()
+            ]);
+
+            // 2. Otomatis input ke tabel groupmaterial (pivot) jika ada data masterplant_ids
+            // Pastikan di front-end (Vue.js) Anda mengirimkan array ID seperti: masterplant_ids: [1, 2, 3]
+            if (isset($data['masterplant_ids']) && is_array($data['masterplant_ids'])) {
+                $material->masterplants()->attach($data['masterplant_ids']);
+            }
+
+            return $material;
+        });
     }
 
     public function updateMaterial(int $id, array $data): ?Material
     {
-        $material = Material::find($id);
+        // Menggunakan DB::transaction untuk memastikan data utama dan pivot aman ter-update bersamaan
+        return DB::transaction(function () use ($id, $data) {
+            $material = Material::find($id);
 
-        if (!$material) {
-            return null;
-        }
+            if (!$material) {
+                return null;
+            }
 
-        $material->update([
-            // Umumnya kode tidak diubah saat update,
-            // tapi jika tetap ingin bisa diubah, gunakan $data['kode']
-            'kode' => $data['kode'] ?? $material->kode,
-            'kategori_id' => $data['kategori_id'],
-            'material' => strtoupper($data['material']),
-            'satuan' => $data['satuan'],
-            'oleh' => Auth::id() // Pastikan Anda menggunakan ID user yang sedang login sebagai 'oleh'
-        ]);
+            // 1. Update data profil utama customer
+            $material->update([
+                'kode' => $data['kode'] ?? $material->kode, // Mempertahankan kode lama jika tidak diubah
+                'material' => strtoupper($data['material']),
+                'satuan' => $data['satuan'],
+                'oleh' => Auth::id()
+            ]);
 
-        return $material;
+            // 2. OTOMATIS UPDATE TABLE PIVOT (groupmaterial)
+            // Pastikan parameter yang dilempar dari controller membawa array 'masterplant_ids'
+            if (isset($data['masterplant_ids']) && is_array($data['masterplant_ids'])) {
+                // sync() akan menghapus relasi lama yang tidak terpilih dan menambah relasi baru yang dicentang
+                $material->masterplants()->sync($data['masterplant_ids']);
+            } else {
+                // Jika user mengosongkan semua checkbox masterplant (opsional, tergantung kebijakan bisnis)
+                $material->masterplants()->detach();
+            }
+
+            return $material;
+        });
     }
 
     public function deleteMaterial(int $id): bool

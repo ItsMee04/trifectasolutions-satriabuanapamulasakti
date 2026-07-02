@@ -38,9 +38,9 @@
                         <tr class="text-center">
                             <th style="width: 5%">#</th>
                             <th style="width: 20%">Kode Material</th>
-                            <th style="width: 20%">Kategori</th>
                             <th style="width: 20%">Material</th>
                             <th style="width: 20%">Satuan</th>
+                            <th style="width: 20%">Plant</th>
                             <th style="width: 20%">Status</th>
                             <th style="width: 20%">Action</th>
                         </tr>
@@ -61,9 +61,9 @@
                             <tr v-for="(item, index) in paginatedMaterial" :key="item.id" class="text-center">
                                 <td>{{ ((currentPage - 1) * 10) + (index + 1) }}</td>
                                 <td>{{ item.kode }}</td>
-                                <td>{{ item.kategori.kategori }}</td>
                                 <td>{{ item.material }}</td>
                                 <td>{{ item.satuan }}</td>
+                                <td>{{ item.masterplants.map(plant => plant.kode).join(', ') }}</td>
                                 <td>
                                     <span v-if="item.status == 1" class="badge bg-success">
                                         ACTIVE
