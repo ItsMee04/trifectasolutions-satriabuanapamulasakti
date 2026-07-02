@@ -64,7 +64,7 @@
                                                 v-model="formCustomer.masterplant_ids"
                                             >
                                             <label class="form-check-label" :for="'plant-' + plant.id">
-                                                {{ plant.plant }}
+                                                {{ plant.kode }}
                                             </label>
                                         </div>
                                     </div>

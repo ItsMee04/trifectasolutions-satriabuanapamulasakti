@@ -67,7 +67,7 @@
                                 <td>{{ item.email }}</td>
                                 <td>{{ item.kontak }}</td>
                                 <td>{{ item.alamat }}</td>
-                                <td>{{ item.masterplants?.map(plant => plant.plant).join(', ') || 'Tidak ada plant' }}</td>
+                                <td>{{ item.masterplants?.map(plant => plant.kode).join(', ') || 'Tidak ada plant' }}</td>
                                 <td>
                                     <span v-if="item.status == 1" class="badge bg-success">
                                         ACTIVE
